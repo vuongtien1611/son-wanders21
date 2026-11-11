@@ -25,13 +25,25 @@
   --w-line: #E2DDD2;
   --w-font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --w-font-body: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
-  --w-ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Motion System V2 Tokens */
+  --motion-ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-impact: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-fast: 250ms;
+  --motion-medium: 600ms;
+  --motion-slow: 1000ms;
+  --motion-cinematic: 1300ms;
+  --motion-reveal-distance: 60px;
+  --motion-stagger: 130ms;
+
+  --w-ease-cinematic: var(--motion-ease-cinematic);
 }
 
 /* Base Surface & Typography */
 html {
   scroll-behavior: smooth;
   background-color: var(--w-ivory);
+  overflow-x: clip;
 }
 
 body {
@@ -40,8 +52,13 @@ body {
   font-family: var(--w-font-body) !important;
   font-size: 15.5px;
   line-height: 1.7;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+main section {
+  overflow-x: clip;
 }
 
 ::selection {
@@ -227,6 +244,8 @@ main h2 {
   background-color: var(--w-emerald);
   border-color: var(--w-gold);
   color: #FFFFFF;
+  transform: translate3d(var(--w-mag-x, 0px), calc(-2px + var(--w-mag-y, 0px)), 0);
+  box-shadow: 0 12px 24px -10px rgba(7, 59, 46, 0.38);
 }
 
 .w-brand-logo {
@@ -273,20 +292,30 @@ main h2 {
   text-transform: uppercase;
   letter-spacing: 0.16em;
   border-radius: 4px;
-  transition: background-color 220ms ease, color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease,
+    transform var(--motion-fast) var(--motion-ease-cinematic);
   text-decoration: none;
   cursor: pointer;
 }
 
+.w-btn:hover {
+  transform: translate3d(var(--w-mag-x, 0px), calc(-2.5px + var(--w-mag-y, 0px)), 0);
+  box-shadow: 0 14px 28px -12px rgba(7, 59, 46, 0.36);
+}
+
 .w-btn svg,
 .w-btn .w-btn-arrow {
-  transition: transform 200ms var(--w-ease-cinematic);
+  transition: transform var(--motion-fast) var(--motion-ease-cinematic);
   flex-shrink: 0;
 }
 
 .w-btn:hover svg,
 .w-btn:hover .w-btn-arrow {
-  transform: translateX(4px);
+  transform: translateX(5px);
 }
 
 .w-btn-gold {
@@ -544,19 +573,42 @@ html.wi-active:not(.wi-hero-enter) .w-hero-stagger {
   border-radius: 10px;
   background-color: #E5DFD3;
   box-shadow: 0 10px 28px -14px rgba(7, 59, 46, 0.16);
-  transition: transform 280ms var(--w-ease-cinematic), box-shadow 280ms ease;
+  transition: transform 480ms var(--motion-ease-cinematic), box-shadow 480ms ease;
 }
 
 .w-arch-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 22px 42px -16px rgba(7, 59, 46, 0.26);
+  transform: translateY(-5px);
+  box-shadow: 0 26px 48px -16px rgba(7, 59, 46, 0.30);
+}
+
+.w-arch-card img {
+  transition: transform 560ms var(--motion-ease-cinematic);
+  will-change: transform;
+}
+
+.w-arch-card:hover img {
+  transform: scale(1.06);
+}
+
+.w-arch-card h2,
+.w-arch-card h3 {
+  transition: transform 480ms var(--motion-ease-cinematic);
+}
+
+.w-arch-card:hover h2,
+.w-arch-card:hover h3 {
+  transform: translateY(-5px);
 }
 
 .w-arch-card-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(0deg, rgba(7, 59, 46, 0.88) 0%, rgba(7, 59, 46, 0.25) 48%, rgba(7, 59, 46, 0.04) 100%);
-  transition: opacity 280ms ease;
+  transition: opacity 480ms ease, background 480ms ease;
+}
+
+.w-arch-card:hover .w-arch-card-overlay {
+  opacity: 0.96;
 }
 
 .w-arch-card-arrow {
@@ -569,66 +621,390 @@ html.wi-active:not(.wi-hero-enter) .w-hero-stagger {
   border: 1px solid rgba(246, 243, 236, 0.42);
   border-radius: 4px;
   color: var(--w-ivory);
-  transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms var(--w-ease-cinematic);
+  transition: background-color 250ms ease, border-color 250ms ease, color 250ms ease, transform 320ms var(--motion-ease-cinematic);
+}
+
+.w-arch-card-arrow svg {
+  transition: transform 320ms var(--motion-ease-cinematic);
 }
 
 .w-arch-card:hover .w-arch-card-arrow {
   background-color: var(--w-gold);
   border-color: var(--w-gold);
   color: var(--w-forest-deep);
-  transform: translateX(2px);
+}
+
+.w-arch-card:hover .w-arch-card-arrow svg {
+  transform: translate(2.5px, -2.5px);
 }
 
 .w-pc-img {
-  transition: transform 580ms var(--w-ease-cinematic);
+  transition: transform 560ms var(--motion-ease-cinematic);
   will-change: transform;
 }
 
 .w-arch-card:hover .w-pc-img {
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 /* ============================================================
-   CINEMATIC MOTION SYSTEM (Section Reveal & Image Reveal)
+   CINEMATIC MOTION SYSTEM V2 (Choreographed Scroll & Parallax)
+   Scoped to html.w-motion-ready for 100% no-JS safety.
    ============================================================ */
-.w-reveal {
+html.w-motion-ready .w-reveal {
   opacity: 0;
-  transform: translate3d(0, 28px, 0);
+  transform: translate3d(0, var(--motion-reveal-distance), 0);
   transition:
-    opacity 780ms var(--w-ease-cinematic),
-    transform 820ms var(--w-ease-cinematic);
+    opacity var(--motion-slow) var(--motion-ease-cinematic),
+    transform var(--motion-slow) var(--motion-ease-cinematic);
+  transition-delay: var(--wm-delay, 0ms);
   will-change: opacity, transform;
 }
 
-.w-reveal.is-revealed {
+html.w-motion-ready .w-reveal.is-revealed {
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
 
-.w-reveal-delay-1 { transition-delay: 80ms; }
-.w-reveal-delay-2 { transition-delay: 160ms; }
-.w-reveal-delay-3 { transition-delay: 240ms; }
-
-.w-reveal-img {
+html.w-motion-ready .w-reveal-img {
   opacity: 0;
-  transform: scale(1.04);
+  transform: scale(1.08);
   transition:
-    opacity 900ms var(--w-ease-cinematic),
-    transform 900ms var(--w-ease-cinematic);
+    opacity var(--motion-cinematic) var(--motion-ease-cinematic),
+    transform var(--motion-cinematic) var(--motion-ease-cinematic);
+  transition-delay: var(--wm-delay, 0ms);
   will-change: opacity, transform;
 }
 
-.w-reveal-img.is-revealed {
+html.w-motion-ready .w-reveal-img.is-revealed {
   opacity: 1;
   transform: scale(1);
 }
 
+/* 1. Eyebrow & Gold Rule Line Reveal */
+html.w-motion-ready .wm-eyebrow {
+  opacity: 0;
+  transform: translate3d(-18px, 0, 0);
+  transition:
+    opacity 620ms var(--motion-ease-cinematic),
+    transform 650ms var(--motion-ease-cinematic);
+  transition-delay: var(--wm-delay, 0ms);
+}
+
+html.w-motion-ready .wm-eyebrow.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+html.w-motion-ready .wm-eyebrow .w-eyebrow-line,
+html.w-motion-ready .wm-gold-rule {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 680ms var(--motion-ease-cinematic);
+  transition-delay: calc(var(--wm-delay, 0ms) + 80ms);
+}
+
+html.w-motion-ready .wm-eyebrow.is-revealed .w-eyebrow-line,
+html.w-motion-ready .wm-gold-rule.is-revealed {
+  transform: scaleX(1);
+}
+
+/* 2. Heading Vertical Mask Reveal (Generous bounds preserve Vietnamese diacritics) */
+html.w-motion-ready .wm-heading {
+  opacity: 0;
+  transform: translate3d(0, var(--motion-reveal-distance), 0);
+  clip-path: inset(-18% 0 112% 0);
+  transition:
+    opacity 1050ms var(--motion-ease-cinematic),
+    transform 1150ms var(--motion-ease-cinematic),
+    clip-path 1150ms var(--motion-ease-cinematic);
+  transition-delay: var(--wm-delay, 40ms);
+  will-change: opacity, transform;
+}
+
+html.w-motion-ready .wm-heading.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  clip-path: inset(-18% 0 -26% 0);
+}
+
+/* 3. Description Reveal (follows Heading by ~150ms) */
+html.w-motion-ready .wm-desc {
+  opacity: 0;
+  transform: translate3d(0, 35px, 0);
+  transition:
+    opacity 850ms var(--motion-ease-cinematic),
+    transform 850ms var(--motion-ease-cinematic);
+  transition-delay: var(--wm-delay, 180ms);
+  will-change: opacity, transform;
+}
+
+html.w-motion-ready .wm-desc.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* 4. Architectural Cards Stagger Reveal (65px + scale 0.94 -> 1) */
+html.w-motion-ready .wm-card {
+  opacity: 0;
+  transform: translate3d(0, 65px, 0) scale(0.94);
+  transition:
+    opacity 950ms var(--motion-ease-cinematic),
+    transform 950ms var(--motion-ease-cinematic),
+    box-shadow 480ms ease;
+  transition-delay: var(--wm-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+html.w-motion-ready .wm-card.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+html.w-motion-ready .wm-card.is-revealed:hover {
+  transform: translate3d(0, -5px, 0) scale(1);
+}
+
+/* 5. Product Card Stagger Reveal (45px + scale 0.97 + inner image glide) */
+html.w-motion-ready .wm-product-card {
+  opacity: 0;
+  transform: translate3d(0, 45px, 0) scale(0.97);
+  transition:
+    opacity 900ms var(--motion-ease-cinematic),
+    transform 900ms var(--motion-ease-cinematic),
+    border-color 350ms ease,
+    box-shadow 350ms ease;
+  transition-delay: var(--wm-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+html.w-motion-ready .wm-product-card .wpc-img {
+  transform: scale(1.06);
+  opacity: 0;
+  transition:
+    transform 900ms var(--motion-ease-cinematic),
+    opacity 750ms ease;
+  transition-delay: calc(var(--wm-delay, 0ms) + 80ms);
+}
+
+html.w-motion-ready .wm-product-card .wpc-title,
+html.w-motion-ready .wm-product-card .wpc-code {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 700ms var(--motion-ease-cinematic),
+    transform 700ms var(--motion-ease-cinematic),
+    color 200ms ease;
+  transition-delay: calc(var(--wm-delay, 0ms) + 150ms);
+}
+
+html.w-motion-ready .wm-product-card.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+html.w-motion-ready .wm-product-card.is-revealed:hover {
+  transform: translate3d(0, -6px, 0) scale(1);
+  transition-delay: 0ms;
+}
+
+html.w-motion-ready .wm-product-card.is-revealed .wpc-img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+html.w-motion-ready .wm-product-card.is-revealed:hover .wpc-img {
+  transform: scale(1.04);
+  transition: transform 350ms var(--motion-ease-cinematic);
+  transition-delay: 0ms;
+}
+
+html.w-motion-ready .wm-product-card.is-revealed .wpc-title,
+html.w-motion-ready .wm-product-card.is-revealed .wpc-code {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* 6. Cinematic Image Mask Curtain Reveal + Slow Zoom Out (1.08 -> 1) */
+.wm-img-frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.wm-curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background-color: var(--wm-curtain-bg, #F6F3EC);
+  border-bottom: 2px solid rgba(214, 173, 69, 0.72);
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transition: transform 1200ms var(--motion-ease-cinematic);
+  will-change: transform;
+}
+
+html.w-motion-ready .wm-img-frame:not(.is-revealed) img {
+  transform: scale(1.08);
+  opacity: 0.75;
+}
+
+html.w-motion-ready .wm-img-frame img {
+  transition:
+    transform 1400ms var(--motion-ease-cinematic),
+    opacity 950ms var(--motion-ease-cinematic);
+}
+
+html.w-motion-ready .wm-img-frame.is-revealed .wm-curtain {
+  transform: translate3d(0, -104%, 0);
+}
+
+html.w-motion-ready .wm-img-frame.is-revealed img {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* 7. Color Explorer Group List & Initial Swatch Cascade */
+html.w-motion-ready .wm-explorer-group {
+  opacity: 0;
+  transform: translate3d(28px, 0, 0);
+  transition:
+    opacity 720ms var(--motion-ease-cinematic),
+    transform 720ms var(--motion-ease-cinematic),
+    background-color 220ms ease,
+    color 220ms ease;
+  transition-delay: var(--wm-delay, 0ms);
+}
+
+html.w-motion-ready .wm-explorer-group.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+html.w-motion-ready .wm-explorer-swatch {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0) scale(0.88);
+  transition:
+    opacity 620ms var(--motion-ease-cinematic),
+    transform 620ms var(--motion-ease-cinematic),
+    border-color 220ms ease;
+  transition-delay: var(--wm-delay, 0ms);
+}
+
+html.w-motion-ready .wm-explorer-swatch.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* 8. Numbered Steps & Why WANDERS Pillars Stagger */
+html.w-motion-ready .wm-step-item {
+  opacity: 0;
+  transform: translate3d(0, 36px, 0);
+  transition:
+    opacity 850ms var(--motion-ease-cinematic),
+    transform 850ms var(--motion-ease-cinematic);
+  transition-delay: var(--wm-delay, 0ms);
+}
+
+html.w-motion-ready .wm-step-item.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* 9. Footer Sequential Choreography */
+html.w-motion-ready .w-footer [data-footer-col] {
+  opacity: 0;
+  transform: translate3d(0, 34px, 0);
+  transition:
+    opacity 850ms var(--motion-ease-cinematic),
+    transform 850ms var(--motion-ease-cinematic);
+  transition-delay: var(--wm-footer-delay, 0ms);
+}
+
+html.w-motion-ready .w-footer.is-revealed [data-footer-col="0"] { --wm-footer-delay: 0ms; opacity: 1; transform: translate3d(0, 0, 0); }
+html.w-motion-ready .w-footer.is-revealed [data-footer-col="1"] { --wm-footer-delay: 100ms; opacity: 1; transform: translate3d(0, 0, 0); }
+html.w-motion-ready .w-footer.is-revealed [data-footer-col="2"] { --wm-footer-delay: 200ms; opacity: 1; transform: translate3d(0, 0, 0); }
+html.w-motion-ready .w-footer.is-revealed [data-footer-col="3"] { --wm-footer-delay: 300ms; opacity: 1; transform: translate3d(0, 0, 0); }
+
+.w-footer-bottom-wrap {
+  position: relative;
+}
+
+.w-footer-bottom-divider {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(214, 173, 69, 0.72) 0%, rgba(246, 243, 236, 0.16) 75%, rgba(246, 243, 236, 0.08) 100%);
+  transform-origin: left center;
+  transition: transform 950ms var(--motion-ease-cinematic) 280ms;
+}
+
+html.w-motion-ready .w-footer:not(.is-revealed) .w-footer-bottom-divider {
+  transform: scaleX(0);
+}
+
+html.w-motion-ready .w-footer.is-revealed .w-footer-bottom-divider {
+  transform: scaleX(1);
+}
+
+html.w-motion-ready .w-footer .w-footer-bottom {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 750ms var(--motion-ease-cinematic) 360ms,
+    transform 750ms var(--motion-ease-cinematic) 360ms;
+}
+
+html.w-motion-ready .w-footer.is-revealed .w-footer-bottom {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* 10. Selective GPU Scroll Parallax Layers */
+[data-wm-parallax] {
+  will-change: transform;
+  transform: translate3d(0, var(--wm-py, 0px), 0) scale(1.08);
+  transition: transform 90ms linear;
+}
+
+@media (max-width: 1023px) {
+  [data-wm-parallax] {
+    transform: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .w-reveal,
-  .w-reveal-img {
+  html.w-motion-ready .w-reveal,
+  html.w-motion-ready .w-reveal-img,
+  html.w-motion-ready .wm-eyebrow,
+  html.w-motion-ready .wm-eyebrow .w-eyebrow-line,
+  html.w-motion-ready .wm-gold-rule,
+  html.w-motion-ready .wm-heading,
+  html.w-motion-ready .wm-desc,
+  html.w-motion-ready .wm-card,
+  html.w-motion-ready .wm-product-card,
+  html.w-motion-ready .wm-product-card .wpc-img,
+  html.w-motion-ready .wm-product-card .wpc-title,
+  html.w-motion-ready .wm-product-card .wpc-code,
+  html.w-motion-ready .wm-img-frame img,
+  html.w-motion-ready .wm-explorer-group,
+  html.w-motion-ready .wm-explorer-swatch,
+  html.w-motion-ready .wm-step-item,
+  html.w-motion-ready .w-footer [data-footer-col],
+  html.w-motion-ready .w-footer-bottom-divider,
+  html.w-motion-ready .w-footer .w-footer-bottom {
     opacity: 1 !important;
     transform: none !important;
+    clip-path: none !important;
     transition: none !important;
+  }
+  .wm-curtain {
+    display: none !important;
+  }
+  [data-wm-parallax] {
+    transform: none !important;
   }
 }
 

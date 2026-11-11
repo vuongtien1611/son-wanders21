@@ -138,7 +138,7 @@ ${renderHead({
     <section class="w-hero-section">
       <div class="absolute inset-0">
         <span class="relative hero-zoom hidden h-full w-full object-cover sm:block" data-base44-image="" data-base44-image-src="./images/base44/2c9aa4c1c_generated_be64a0c2.png">
-          <span class="block relative w-full h-full overflow-hidden">
+          <span class="block relative w-full h-full overflow-hidden" data-wm-parallax="0.18">
             <img class="w-full h-full inset-0 absolute object-cover" alt="Biệt thự hiện đại với tường sơn trắng ngà và khối đất nung" src="./images/base44/2c9aa4c1c_generated_be64a0c2.png">
           </span>
         </span>
@@ -516,9 +516,9 @@ ${renderHead({
           </div>
           <div class="order-1 lg:order-2 w-reveal w-reveal-delay-1">
             <div class="overflow-hidden rounded-[10px] border border-[#D6AD45]/25">
-              <span class="inline-block relative aspect-[16/10] w-full object-cover">
+              <span class="inline-block relative aspect-[16/10] w-full object-cover" data-wm-parallax="0.12">
                 <span class="block relative w-full h-full overflow-hidden">
-                  <img class="w-full h-full inset-0 absolute object-cover w-reveal-img" alt="Không gian colour studio với hệ mẫu màu trung tính" src="./images/base44/f87fca256_generated_6e727af7.png">
+                  <img class="w-full h-full inset-0 absolute object-cover" alt="Không gian colour studio với hệ mẫu màu trung tính" src="./images/base44/f87fca256_generated_6e727af7.png">
                 </span>
               </span>
             </div>
@@ -624,10 +624,10 @@ ${renderHead({
     <section class="border-t border-[#E2DDD2] w-bg-white py-20 lg:py-28">
       <div class="wanders-container">
         <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
-          <div class="relative overflow-hidden rounded-[10px] bg-[#E8E2D5] w-reveal">
-            <span class="inline-block relative aspect-[4/5] w-full object-cover">
+          <div class="relative overflow-hidden rounded-[10px] bg-[#E8E2D5] wm-img-frame" data-wm-curtain="ivory">
+            <span class="inline-block relative aspect-[4/5] w-full object-cover" data-wm-parallax="0.12">
               <span class="block relative w-full h-full overflow-hidden">
-                <img class="w-full h-full inset-0 absolute object-cover w-reveal-img" alt="Thi công sơn lên bề mặt tường kiến trúc" src="./images/base44/b61550fbc_generated_9d16c57c.png">
+                <img class="w-full h-full inset-0 absolute object-cover" alt="Thi công sơn lên bề mặt tường kiến trúc" src="./images/base44/b61550fbc_generated_9d16c57c.png">
               </span>
             </span>
           </div>
@@ -831,21 +831,21 @@ ${renderHead({
             }
             primaryImg.style.transition = 'none';
             primaryImg.style.opacity = '0';
-            primaryImg.style.transform = 'scale(1.025)';
+            primaryImg.style.transform = 'scale(1.04)';
             primaryImg.style.objectPosition = 'center center';
             primaryImg.src = nextSrc;
             primaryImg.alt = nextAlt || '';
             void primaryImg.offsetWidth;
             requestAnimationFrame(() => {
               if (seq !== switchSeq) return;
-              primaryImg.style.transition = 'opacity 440ms cubic-bezier(0.22, 1, 0.36, 1), transform 480ms cubic-bezier(0.22, 1, 0.36, 1)';
+              primaryImg.style.transition = 'opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 580ms cubic-bezier(0.22, 1, 0.36, 1)';
               primaryImg.style.opacity = '1';
               primaryImg.style.transform = 'scale(1)';
               switchTimer = setTimeout(() => {
                 if (seq === switchSeq && imgWrap) {
                   imgWrap.style.backgroundImage = '';
                 }
-              }, 500);
+              }, 600);
             });
           };
 
@@ -905,7 +905,7 @@ ${renderHead({
                 sb.setAttribute('aria-label', 'Chọn màu ' + sw.name);
                 if (!reduced) {
                   sb.classList.remove('is-stagger');
-                  sb.style.animationDelay = (sIdx * 28) + 'ms';
+                  sb.style.animationDelay = (sIdx * 48) + 'ms';
                   void sb.offsetWidth;
                   sb.classList.add('is-stagger');
                 }
@@ -938,12 +938,20 @@ ${renderHead({
             if (activeBar) activeBar.classList.replace('opacity-0', 'opacity-100');
 
             const filter = tab.getAttribute('data-filter') || 'featured';
+            let visIdx = 0;
             catCards.forEach((card) => {
               const show = filter === 'featured'
                 ? card.getAttribute('data-featured') === '1'
                 : card.getAttribute('data-cat') === filter;
               card.style.display = show ? '' : 'none';
+              if (show) {
+                const innerCard = card.querySelector('.sp-product-card') || card;
+                innerCard.classList.remove('is-revealed');
+                innerCard.style.setProperty('--wm-delay', (visIdx * 80) + 'ms');
+                visIdx++;
+              }
             });
+            window.dispatchEvent(new CustomEvent('wanders:refresh-reveals'));
           });
         });
       }
@@ -1326,7 +1334,11 @@ ${renderHead({
           const searchOk = !q || text.includes(q);
           const show = catOk && searchOk;
           card.style.display = show ? '' : 'none';
-          if (show) visible++;
+          if (show) {
+            card.style.setProperty('--wm-delay', (Math.min(visible, 7) * 75) + 'ms');
+            card.classList.add('is-revealed');
+            visible++;
+          }
         });
 
         if (countEl) countEl.textContent = visible + ' sản phẩm';

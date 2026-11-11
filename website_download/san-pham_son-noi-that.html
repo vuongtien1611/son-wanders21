@@ -15,6 +15,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      try {
+        var r = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!r) {
+          document.documentElement.classList.add('w-motion-ready');
+          setTimeout(function () {
+            if (!window.__wandersMotionBooted) {
+              document.documentElement.classList.remove('w-motion-ready');
+            }
+          }, 1500);
+        }
+      } catch (e) {}
+    })();
+  </script>
   <link rel="stylesheet" href="./assets/css/base44.css">
   <link rel="stylesheet" href="./assets/css/wanders_header_dropdown.css">
   <link rel="stylesheet" href="./assets/css/wanders_product_card.css">
@@ -211,7 +226,7 @@
   <footer class="w-footer">
     <div class="wanders-container pt-16 pb-12 lg:pt-20 lg:pb-14">
       <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr] lg:gap-10">
-        <div>
+        <div data-footer-col="0">
           <div>
             <span class="w-footer-logo-badge">
               <img class="w-footer-logo" alt="Logo WANDERS" src="./images/base44/a963c52b6_image.png">
@@ -221,7 +236,7 @@
           <p class="mt-5 text-[12.5px] leading-relaxed text-[#F6F3EC]/55">Lam Điền, Xã Quảng Bị, Thành phố Hà Nội</p>
         </div>
 
-        <div>
+        <div data-footer-col="1">
           <p class="w-footer-heading">Menu</p>
           <ul class="mt-5 space-y-3">
             <li><a class="w-footer-link" href="./gioi-thieu.html">Giới thiệu</a></li>
@@ -232,7 +247,7 @@
           </ul>
         </div>
 
-        <div>
+        <div data-footer-col="2">
           <p class="w-footer-heading">Danh mục sản phẩm</p>
           <ul class="mt-5 space-y-3">
             <li><a class="w-footer-link" href="./san-pham/son-noi-that/index.html">Sơn nội thất</a></li>
@@ -244,7 +259,7 @@
           </ul>
         </div>
 
-        <div>
+        <div data-footer-col="3">
           <p class="w-footer-heading">Liên hệ</p>
           <ul class="mt-5 space-y-3 text-[13.5px] leading-relaxed">
             <li><span class="text-[#F6F3EC]/45 block text-[11px] uppercase tracking-[0.14em]">Hotline</span><a href="tel:0937760688" class="text-[#F6F3EC] font-medium hover:text-[#D6AD45] hover:underline">0937.760.688</a></li>
@@ -255,9 +270,12 @@
         </div>
       </div>
 
-      <div class="mt-14 flex flex-col gap-3 border-t border-[#F6F3EC]/15 pt-7 text-[11.5px] text-[#F6F3EC]/50 sm:flex-row sm:items-center sm:justify-between">
-        <p>© WANDERS. Deine Wand mal anders.</p>
-        <p>Hotline: 0937.760.688 · Email: wanderspaint@gmail.com</p>
+      <div class="w-footer-bottom-wrap mt-14 pt-7 text-[11.5px] text-[#F6F3EC]/50">
+        <span class="w-footer-bottom-divider" aria-hidden="true"></span>
+        <div class="w-footer-bottom flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p>© WANDERS. Deine Wand mal anders.</p>
+          <p>Hotline: 0937.760.688 · Email: wanderspaint@gmail.com</p>
+        </div>
       </div>
     </div>
   </footer>
