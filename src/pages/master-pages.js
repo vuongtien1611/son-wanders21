@@ -1585,7 +1585,7 @@ ${renderHead({
             <h2 class="w-section-title text-[#073B2E]">Gửi yêu cầu tư vấn</h2>
             <p class="mt-3 max-w-[52ch] text-[14.5px] leading-[1.75] text-[#5A6468]">Chỉ mất một phút. Thông tin bạn gửi được lưu lại để WANDERS liên hệ tư vấn trực tiếp.</p>
             <div class="mt-7">
-              <form name="tu-van-wanders" method="POST" action="/lien-he.html" data-netlify="true" netlify-honeypot="bot-field" class="rounded-[10px] border border-[#E2DDD2] bg-white p-6 shadow-sm sm:p-8">
+              <form name="tu-van-wanders" method="POST" action="${prefix}lien-he.html" data-netlify="true" netlify-honeypot="bot-field" class="rounded-[10px] border border-[#E2DDD2] bg-white p-6 shadow-sm sm:p-8">
                 <input type="hidden" name="form-name" value="tu-van-wanders">
                 <p class="hidden" aria-hidden="true"><label>Không điền mục này: <input name="bot-field"></label></p>
                 <div class="space-y-5">
@@ -1701,7 +1701,10 @@ ${renderHead({
         }
 
         try {
-          const isLocalNode = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          const host = window.location.hostname || '';
+          const isLocalNode = host === 'localhost' || host === '127.0.0.1';
+          const isGitHubPages = host === 'github.io' || host.endsWith('.github.io');
+
           if (isLocalNode) {
             const resp = await fetch('/api/contact', {
               method: 'POST',
@@ -1715,6 +1718,29 @@ ${renderHead({
               showStatus('ok', 'Đã tiếp nhận yêu cầu tư vấn (Mã #' + data.id + '). Đội ngũ kỹ thuật WANDERS sẽ liên hệ qua số ' + phone + ' trong giờ làm việc.');
               form.reset();
             }
+          } else if (isGitHubPages) {
+            const subject = encodeURIComponent('[WANDERS] Yêu cầu tư vấn từ ' + full_name);
+            const mailBody = encodeURIComponent(
+              'Họ tên: ' + full_name + '\n' +
+              'Điện thoại: ' + phone + '\n' +
+              'Email: ' + (email || 'Không cung cấp') + '\n' +
+              'Nhu cầu: ' + (need || 'Chưa chọn nhóm cụ thể') + '\n\n' +
+              'Nội dung:\n' + message
+            );
+            const mailtoUrl = 'mailto:wanderspaint@gmail.com?subject=' + subject + '&body=' + mailBody;
+            if (statusBox) {
+              statusBox.classList.remove('hidden');
+              statusBox.style.borderColor = '#D6AD45';
+              statusBox.style.backgroundColor = '#FAF8F3';
+              statusBox.style.color = '#073B2E';
+              statusBox.innerHTML =
+                '<p class="font-semibold text-[#073B2E]">Bản xem trước GitHub Pages không lưu biểu mẫu tự động.</p>' +
+                '<p class="mt-1.5 text-[12.5px] text-[#5A6468]">Thông tin của bạn chưa được gửi lên máy chủ. Vui lòng bấm gửi trực tiếp qua Email hoặc gọi Hotline để đội ngũ kỹ thuật tiếp nhận ngay:</p>' +
+                '<div class="mt-3 flex flex-wrap gap-2.5">' +
+                '<a href="' + mailtoUrl + '" class="inline-flex items-center gap-2 rounded bg-[#073B2E] px-4 py-2 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-[#F6F3EC] hover:bg-[#0F4C3A]">Gửi qua Email</a>' +
+                '<a href="tel:0937760688" class="inline-flex items-center gap-2 rounded border border-[#073B2E] px-4 py-2 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-[#073B2E] hover:bg-[#073B2E] hover:text-[#F6F3EC]">Gọi 0937.760.688</a>' +
+                '</div>';
+            }
           } else {
             const encoded = new URLSearchParams({
               'form-name': 'tu-van-wanders',
@@ -1725,7 +1751,7 @@ ${renderHead({
               need: need || 'Chưa chọn nhóm cụ thể',
               message
             }).toString();
-            const resp = await fetch('/', {
+            const resp = await fetch(form.getAttribute('action') || './', {
               method: 'POST',
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
               body: encoded

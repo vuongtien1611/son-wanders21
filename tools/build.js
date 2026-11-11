@@ -138,7 +138,8 @@ ${urls.map((u) => `  <url><loc>${base}${u}</loc></url>`).join('\n')}
 </urlset>
 `;
   fs.writeFileSync(path.join(OUT_DIR, 'sitemap.xml'), xml, 'utf8');
-  console.log('Generated: pages_index.json, robots.txt, sitemap.xml (' + urls.length + ' URLs)');
+  fs.writeFileSync(path.join(OUT_DIR, '.nojekyll'), '', 'utf8');
+  console.log('Generated: pages_index.json, robots.txt, sitemap.xml (' + urls.length + ' URLs), .nojekyll');
 }
 
 function runBuild() {
