@@ -1720,13 +1720,16 @@ ${renderHead({
             }
           } else if (isGitHubPages) {
             const subject = encodeURIComponent('[WANDERS] Yêu cầu tư vấn từ ' + full_name);
-            const mailBody = encodeURIComponent(
-              'Họ tên: ' + full_name + '\n' +
-              'Điện thoại: ' + phone + '\n' +
-              'Email: ' + (email || 'Không cung cấp') + '\n' +
-              'Nhu cầu: ' + (need || 'Chưa chọn nhóm cụ thể') + '\n\n' +
-              'Nội dung:\n' + message
-            );
+            const nl = String.fromCharCode(10);
+            const mailBody = encodeURIComponent([
+              'Họ tên: ' + full_name,
+              'Điện thoại: ' + phone,
+              'Email: ' + (email || 'Không cung cấp'),
+              'Nhu cầu: ' + (need || 'Chưa chọn nhóm cụ thể'),
+              '',
+              'Nội dung:',
+              message
+            ].join(nl));
             const mailtoUrl = 'mailto:wanderspaint@gmail.com?subject=' + subject + '&body=' + mailBody;
             if (statusBox) {
               statusBox.classList.remove('hidden');
