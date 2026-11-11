@@ -23,6 +23,9 @@
     '.wm-explorer-group',
     '.wm-explorer-swatch',
     '.wm-step-item',
+    '.w-about-philo-item',
+    '.w-about-sol-row',
+    '.w-about-value-item',
     'footer.w-footer',
   ].join(', ');
 
@@ -100,8 +103,11 @@
 
     var sections = Array.prototype.slice.call(main.querySelectorAll('section'));
     sections.forEach(function (sec) {
-      if (sec.classList.contains('w-hero-section') || sec.classList.contains('color-hero-section')) {
-        var heroBg = sec.querySelector('.absolute.inset-0 > span');
+      if (sec.classList.contains('w-hero-section') || sec.classList.contains('color-hero-section') || sec.classList.contains('w-about-hero')) {
+        if (sec.classList.contains('w-about-hero')) {
+          requestAnimationFrame(function () { sec.classList.add('is-ready'); });
+        }
+        var heroBg = sec.querySelector('.absolute.inset-0 > span, .w-about-hero-bg > span');
         if (heroBg && !heroBg.hasAttribute('data-wm-parallax')) {
           heroBg.setAttribute('data-wm-parallax', '0.16');
         }
@@ -110,7 +116,7 @@
 
       // Promote heading + eyebrow + lead description inside headers
       var headings = Array.prototype.slice.call(
-        sec.querySelectorAll('h2.w-section-title, h2.w-subhero-title, h1.w-subhero-title')
+        sec.querySelectorAll('h2.w-section-title, h2.w-subhero-title, h1.w-subhero-title, h2.w-about-h2')
       );
       headings.forEach(function (h) {
         if (h.closest('#wandersLightbox')) return;
@@ -212,14 +218,16 @@
         injectCurtainFrame(fr);
       });
 
-      // Why WANDERS numbered list items & Gioi-thieu 3-column pillar items
-      var listSteps = Array.prototype.slice.call(sec.querySelectorAll('ol > li'));
-      listSteps.forEach(function (li) {
-        var wrap = li.closest('.w-reveal');
+      // Numbered list items, Philosophy rows, Solutions rows, Value pillars -> wm-step-item
+      var stepItems = Array.prototype.slice.call(
+        sec.querySelectorAll('ol > li, .w-about-philo-item, .w-about-sol-row, .w-about-value-item')
+      );
+      stepItems.forEach(function (item) {
+        var wrap = item.closest('.w-reveal');
         if (wrap && wrap.querySelectorAll('h2').length === 0) {
           stripParentRevealWrapper(wrap);
         }
-        li.classList.add('wm-step-item');
+        item.classList.add('wm-step-item');
       });
     });
 

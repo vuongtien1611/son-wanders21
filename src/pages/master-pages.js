@@ -1030,128 +1030,128 @@ ${renderHead({
 
 // ============================================================================
 // 2. GIOI-THIEU (gioi-thieu.html & gioi-thieu/index.html)
+//    CINEMATIC LUXURY ARCHITECTURAL PAINT · BRAND STORY EXPERIENCE
 // ============================================================================
 function buildGioiThieuHtml(prefix) {
+  const aboutImg = (file) => `${prefix}images/about-us/${file}`;
+  const solutions = [
+    {
+      num: '01',
+      name: 'Sơn nội thất',
+      desc: 'Lớp sơn mịn, êm dịu ánh nhìn và dễ lau chùi cho phòng khách, phòng ngủ và không gian sinh hoạt.',
+      href: `${prefix}san-pham/son-noi-that/index.html`,
+    },
+    {
+      num: '02',
+      name: 'Sơn ngoại thất',
+      desc: 'Giải pháp bảo vệ bề mặt mặt tiền, ban công và tường bao trước nắng mưa và bức xạ ngoài trời.',
+      href: `${prefix}san-pham/son-ngoai-that/index.html`,
+    },
+    {
+      num: '03',
+      name: 'Sơn chống thấm',
+      desc: 'Hệ thống chống thấm giúp ngăn ẩm thấm cho tường đứng, sân thượng, sê nô và khu vực ẩm ướt.',
+      href: `${prefix}san-pham/son-chong-tham/index.html`,
+    },
+    {
+      num: '04',
+      name: 'Sơn lót',
+      desc: 'Lớp lót trung gian tạo nền đồng đều, tăng độ kết nối bề mặt và ổn định sắc độ cho lớp phủ hoàn thiện.',
+      href: `${prefix}san-pham/son-lot/index.html`,
+    },
+    {
+      num: '05',
+      name: 'Sơn chống nóng',
+      desc: 'Giải pháp phủ chuyên biệt cho mái và tường hướng nắng nhằm hỗ trợ giảm hấp thụ nhiệt bề mặt.',
+      href: `${prefix}san-pham/son-chong-nong/index.html`,
+    },
+    {
+      num: '06',
+      name: 'Sản phẩm khác',
+      desc: 'Bột bả làm phẳng, lớp phủ bảo vệ, sơn nhũ và phụ gia hỗ trợ hoàn thiện chi tiết công trình.',
+      href: `${prefix}san-pham/san-pham-khac/index.html`,
+    },
+  ];
+
+  const solutionsHtml = solutions
+    .map(
+      (s) => `
+            <a class="w-about-sol-row group" href="${s.href}">
+              <div class="flex items-start gap-5 sm:items-center sm:gap-7">
+                <span class="font-mono text-[12px] font-semibold tracking-[0.14em] text-[#D6AD45]">${s.num}</span>
+                <div>
+                  <h3 class="text-[19px] font-semibold text-[#073B2E] transition-colors duration-200 group-hover:text-[#0F4C3A] sm:text-[22px]">${escapeHtml(s.name)}</h3>
+                  <p class="mt-1.5 max-w-[50ch] text-[14px] leading-relaxed text-[#5A6468]">${escapeHtml(s.desc)}</p>
+                </div>
+              </div>
+              <span class="w-about-sol-arrow" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </span>
+            </a>`
+    )
+    .join('\n');
+
+  const craftSwatches = [
+    { hex: '#F1ECE0', name: 'Trắng ngà' },
+    { hex: '#DFD0B8', name: 'Cát ấm' },
+    { hex: '#B7BEA3', name: 'Xô thơm mộc' },
+    { hex: '#C58A63', name: 'Ánh đất nung' },
+    { hex: '#637C87', name: 'Xanh thép' },
+  ];
+
+  const craftSwatchesHtml = craftSwatches
+    .map(
+      (sw) => `
+              <div>
+                <div class="w-about-swatch-chip" style="background-color:${sw.hex}" title="${escapeHtml(sw.name)} (${sw.hex})"></div>
+                <p class="mt-2 font-mono text-[10.5px] font-medium text-[#5A6468]">${sw.hex}</p>
+                <p class="mt-0.5 text-[11px] text-[#273238]/75">${escapeHtml(sw.name)}</p>
+              </div>`
+    )
+    .join('\n');
+
   return `<!DOCTYPE html>
 <html lang="vi">
 ${renderHead({
   prefix,
-  title: 'Giới thiệu WANDERS — Deine Wand mal anders',
-  description: 'Khám phá WANDERS: định hướng màu sắc, định hướng sản phẩm và giải pháp sơn kiến trúc hiện đại.',
-  ogImage: 'images/base44/2c9aa4c1c_generated_be64a0c2.png',
+  title: 'Giới thiệu WANDERS — The Art of Color',
+  description: 'WANDERS – Khi màu sắc trở thành dấu ấn không gian. Giải pháp sơn kiến trúc, triết lý màu sắc và cảm hứng hoàn thiện bề mặt.',
+  ogImage: 'images/about-us/ChatGPT Image Nov 11, 2026, 05_02_25 PM-1.png',
   canonicalPath: 'gioi-thieu.html',
 })}
 <body class="font-body antialiased">
   ${renderHeader(prefix, 'gioi-thieu')}
 
   <main>
-    <section class="w-hero-section">
-      <div class="absolute inset-0">
-        <span class="inline-block relative h-full w-full object-cover">
-          <span class="block relative w-full h-full overflow-hidden">
-            <img class="w-full h-full inset-0 absolute object-cover" alt="Khám phá WANDERS" src="${prefix}images/base44/f87fca256_generated_6e727af7.png">
-          </span>
+    <!-- ============================================================ -->
+    <!-- SECTION 01: CINEMATIC HERO                                   -->
+    <!-- ============================================================ -->
+    <section class="w-about-hero">
+      <div class="w-about-hero-bg">
+        <span class="block relative h-full w-full overflow-hidden">
+          <img class="w-about-hero-img" width="1672" height="941" alt="Không gian phòng khách WANDERS với tường xanh Forest Green và mảng đất nung" src="${aboutImg('ChatGPT Image Nov 11, 2026, 05_02_25 PM-1.png')}">
         </span>
-        <div class="w-subhero-overlay"></div>
+        <div class="w-about-hero-scrim"></div>
       </div>
-      <div class="wanders-container relative z-10 flex flex-col justify-end pb-14 pt-24 min-h-[400px] lg:min-h-[480px]">
-        <p class="w-eyebrow w-eyebrow--light w-hero-stagger w-hero-stagger--1"><span class="w-eyebrow-line"></span>About Wanders</p>
-        <h1 class="w-subhero-title mt-5 max-w-[24ch] text-white w-hero-stagger w-hero-stagger--2">Khám phá WANDERS</h1>
-        <p class="mt-4 max-w-[54ch] text-[15px] leading-[1.75] text-[#F6F3EC]/85 sm:text-[16px] w-hero-stagger w-hero-stagger--3">Một thương hiệu sơn được xây quanh ý niệm: màu sắc là vật liệu định hình cảm giác sống, không chỉ là lớp phủ cuối cùng.</p>
-      </div>
-    </section>
 
-    <!-- Editorial Story Block (Warm Ivory #F6F3EC) -->
-    <section class="w-bg-ivory py-16 lg:py-24">
-      <div class="wanders-container">
-        <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 w-reveal">
-          <div>
-            <p class="w-eyebrow"><span class="w-eyebrow-line"></span>Câu chuyện</p>
-            <h2 class="w-section-title mt-5 text-[#073B2E]">Bắt đầu từ một bức tường</h2>
-            <div class="w-gold-rule mt-5"></div>
-          </div>
-          <div class="space-y-5 text-[15.5px] leading-[1.85] text-[#273238]/88">
-            <p>WANDERS ra đời từ quan sát đơn giản: rất nhiều công trình được thiết kế rất kỹ ở phần hình khối, nhưng lại quyết định màu sơn vào phút cuối. Chúng tôi muốn đưa việc chọn màu trở lại đúng vị trí của nó — một bước thiết kế, không phải một bước mua vật tư.</p>
-            <p>Vì vậy website này được tổ chức quanh màu sắc trước, sản phẩm sau. Mỗi nhóm màu đi kèm bối cảnh sử dụng, mỗi sản phẩm đi kèm vai trò trong cấu tạo bề mặt. Tagline gốc <em>Deine Wand mal anders</em> — "bức tường của bạn, một cách khác" — là tiêu chí cho mọi lựa chọn thiết kế.</p>
-          </div>
-        </div>
-
-        <div class="mt-14 grid gap-6 sm:grid-cols-2 w-reveal w-reveal-delay-1">
-          <figure>
-            <div class="overflow-hidden rounded-[10px] border border-[#E2DDD2] bg-[#E8E2D5]">
-              <span class="inline-block relative aspect-[4/3] w-full object-cover">
-                <span class="block relative w-full h-full overflow-hidden">
-                  <img class="w-full h-full inset-0 absolute object-cover w-reveal-img" alt="Không gian colour studio với hệ mẫu màu" src="${prefix}images/base44/f87fca256_generated_6e727af7.png">
-                </span>
-              </span>
-            </div>
-            <figcaption class="mt-3.5 flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-[#5A6468]">
-              <span class="font-semibold text-[#073B2E]">Colour studio</span>
-              <span>Không gian trưng bày màu sắc</span>
-            </figcaption>
-          </figure>
-          <figure>
-            <div class="overflow-hidden rounded-[10px] border border-[#E2DDD2] bg-[#E8E2D5]">
-              <span class="inline-block relative aspect-[4/3] w-full object-cover">
-                <span class="block relative w-full h-full overflow-hidden">
-                  <img class="w-full h-full inset-0 absolute object-cover w-reveal-img" alt="Khu vực pha màu trong phòng thí nghiệm" src="${prefix}images/base44/91ce1fd3b_generated_b88649b8.png">
-                </span>
-              </span>
-            </div>
-            <figcaption class="mt-3.5 flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-[#5A6468]">
-              <span class="font-semibold text-[#073B2E]">Khu pha màu</span>
-              <span>Kiểm định sắc độ chuẩn</span>
-            </figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- Brand Pillars (White #FFFFFF) -->
-    <section class="border-t border-[#E2DDD2] w-bg-white py-16 lg:py-24">
-      <div class="wanders-container">
-        <div class="w-reveal">
-          <p class="w-eyebrow"><span class="w-eyebrow-line"></span>Định hướng chất lượng</p>
-          <h2 class="w-section-title mt-4 text-[#073B2E]">Ba trụ cột thiết kế và vật liệu</h2>
-        </div>
-
-        <div class="mt-10 grid gap-8 border-t border-[#E2DDD2] pt-10 md:grid-cols-3 md:gap-10 w-reveal w-reveal-delay-1">
-          <div>
-            <p class="font-mono text-[11.5px] font-bold text-[#D6AD45]">01</p>
-            <h3 class="mt-3 text-[18px] font-semibold text-[#073B2E]">Định hướng màu sắc</h3>
-            <p class="mt-3 text-[14.5px] leading-[1.75] text-[#5A6468]">Xây dựng một hệ màu có thể sử dụng xuyên suốt từ phác thảo thiết kế, mẫu thử tại công trình đến lớp phủ hoàn thiện.</p>
-          </div>
-          <div>
-            <p class="font-mono text-[11.5px] font-bold text-[#D6AD45]">02</p>
-            <h3 class="mt-3 text-[18px] font-semibold text-[#073B2E]">Định hướng sản phẩm</h3>
-            <p class="mt-3 text-[14.5px] leading-[1.75] text-[#5A6468]">Danh mục được tổ chức theo bề mặt và điều kiện khí hậu, để mỗi lớp sơn có một vai trò rõ ràng trong cấu tạo tường.</p>
-          </div>
-          <div>
-            <p class="font-mono text-[11.5px] font-bold text-[#D6AD45]">03</p>
-            <h3 class="mt-3 text-[18px] font-semibold text-[#073B2E]">Định hướng hợp tác</h3>
-            <p class="mt-3 text-[14.5px] leading-[1.75] text-[#5A6468]">Làm việc cùng kiến trúc sư, đơn vị thi công và nhà phân phối nhằm giữ đúng màu và đúng kỹ thuật tại công trình.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Brand Material Focus Band (Deep Forest Green Accent) -->
-    <section class="w-forest-story py-16 lg:py-20">
-      <div class="wanders-container">
-        <div class="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-16 w-reveal">
-          <div>
-            <p class="w-eyebrow w-eyebrow--light"><span class="w-eyebrow-line"></span>Tiêu chuẩn ứng dụng</p>
-            <h2 class="w-section-title mt-4 text-[#F6F3EC]">Màu sắc chuẩn xác trên từng lớp vật liệu</h2>
-            <div class="w-gold-rule mt-5"></div>
-            <p class="mt-5 max-w-[54ch] text-[15.5px] leading-[1.8] text-[#F6F3EC]/82">Từ hệ Color Studio 120 mã chuẩn đến 24 dòng sơn chuyên biệt cho nội thất, ngoại thất, chống thấm và chống nóng — mọi cấu phần đều hướng đến độ bền màu và chiều sâu thẩm mỹ lâu dài.</p>
-          </div>
-          <div class="flex flex-col gap-3.5 sm:flex-row lg:justify-end">
-            <a class="w-btn w-btn-gold" href="${prefix}bang-mau.html">
-              <span>Tra cứu Color Studio</span>
+      <div class="wanders-container w-about-hero-inner">
+        <div class="w-about-hero-content">
+          <p class="w-eyebrow w-eyebrow--light w-about-hero-stagger w-about-hero-stagger--1">
+            <span class="w-eyebrow-line"></span>WANDERS · THE ART OF COLOR
+          </p>
+          <h1 class="w-about-hero-h1 mt-6 w-about-hero-stagger w-about-hero-stagger--2">
+            WANDERS – Khi màu sắc trở thành dấu ấn không gian.
+          </h1>
+          <p class="mt-6 max-w-[48ch] text-[15.5px] leading-[1.8] text-[#F6F3EC]/88 sm:text-[16.5px] w-about-hero-stagger w-about-hero-stagger--3">
+            WANDERS mang đến những giải pháp sơn và cảm hứng màu sắc, góp phần kiến tạo không gian sống giàu cá tính, hài hòa và bền đẹp theo thời gian.
+          </p>
+          <div class="mt-9 flex flex-col gap-3.5 sm:flex-row sm:items-center w-about-hero-stagger w-about-hero-stagger--4">
+            <a class="w-btn w-btn-gold" href="${prefix}san-pham.html">
+              <span>Khám phá sản phẩm</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
             </a>
-            <a class="w-btn w-btn-glass" href="${prefix}san-pham.html">
-              <span>Xem 24 sản phẩm</span>
+            <a class="w-btn w-btn-glass" href="${prefix}bang-mau.html">
+              <span>Khám phá bảng màu</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
             </a>
           </div>
@@ -1159,19 +1159,283 @@ ${renderHead({
       </div>
     </section>
 
-    <!-- Warm Ivory Consultation Strip before Footer or direct CTA -->
-    <section class="w-bg-ivory py-14 lg:py-16">
-      <div class="wanders-container flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between w-reveal">
-        <div>
-          <p class="w-eyebrow"><span class="w-eyebrow-line"></span>Đồng hành công trình</p>
-          <p class="mt-3 text-[16px] font-medium text-[#073B2E]">Liên hệ trực tiếp để nhận tư vấn chọn sơn, định mức thi công và mẫu màu thực tế.</p>
+    <!-- ============================================================ -->
+    <!-- SECTION 02: CÂU CHUYỆN WANDERS (Warm Ivory #F6F3EC)          -->
+    <!-- ============================================================ -->
+    <section class="w-bg-ivory w-about-section">
+      <div class="wanders-container">
+        <div class="w-about-split-45-55">
+          <div>
+            <p class="w-eyebrow"><span class="w-eyebrow-line"></span>Our Story</p>
+            <h2 class="w-about-h2 mt-5 text-[#073B2E]">Không chỉ là sơn. Đó là cách chúng ta cảm nhận không gian.</h2>
+            <div class="w-gold-rule mt-6"></div>
+            <div class="mt-6 space-y-5 text-[15.5px] leading-[1.85] text-[#273238]/88 w-reveal">
+              <p>Mỗi không gian đều có một câu chuyện riêng. WANDERS tin rằng màu sắc không chỉ hoàn thiện bề mặt kiến trúc mà còn góp phần thể hiện cá tính, cảm xúc và phong cách sống.</p>
+              <p>Với định hướng <em>Deine Wand mal anders</em> — “bức tường của bạn, một cách khác” — chúng tôi tổ chức hệ thống màu sắc gắn liền với ánh sáng và chất liệu thật, giúp mỗi công trình định hình rõ dấu ấn thẩm mỹ từ những phác thảo đầu tiên.</p>
+            </div>
+            <blockquote class="w-about-quote w-reveal w-reveal-delay-1">
+              <p class="w-about-quote-text">“Mỗi bức tường, một dấu ấn riêng.”</p>
+            </blockquote>
+          </div>
+
+          <div>
+            <div class="w-about-media-card w-about-zoom-hover wm-img-frame" data-wm-curtain="ivory" data-wm-curtain-dir="rtl">
+              <span class="block relative aspect-[4/3] w-full overflow-hidden">
+                <img decoding="async" width="1448" height="1086" class="w-full h-full inset-0 absolute object-cover" alt="Không gian trưng bày bảng màu và vật liệu cao cấp WANDERS" src="${aboutImg('ChatGPT Image Nov 11, 2026, 05_02_27 PM-2.png')}">
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="flex flex-wrap items-center gap-4 shrink-0">
-          <a href="tel:0937760688" class="text-[14px] font-semibold text-[#073B2E] hover:text-[#0F4C3A]">Hotline: 0937.760.688</a>
-          <a class="w-btn w-btn-forest" href="${prefix}lien-he.html">
-            <span>Liên hệ tư vấn</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-          </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 03: TRIẾT LÝ MÀU SẮC (Deep Forest Green #073B2E)     -->
+    <!-- ============================================================ -->
+    <section class="w-forest-story w-about-section">
+      <div class="wanders-container relative z-10">
+        <div class="w-about-split-asym">
+          <div>
+            <div class="w-about-media-card w-about-media-card--dark w-about-zoom-hover wm-img-frame" data-wm-curtain="forest">
+              <span class="block relative aspect-[4/3] w-full overflow-hidden">
+                <img decoding="async" width="1448" height="1086" class="w-full h-full inset-0 absolute object-cover" alt="Phòng khách kiến trúc vòm với sắc xanh Forest Green trầm lắng" src="${aboutImg('ChatGPT Image Nov 11, 2026, 05_02_29 PM-3.png')}">
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <p class="w-eyebrow w-eyebrow--light"><span class="w-eyebrow-line"></span>Color Philosophy</p>
+            <h2 class="w-about-h2 mt-5 text-[#F6F3EC]">Màu sắc là ngôn ngữ của kiến trúc.</h2>
+            <div class="w-about-philo-list mt-8">
+              <div class="w-about-philo-item">
+                <span class="font-mono text-[13px] font-semibold tracking-[0.14em] text-[#D6AD45]">01</span>
+                <div>
+                  <h3 class="text-[21px] font-semibold text-[#F6F3EC]" style="font-family:var(--w-font-display);">Cảm xúc</h3>
+                  <p class="mt-2 text-[15px] leading-[1.78] text-[#F6F3EC]/80">Mỗi gam màu góp phần định hình cảm xúc và bầu không khí trong không gian sống.</p>
+                </div>
+              </div>
+              <div class="w-about-philo-item">
+                <span class="font-mono text-[13px] font-semibold tracking-[0.14em] text-[#D6AD45]">02</span>
+                <div>
+                  <h3 class="text-[21px] font-semibold text-[#F6F3EC]" style="font-family:var(--w-font-display);">Cá tính</h3>
+                  <p class="mt-2 text-[15px] leading-[1.78] text-[#F6F3EC]/80">Màu sắc giúp mỗi công trình thể hiện ngôn ngữ thẩm mỹ và dấu ấn riêng.</p>
+                </div>
+              </div>
+              <div class="w-about-philo-item">
+                <span class="font-mono text-[13px] font-semibold tracking-[0.14em] text-[#D6AD45]">03</span>
+                <div>
+                  <h3 class="text-[21px] font-semibold text-[#F6F3EC]" style="font-family:var(--w-font-display);">Sự hài hòa</h3>
+                  <p class="mt-2 text-[15px] leading-[1.78] text-[#F6F3EC]/80">Sự phối hợp giữa màu sắc, vật liệu và ánh sáng tạo nên một tổng thể cân bằng.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 04: GIẢI PHÁP SƠN TOÀN DIỆN (White #FFFFFF)          -->
+    <!-- ============================================================ -->
+    <section class="w-bg-white w-about-section">
+      <div class="wanders-container">
+        <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-12">
+          <div class="max-w-[640px]">
+            <p class="w-eyebrow"><span class="w-eyebrow-line"></span>Product Systems</p>
+            <h2 class="w-about-h2 mt-4 text-[#073B2E]">Giải pháp hoàn thiện cho mọi không gian.</h2>
+          </div>
+          <p class="max-w-[400px] text-[15.5px] leading-[1.75] text-[#5A6468]">Danh mục 6 nhóm sản phẩm WANDERS được phân chia theo từng bề mặt và mục đích sử dụng thực tế của công trình.</p>
+        </div>
+
+        <div class="mt-12 grid gap-12 lg:mt-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-16">
+          <div class="w-about-sticky-visual">
+            <div class="w-about-media-card w-about-zoom-hover wm-img-frame" data-wm-curtain="white">
+              <span class="block relative aspect-[4/3] w-full overflow-hidden">
+                <img decoding="async" width="1448" height="1086" class="w-full h-full inset-0 absolute object-cover" alt="Biệt thự hiện đại với tường trắng ngà, đất nung và cảnh quan hồ nước" src="${aboutImg('ChatGPT Image Nov 11, 2026, 05_02_31 PM-4.png')}">
+              </span>
+            </div>
+            <p class="mt-3.5 text-[12px] tracking-[0.06em] text-[#5A6468]">Phối cảnh minh họa định hướng sắc độ trắng ngà &amp; đất nung WANDERS trong kiến trúc đương đại.</p>
+          </div>
+
+          <div class="w-about-sol-list">
+            ${solutionsHtml}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 05: NGHỆ THUẬT HOÀN THIỆN BỀ MẶT (Warm Ivory)        -->
+    <!-- ============================================================ -->
+    <section class="border-t border-[#E2DDD2] w-bg-ivory w-about-section">
+      <div class="wanders-container">
+        <div class="w-about-split-55-45">
+          <div>
+            <div class="w-about-media-card w-about-zoom-hover wm-img-frame" data-wm-curtain="ivory">
+              <span class="block relative aspect-[3/4] max-h-[660px] w-full overflow-hidden" data-wm-parallax="0.12">
+                <img decoding="async" width="1086" height="1448" class="w-full h-full inset-0 absolute object-cover" alt="Cận cảnh bề mặt sơn xanh Sage bên khung cửa gỗ và nắng tự nhiên" src="${aboutImg('ChatGPT Image Nov 11, 2026, 05_02_32 PM-5.png')}">
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <p class="w-eyebrow"><span class="w-eyebrow-line"></span>Material &amp; Finish</p>
+            <h2 class="w-about-h2 mt-5 text-[#073B2E]">Vẻ đẹp bắt đầu từ từng chi tiết.</h2>
+            <p class="mt-5 text-[15.5px] leading-[1.82] text-[#273238]/88 w-reveal">Ánh sáng tự nhiên thay đổi theo từng khung giờ, làm mỗi lớp hoàn thiện hiện lên một sắc thái khác nhau. Sự tinh tế của bức tường đến từ cách màu sơn đối thoại cùng bề mặt vật liệu xung quanh.</p>
+
+            <ol class="mt-8 divide-y divide-[#E2DDD2] border-t border-[#E2DDD2]">
+              <li class="py-5">
+                <h3 class="text-[17px] font-semibold text-[#073B2E]">Sắc độ và ánh sáng</h3>
+                <p class="mt-1.5 text-[14.5px] leading-[1.72] text-[#5A6468]">Mỗi gam màu được cân nhắc trong mối liên hệ với nắng sớm, bóng râm và hệ đèn nội thất để giữ vẻ dịu mắt xuyên suốt cả ngày.</p>
+              </li>
+              <li class="py-5">
+                <h3 class="text-[17px] font-semibold text-[#073B2E]">Bề mặt và cảm giác vật liệu</h3>
+                <p class="mt-1.5 text-[14.5px] leading-[1.72] text-[#5A6468]">Sự khác biệt giữa bề mặt mờ mịn và độ ánh bóng tinh giản tạo nên chiều sâu thị giác phù hợp với từng không gian sinh hoạt.</p>
+              </li>
+              <li class="py-5">
+                <h3 class="text-[17px] font-semibold text-[#073B2E]">Sự hài hòa với kiến trúc</h3>
+                <p class="mt-1.5 text-[14.5px] leading-[1.72] text-[#5A6468]">Màu sơn kết nối tự nhiên cùng gỗ mộc, đá hoàn thiện và cảnh quan xanh, giữ sự cân đối tổng thể cho công trình.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 06: CẢM HỨNG TỪ CHẤT LIỆU VÀ MÀU SƠN (White)        -->
+    <!-- ============================================================ -->
+    <section class="w-bg-white w-about-section">
+      <div class="wanders-container">
+        <div class="w-about-split-45-55">
+          <div>
+            <p class="w-eyebrow"><span class="w-eyebrow-line"></span>Craft &amp; Inspiration</p>
+            <h2 class="w-about-h2 mt-5 text-[#073B2E]">Từ sắc màu đến cảm hứng sáng tạo.</h2>
+            <p class="mt-5 text-[15.5px] leading-[1.82] text-[#273238]/88 w-reveal">Từ bảng phối tham khảo trên bàn thiết kế đến sắc tường hoàn thiện, Color Studio giúp kiến trúc sư và gia chủ thử nghiệm trực quan 120 sắc độ chuẩn trong bộ sưu tập WANDERS.</p>
+
+            <div class="mt-8 w-reveal w-reveal-delay-1">
+              <p class="text-[10.5px] font-semibold uppercase tracking-[0.22em] text-[#073B2E]">Sắc độ tham khảo từ bảng màu</p>
+              <div class="w-about-swatches mt-3.5">
+                ${craftSwatchesHtml}
+              </div>
+            </div>
+
+            <div class="mt-9 w-reveal w-reveal-delay-2">
+              <a class="w-btn w-btn-forest" href="${prefix}bang-mau.html">
+                <span>Khám phá bảng màu WANDERS</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <div class="w-about-media-card w-about-zoom-hover wm-img-frame" data-wm-curtain="white">
+              <span class="block relative aspect-[4/3] w-full overflow-hidden">
+                <img decoding="async" width="1448" height="1086" class="w-full h-full inset-0 absolute object-cover" alt="Bảng mẫu sơn, sắc tố màu và dụng cụ hoàn thiện bề mặt" src="${aboutImg('ChatGPT Image Nov 11, 2026, 05_02_34 PM-6.png')}">
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 07: CAM KẾT THƯƠNG HIỆU (Warm Ivory #F6F3EC)         -->
+    <!-- ============================================================ -->
+    <section class="border-t border-[#E2DDD2] w-bg-ivory w-about-section">
+      <div class="wanders-container">
+        <div class="max-w-[680px]">
+          <p class="w-eyebrow"><span class="w-eyebrow-line"></span>Brand Commitment</p>
+          <h2 class="w-about-h2 mt-4 text-[#073B2E]">Những giá trị WANDERS hướng tới.</h2>
+        </div>
+
+        <div class="w-about-values-grid mt-12">
+          <div class="w-about-value-item">
+            <div class="flex items-center justify-between gap-4">
+              <span class="w-about-value-num">01</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#073B2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path></svg>
+            </div>
+            <h3 class="mt-5 text-[18px] font-semibold text-[#073B2E]">Chú trọng chất lượng</h3>
+            <p class="mt-2.5 text-[14.5px] leading-[1.75] text-[#5A6468]">Tập trung vào tính ổn định của từng lớp sơn từ xử lý bề mặt, lớp lót đến lớp phủ hoàn thiện.</p>
+          </div>
+
+          <div class="w-about-value-item">
+            <div class="flex items-center justify-between gap-4">
+              <span class="w-about-value-num">02</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#073B2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="#073B2E"></circle><circle cx="17.5" cy="10.5" r=".5" fill="#073B2E"></circle><circle cx="8.5" cy="7.5" r=".5" fill="#073B2E"></circle><circle cx="6.5" cy="12.5" r=".5" fill="#073B2E"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
+            </div>
+            <h3 class="mt-5 text-[18px] font-semibold text-[#073B2E]">Đề cao thẩm mỹ</h3>
+            <p class="mt-2.5 text-[14.5px] leading-[1.75] text-[#5A6468]">Ưu tiên các bảng màu giàu chiều sâu, dịu mắt và dễ kết hợp với vật liệu kiến trúc hiện đại.</p>
+          </div>
+
+          <div class="w-about-value-item">
+            <div class="flex items-center justify-between gap-4">
+              <span class="w-about-value-num">03</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#073B2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </div>
+            <h3 class="mt-5 text-[18px] font-semibold text-[#073B2E]">Đa dạng giải pháp</h3>
+            <p class="mt-2.5 text-[14.5px] leading-[1.75] text-[#5A6468]">Đáp ứng đầy đủ 6 nhóm ứng dụng từ nội thất, ngoại thất đến chống thấm, sơn lót và chống nóng.</p>
+          </div>
+
+          <div class="w-about-value-item">
+            <div class="flex items-center justify-between gap-4">
+              <span class="w-about-value-num">04</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#073B2E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <h3 class="mt-5 text-[18px] font-semibold text-[#073B2E]">Đồng hành cùng khách hàng</h3>
+            <p class="mt-2.5 text-[14.5px] leading-[1.75] text-[#5A6468]">Hỗ trợ tư vấn chọn màu sắc, định hướng bề mặt và đồng hành cùng kiến trúc sư lẫn gia chủ.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 08: LIÊN HỆ & CTA (Deep Forest Green #073B2E)        -->
+    <!-- ============================================================ -->
+    <section class="w-cta-band w-about-section">
+      <div class="w-cta-ribbon" aria-hidden="true">
+        <svg viewBox="0 0 1440 360" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="wAboutCtaWave" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#0F4C3A" stop-opacity="0" />
+              <stop offset="45%" stop-color="#196850" stop-opacity="0.7" />
+              <stop offset="85%" stop-color="#D6AD45" stop-opacity="0.35" />
+              <stop offset="100%" stop-color="#D6AD45" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <path d="M-40,295 C260,210 520,335 840,240 C1120,155 1290,220 1480,145 L1480,360 L-40,360 Z" fill="url(#wAboutCtaWave)" />
+          <path d="M-40,295 C260,210 520,335 840,240 C1120,155 1290,220 1480,145" fill="none" stroke="#D6AD45" stroke-width="1.2" stroke-opacity="0.45" />
+        </svg>
+      </div>
+
+      <div class="wanders-container relative z-10">
+        <div class="grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-end lg:gap-16">
+          <div>
+            <p class="w-eyebrow w-eyebrow--light"><span class="w-eyebrow-line"></span>Kết nối cùng WANDERS</p>
+            <h2 class="w-about-h2 mt-5 max-w-[22ch] text-[#F6F3EC]">Cùng WANDERS kiến tạo không gian sống mang dấu ấn riêng.</h2>
+            <div class="w-gold-rule mt-6"></div>
+            <p class="mt-6 max-w-[50ch] text-[15.5px] leading-[1.8] text-[#F6F3EC]/82 w-reveal">Liên hệ đội ngũ WANDERS để được tư vấn định hướng màu sắc, chọn hệ sơn phù hợp với từng bề mặt và nhận hỗ trợ trực tiếp cho công trình của bạn.</p>
+
+            <div class="mt-9 flex flex-col gap-3.5 sm:flex-row sm:items-center w-reveal w-reveal-delay-1">
+              <a class="w-btn w-btn-gold" href="${prefix}lien-he.html">
+                <span>Tư vấn chọn sơn</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </a>
+              <a class="w-btn w-btn-glass" href="tel:0937760688">
+                <span>Gọi 0937.760.688</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="border-t border-[#D6AD45]/30 pt-7 text-[14px] leading-relaxed text-[#F6F3EC]/85 lg:border-t-0 lg:border-l lg:border-[#D6AD45]/30 lg:pl-10 lg:pt-0 w-reveal w-reveal-delay-2">
+            <p class="text-[10.5px] font-semibold uppercase tracking-[0.22em] text-[#E8CA7A]">Thông tin liên hệ chính thức</p>
+            <div class="mt-4 space-y-2.5">
+              <p><span class="text-[#F6F3EC]/55">Hotline:</span> <a href="tel:0937760688" class="font-semibold text-[#E8CA7A] hover:underline">0937.760.688</a></p>
+              <p><span class="text-[#F6F3EC]/55">Email:</span> <a href="mailto:wanderspaint@gmail.com" class="text-[#F6F3EC] hover:text-[#E8CA7A] hover:underline">wanderspaint@gmail.com</a></p>
+              <p><span class="text-[#F6F3EC]/55">Địa chỉ:</span> Lam Điền, Xã Quảng Bị, Thành phố Hà Nội.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
