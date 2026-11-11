@@ -21,16 +21,16 @@ function renderHead({
 } = {}) {
   const canonicalUrl = canonicalPath ? `https://wanders.vn/${canonicalPath}` : 'https://wanders.vn/';
   const cssLinks = [
-    `${prefix}assets/base44.css`,
-    `${prefix}assets/wanders_header_dropdown.css`,
-    ...extraCss.map((c) => `${prefix}assets/${c}`),
-    `${prefix}assets/wanders-luxury.css`,
+    `${prefix}assets/css/base44.css`,
+    `${prefix}assets/css/wanders_header_dropdown.css`,
+    ...extraCss.map((c) => `${prefix}assets/css/${c}`),
+    `${prefix}assets/css/wanders-luxury.css`,
   ]
     .map((href) => `  <link rel="stylesheet" href="${href}">`)
     .join('\n');
 
   const introHead = includeIntro
-    ? `\n  <link rel="stylesheet" href="${prefix}assets/wanders-intro.css">
+    ? `\n  <link rel="stylesheet" href="${prefix}assets/css/wanders-intro.css">
   <script>
     (function () {
       try {
@@ -204,8 +204,8 @@ function renderMobileDrawer(prefix = './') {
 }
 
 function renderCoreScripts(prefix = './', { includeIntro = false, extraScripts = [] } = {}) {
-  const extras = extraScripts.map((s) => `  <script src="${prefix}assets/${s}"></script>`).join('\n');
-  const introScript = includeIntro ? `\n  <script src="${prefix}assets/wanders-intro.js"></script>` : '';
+  const extras = extraScripts.map((s) => `  <script src="${prefix}assets/js/${s}"></script>`).join('\n');
+  const introScript = includeIntro ? `\n  <script src="${prefix}assets/js/wanders-intro.js"></script>` : '';
   return `<script>
     document.addEventListener('DOMContentLoaded', () => {
       const menuBtn = document.querySelector('header button[aria-label="Mở menu"]');
@@ -217,8 +217,8 @@ function renderCoreScripts(prefix = './', { includeIntro = false, extraScripts =
       }
     });
   </script>
-${extras ? extras + '\n' : ''}  <script src="${prefix}assets/wanders_nav_dropdown.js"></script>
-  <script src="${prefix}assets/wanders-motion.js"></script>${introScript}`;
+${extras ? extras + '\n' : ''}  <script src="${prefix}assets/js/wanders_nav_dropdown.js"></script>
+  <script src="${prefix}assets/js/wanders-motion.js"></script>${introScript}`;
 }
 
 module.exports = {

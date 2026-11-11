@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const xlsx = require('xlsx');
 const {
   renderHead,
   renderHeader,
@@ -8,10 +7,29 @@ const {
   renderFooter,
   renderMobileDrawer,
   renderCoreScripts,
-} = require('./wanders_layout');
+} = require('../components/layout');
 
-const ROOT = 'giao-dien/website_download';
-const wb = xlsx.readFile('Sơn WANDERS.xlsx');
+const ROOT = path.resolve(__dirname, '../../website_download');
+const XLSX_PATH = fs.existsSync(path.resolve(__dirname, '../../../Sơn WANDERS.xlsx'))
+  ? path.resolve(__dirname, '../../../Sơn WANDERS.xlsx')
+  : path.resolve(__dirname, '../../Sơn WANDERS.xlsx');
+
+let xlsx = null;
+let wb = null;
+try {
+  if (fs.existsSync(XLSX_PATH)) {
+    xlsx = require('xlsx');
+    wb = xlsx.readFile(XLSX_PATH);
+  }
+} catch (err) {
+  xlsx = null;
+  wb = null;
+}
+
+const CACHED_SPECS_PATH = path.resolve(__dirname, '../data/product_specs.json');
+const CACHED_SPECS = fs.existsSync(CACHED_SPECS_PATH)
+  ? JSON.parse(fs.readFileSync(CACHED_SPECS_PATH, 'utf8'))
+  : {};
 const products = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/wanders_products.json'), 'utf8'));
 
 function escapeHtml(str) {
@@ -31,12 +49,13 @@ function cleanText(str) {
 }
 
 function parseExcelDetails(product) {
-  const ws = wb.Sheets[product.sheet];
+  const ws = wb && wb.Sheets ? wb.Sheets[product.sheet] : null;
+  const cached = CACHED_SPECS[product.code] || null;
   const rawFeatures = [];
   const rawSpecs = [];
   const rawUsage = [];
 
-  if (ws) {
+  if (ws && xlsx) {
     const rows = xlsx.utils.sheet_to_json(ws, { header: 1 });
     const lines = rows
       .map(r => (r || []).map(c => cleanText(c)).filter(Boolean).join(' '))
@@ -86,8 +105,18 @@ function parseExcelDetails(product) {
   }
 
   // Ensure standard core specs always exist cleanly (only add ISO/QCVN when verified in Excel sheet)
-  const sheetTextAll = ws ? xlsx.utils.sheet_to_json(ws, { header: 1 }).map(r => (r || []).join(' ')).join(' ') : '';
-  const hasIsoVerified = /ISO\s*9001/i.test(sheetTextAll);
+  const sheetTextAll = ws && xlsx ? xlsx.utils.sheet_to_json(ws, { header: 1 }).map(r => (r || []).join(' ')).join(' ') : '';
+  const hasIsoVerified = ws ? /ISO\s*9001/i.test(sheetTextAll) : Boolean(cached && cached.hasIsoVerified);
+  if (!ws && cached) {
+    cached.rawFeatures.forEach((f) => rawFeatures.push(f));
+    cached.specs.forEach((sp) => {
+      if (!seenLabels.has(sp.label.toLowerCase())) {
+        seenLabels.add(sp.label.toLowerCase());
+        specPairs.push(sp);
+      }
+    });
+    cached.usageSteps.forEach((u) => rawUsage.push(u));
+  }
   if (!seenLabels.has('mã sản phẩm')) specPairs.unshift({ label: 'Mã sản phẩm', value: product.code });
   if (!seenLabels.has('quy cách đóng gói')) specPairs.push({ label: 'Quy cách đóng gói', value: product.packaging });
   if (hasIsoVerified && !seenLabels.has('tiêu chuẩn')) specPairs.push({ label: 'Tiêu chuẩn chất lượng', value: 'ISO 9001:2015 & QCVN 16:2014/BXD' });
@@ -428,44 +457,52 @@ ${renderHead({
 </html>`;
 }
 
-// 1. Compile all 24 Product Detail Pages (both san-pham/<slug>/index.html & root san-pham_<slug>.html if exists)
-let compiledProducts = 0;
-for (const p of products) {
-  const subdirPath = path.join(ROOT, p.link); // san-pham/<slug>/index.html
-  fs.mkdirSync(path.dirname(subdirPath), { recursive: true });
-  fs.writeFileSync(subdirPath, buildProductDetailHtml(p, '../../'), 'utf8');
-  compiledProducts++;
+function buildProductDetailPages() {
+  // 1. Compile all 24 Product Detail Pages (both san-pham/<slug>/index.html & root san-pham_<slug>.html if exists)
+  let compiledProducts = 0;
+  for (const p of products) {
+    const subdirPath = path.join(ROOT, p.link); // san-pham/<slug>/index.html
+    fs.mkdirSync(path.dirname(subdirPath), { recursive: true });
+    fs.writeFileSync(subdirPath, buildProductDetailHtml(p, '../../'), 'utf8');
+    compiledProducts++;
 
-  // Also update root alias san-pham_<slug>.html if it exists
-  const slug = p.link.replace('san-pham/', '').replace('/index.html', '');
-  const rootAlias = path.join(ROOT, `san-pham_${slug}.html`);
-  if (fs.existsSync(rootAlias)) {
-    fs.writeFileSync(rootAlias, buildProductDetailHtml(p, './'), 'utf8');
+    // Also update root alias san-pham_<slug>.html if it exists
+    const slug = p.link.replace('san-pham/', '').replace('/index.html', '');
+    const rootAlias = path.join(ROOT, `san-pham_${slug}.html`);
+    if (fs.existsSync(rootAlias)) {
+      fs.writeFileSync(rootAlias, buildProductDetailHtml(p, './'), 'utf8');
+    }
   }
+
+  // 2. Compile 6 Category Pages
+  const CATEGORIES = [
+    { slug: 'son-noi-that', category: 'son-noi-that', title: 'Sơn nội thất WANDERS', desc: 'Dòng sơn phủ nội thất bề mặt mịn bóng sang trọng, hàm lượng VOC thấp và dễ vệ sinh.' },
+    { slug: 'son-ngoai-that', category: 'son-ngoai-that', title: 'Sơn ngoại thất WANDERS', desc: 'Giải pháp sơn ngoại thất bền màu vượt trội, chống rêu mốc và chịu nắng mưa khắc nghiệt.' },
+    { slug: 'son-lot', category: 'son-lot', title: 'Sơn lót kháng kiềm WANDERS', desc: 'Lớp lót bảo vệ chuyên sâu giúp kháng kiềm, kháng muối và tăng cường độ bám dính lớp phủ.' },
+    { slug: 'son-chong-tham', category: 'chong-tham', title: 'Sơn chống thấm WANDERS', desc: 'Hệ thống vật liệu chống thấm đàn hồi cao bảo vệ tường đứng, sàn mái và ban công.' },
+    { slug: 'son-chong-nong', category: 'son-chong-nong', title: 'Sơn chống nóng WANDERS', desc: 'Sơn cách nhiệt phản xạ tia UV, giúp hạ nhiệt bề mặt mái tôn và tường công trình.' },
+    { slug: 'san-pham-khac', category: 'san-pham-khac', title: 'Sản phẩm phụ trợ & Đặc dụng', desc: 'Bột bả nội ngoại thất, sơn phủ bóng bảo vệ, sơn nhũ vàng, phụ gia kết nối và sơn chậu cảnh.' }
+  ];
+
+  let compiledCats = 0;
+  for (const c of CATEGORIES) {
+    const catSubdir = path.join(ROOT, 'san-pham', c.slug, 'index.html');
+    fs.mkdirSync(path.dirname(catSubdir), { recursive: true });
+    fs.writeFileSync(catSubdir, buildCategoryPageHtml(c, '../../'), 'utf8');
+    compiledCats++;
+
+    const rootCatAlias = path.join(ROOT, `san-pham_${c.slug}.html`);
+    if (fs.existsSync(rootCatAlias)) {
+      fs.writeFileSync(rootCatAlias, buildCategoryPageHtml(c, './'), 'utf8');
+    }
+  }
+
+  console.log(`Compiled ${compiledProducts} product detail pages and ${compiledCats} category pages in WANDERS Architectural style!`);
 }
 
-// 2. Compile 6 Category Pages
-const CATEGORIES = [
-  { slug: 'son-noi-that', category: 'son-noi-that', title: 'Sơn nội thất WANDERS', desc: 'Dòng sơn phủ nội thất bề mặt mịn bóng sang trọng, hàm lượng VOC thấp và dễ vệ sinh.' },
-  { slug: 'son-ngoai-that', category: 'son-ngoai-that', title: 'Sơn ngoại thất WANDERS', desc: 'Giải pháp sơn ngoại thất bền màu vượt trội, chống rêu mốc và chịu nắng mưa khắc nghiệt.' },
-  { slug: 'son-lot', category: 'son-lot', title: 'Sơn lót kháng kiềm WANDERS', desc: 'Lớp lót bảo vệ chuyên sâu giúp kháng kiềm, kháng muối và tăng cường độ bám dính lớp phủ.' },
-  { slug: 'son-chong-tham', category: 'chong-tham', title: 'Sơn chống thấm WANDERS', desc: 'Hệ thống vật liệu chống thấm đàn hồi cao bảo vệ tường đứng, sàn mái và ban công.' },
-  { slug: 'son-chong-nong', category: 'son-chong-nong', title: 'Sơn chống nóng WANDERS', desc: 'Sơn cách nhiệt phản xạ tia UV, giúp hạ nhiệt bề mặt mái tôn và tường công trình.' },
-  { slug: 'san-pham-khac', category: 'san-pham-khac', title: 'Sản phẩm phụ trợ & Đặc dụng', desc: 'Bột bả nội ngoại thất, sơn phủ bóng bảo vệ, sơn nhũ vàng, phụ gia kết nối và sơn chậu cảnh.' }
-];
-
-let compiledCats = 0;
-for (const c of CATEGORIES) {
-  const catSubdir = path.join(ROOT, 'san-pham', c.slug, 'index.html');
-  fs.mkdirSync(path.dirname(catSubdir), { recursive: true });
-  fs.writeFileSync(catSubdir, buildCategoryPageHtml(c, '../../'), 'utf8');
-  compiledCats++;
-
-  const rootCatAlias = path.join(ROOT, `san-pham_${c.slug}.html`);
-  if (fs.existsSync(rootCatAlias)) {
-    fs.writeFileSync(rootCatAlias, buildCategoryPageHtml(c, './'), 'utf8');
-  }
+if (require.main === module) {
+  buildProductDetailPages();
 }
 
-console.log(`Compiled ${compiledProducts} product detail pages and ${compiledCats} category pages in WANDERS Architectural style!`);
+module.exports = { buildProductDetailPages };
 

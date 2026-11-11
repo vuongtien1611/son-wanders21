@@ -7,7 +7,9 @@ const {
   renderFooter,
   renderMobileDrawer,
   renderCoreScripts,
-} = require('./wanders_layout');
+} = require('../components/layout');
+
+const ROOT = path.resolve(__dirname, '../../website_download');
 
 function generatePageHtml(isSubdir = false, pageTitle = 'Bảng màu & Color Studio — WANDERS', canonicalPath = 'bang-mau.html') {
   const prefix = isSubdir ? '../' : './';
@@ -343,15 +345,24 @@ ${renderHead({
 }
 
 const targets = [
-  { path: 'giao-dien/website_download/bang-mau.html', isSubdir: false, title: 'Bảng màu & Color Studio — WANDERS', canonical: 'bang-mau.html' },
-  { path: 'giao-dien/website_download/cam-hung-mau-sac.html', isSubdir: false, title: 'Cảm hứng màu sắc & Color Studio — WANDERS', canonical: 'cam-hung-mau-sac.html' },
-  { path: 'giao-dien/website_download/bang-mau/index.html', isSubdir: true, title: 'Bảng màu & Color Studio — WANDERS', canonical: 'bang-mau.html' },
-  { path: 'giao-dien/website_download/cam-hung-mau-sac/index.html', isSubdir: true, title: 'Cảm hứng màu sắc & Color Studio — WANDERS', canonical: 'cam-hung-mau-sac.html' }
+  { file: 'bang-mau.html', isSubdir: false, title: 'Bảng màu & Color Studio — WANDERS', canonical: 'bang-mau.html' },
+  { file: 'cam-hung-mau-sac.html', isSubdir: false, title: 'Cảm hứng màu sắc & Color Studio — WANDERS', canonical: 'cam-hung-mau-sac.html' },
+  { file: 'bang-mau/index.html', isSubdir: true, title: 'Bảng màu & Color Studio — WANDERS', canonical: 'bang-mau.html' },
+  { file: 'cam-hung-mau-sac/index.html', isSubdir: true, title: 'Cảm hứng màu sắc & Color Studio — WANDERS', canonical: 'cam-hung-mau-sac.html' }
 ];
 
-targets.forEach((t) => {
-  const dir = path.dirname(t.path);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(t.path, generatePageHtml(t.isSubdir, t.title, t.canonical), 'utf8');
-  console.log('Built unified Color Studio page:', t.path);
-});
+function buildColorPages() {
+  targets.forEach((t) => {
+    const outPath = path.join(ROOT, t.file);
+    const dir = path.dirname(outPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(outPath, generatePageHtml(t.isSubdir, t.title, t.canonical), 'utf8');
+    console.log('Built unified Color Studio page:', t.file);
+  });
+}
+
+if (require.main === module) {
+  buildColorPages();
+}
+
+module.exports = { buildColorPages };

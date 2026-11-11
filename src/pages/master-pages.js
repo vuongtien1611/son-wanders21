@@ -18,10 +18,10 @@ const {
   renderFooter,
   renderMobileDrawer,
   renderCoreScripts,
-} = require('./wanders_layout');
-const { PROJECTS } = require('./build_project_detail_pages');
+} = require('../components/layout');
+const { PROJECTS } = require('./project-pages');
 
-const ROOT = path.resolve(__dirname, '../website_download');
+const ROOT = path.resolve(__dirname, '../../website_download');
 const products = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/wanders_products.json'), 'utf8'));
 
 function saveRootAndSubdir(rootFile, subFolder, buildFn) {
@@ -1585,25 +1585,27 @@ ${renderHead({
             <h2 class="w-section-title text-[#073B2E]">Gửi yêu cầu tư vấn</h2>
             <p class="mt-3 max-w-[52ch] text-[14.5px] leading-[1.75] text-[#5A6468]">Chỉ mất một phút. Thông tin bạn gửi được lưu lại để WANDERS liên hệ tư vấn trực tiếp.</p>
             <div class="mt-7">
-              <form class="rounded-[10px] border border-[#E2DDD2] bg-white p-6 shadow-sm sm:p-8">
+              <form name="tu-van-wanders" method="POST" action="/lien-he.html" data-netlify="true" netlify-honeypot="bot-field" class="rounded-[10px] border border-[#E2DDD2] bg-white p-6 shadow-sm sm:p-8">
+                <input type="hidden" name="form-name" value="tu-van-wanders">
+                <p class="hidden" aria-hidden="true"><label>Không điền mục này: <input name="bot-field"></label></p>
                 <div class="space-y-5">
                   <div>
                     <label for="full_name" class="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#073B2E]">Họ tên <span class="text-[#D6AD45]">*</span></label>
-                    <input id="full_name" placeholder="Nguyễn Văn A" class="mt-2 w-full rounded-[6px] border border-[#E2DDD2] bg-[#FAF8F3] px-4 py-3 text-[14px] text-[#273238] outline-none transition-colors placeholder:text-[#5A6468]/55 focus:border-[#073B2E] focus:bg-white" value="">
+                    <input id="full_name" name="full_name" placeholder="Nguyễn Văn A" class="mt-2 w-full rounded-[6px] border border-[#E2DDD2] bg-[#FAF8F3] px-4 py-3 text-[14px] text-[#273238] outline-none transition-colors placeholder:text-[#5A6468]/55 focus:border-[#073B2E] focus:bg-white" value="">
                   </div>
                   <div class="grid gap-5 sm:grid-cols-2">
                     <div>
                       <label for="phone" class="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#073B2E]">Điện thoại <span class="text-[#D6AD45]">*</span></label>
-                      <input id="phone" inputmode="tel" placeholder="09xx xxx xxx" class="mt-2 w-full rounded-[6px] border border-[#E2DDD2] bg-[#FAF8F3] px-4 py-3 text-[14px] text-[#273238] outline-none transition-colors placeholder:text-[#5A6468]/55 focus:border-[#073B2E] focus:bg-white" value="">
+                      <input id="phone" name="phone" inputmode="tel" placeholder="09xx xxx xxx" class="mt-2 w-full rounded-[6px] border border-[#E2DDD2] bg-[#FAF8F3] px-4 py-3 text-[14px] text-[#273238] outline-none transition-colors placeholder:text-[#5A6468]/55 focus:border-[#073B2E] focus:bg-white" value="">
                     </div>
                     <div>
                       <label for="email" class="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#073B2E]">Email <span class="normal-case font-normal tracking-normal text-[#5A6468]/70">(tuỳ chọn)</span></label>
-                      <input id="email" inputmode="email" placeholder="ban@email.com" class="mt-2 w-full rounded-[6px] border border-[#E2DDD2] bg-[#FAF8F3] px-4 py-3 text-[14px] text-[#273238] outline-none transition-colors placeholder:text-[#5A6468]/55 focus:border-[#073B2E] focus:bg-white" value="">
+                      <input id="email" name="email" inputmode="email" placeholder="ban@email.com" class="mt-2 w-full rounded-[6px] border border-[#E2DDD2] bg-[#FAF8F3] px-4 py-3 text-[14px] text-[#273238] outline-none transition-colors placeholder:text-[#5A6468]/55 focus:border-[#073B2E] focus:bg-white" value="">
                     </div>
                   </div>
                   <div>
                     <label for="need" class="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#073B2E]">Nhu cầu tư vấn</label>
-                    <select id="need" class="mt-2 w-full appearance-none rounded-[6px] border border-[#E2DDD2] bg-[#FAF8F3] px-4 py-3 text-[14px] text-[#273238] outline-none transition-colors focus:border-[#073B2E] focus:bg-white">
+                    <select id="need" name="need" class="mt-2 w-full appearance-none rounded-[6px] border border-[#E2DDD2] bg-[#FAF8F3] px-4 py-3 text-[14px] text-[#273238] outline-none transition-colors focus:border-[#073B2E] focus:bg-white">
                       <option value="" selected="">Chọn nhóm sản phẩm</option>
                       <option value="Sơn nội thất">Sơn nội thất</option>
                       <option value="Sơn ngoại thất">Sơn ngoại thất</option>
@@ -1616,7 +1618,7 @@ ${renderHead({
                   </div>
                   <div>
                     <label for="message" class="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#073B2E]">Nội dung <span class="text-[#D6AD45]">*</span></label>
-                    <textarea id="message" rows="4" placeholder="Ví dụ: cần tư vấn màu cho tường ngoài nhà phố 3 tầng, hướng tây." class="mt-2 w-full resize-none rounded-[6px] border border-[#E2DDD2] bg-[#FAF8F3] px-4 py-3 text-[14px] leading-relaxed text-[#273238] outline-none transition-colors placeholder:text-[#5A6468]/55 focus:border-[#073B2E] focus:bg-white"></textarea>
+                    <textarea id="message" name="message" rows="4" placeholder="Ví dụ: cần tư vấn màu cho tường ngoài nhà phố 3 tầng, hướng tây." class="mt-2 w-full resize-none rounded-[6px] border border-[#E2DDD2] bg-[#FAF8F3] px-4 py-3 text-[14px] leading-relaxed text-[#273238] outline-none transition-colors placeholder:text-[#5A6468]/55 focus:border-[#073B2E] focus:bg-white"></textarea>
                   </div>
                 </div>
                 <button type="submit" class="w-btn w-btn-forest mt-6 w-full justify-between disabled:cursor-wait disabled:opacity-70">
@@ -1688,7 +1690,7 @@ ${renderHead({
         }
 
         if (window.location.protocol === 'file:') {
-          showStatus('err', 'Bạn đang xem trang ở chế độ tệp cục bộ (file:///) chưa kết nối máy chủ gửi biểu mẫu. Vui lòng truy cập qua máy chủ web (HTTP/HTTPS) hoặc liên hệ trực tiếp Hotline 0937.760.688.');
+          showStatus('err', 'Bạn đang mở tệp trực tiếp từ máy tính nên chưa kết nối máy chủ gửi biểu mẫu. Vui lòng truy cập qua máy chủ web (HTTP/HTTPS) hoặc liên hệ trực tiếp Hotline 0937.760.688.');
           return;
         }
 
@@ -1699,17 +1701,41 @@ ${renderHead({
         }
 
         try {
-          const resp = await fetch('/api/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ full_name, phone, email, need, message })
-          });
-          const data = await resp.json().catch(() => ({}));
-          if (!resp.ok || !data.ok) {
-            showStatus('err', data.error || 'Không thể gửi yêu cầu lúc này. Vui lòng thử lại hoặc gọi Hotline 0937.760.688.');
+          const isLocalNode = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+          if (isLocalNode) {
+            const resp = await fetch('/api/contact', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ full_name, phone, email, need, message })
+            });
+            const data = await resp.json().catch(() => ({}));
+            if (!resp.ok || !data.ok) {
+              showStatus('err', data.error || 'Không thể gửi yêu cầu lúc này. Vui lòng thử lại hoặc gọi Hotline 0937.760.688.');
+            } else {
+              showStatus('ok', 'Đã tiếp nhận yêu cầu tư vấn (Mã #' + data.id + '). Đội ngũ kỹ thuật WANDERS sẽ liên hệ qua số ' + phone + ' trong giờ làm việc.');
+              form.reset();
+            }
           } else {
-            showStatus('ok', 'Đã tiếp nhận yêu cầu tư vấn (Mã #' + data.id + '). Đội ngũ kỹ thuật WANDERS sẽ liên hệ qua số ' + phone + ' trong giờ làm việc.');
-            form.reset();
+            const encoded = new URLSearchParams({
+              'form-name': 'tu-van-wanders',
+              'bot-field': '',
+              full_name,
+              phone,
+              email,
+              need: need || 'Chưa chọn nhóm cụ thể',
+              message
+            }).toString();
+            const resp = await fetch('/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: encoded
+            });
+            if (!resp.ok) {
+              showStatus('err', 'Hệ thống biểu mẫu chưa tiếp nhận được yêu cầu (mã ' + resp.status + '). Vui lòng gọi trực tiếp Hotline 0937.760.688 hoặc email wanderspaint@gmail.com.');
+            } else {
+              showStatus('ok', 'Đã tiếp nhận yêu cầu tư vấn của bạn. Đội ngũ kỹ thuật WANDERS sẽ liên hệ qua số ' + phone + ' trong giờ làm việc.');
+              form.reset();
+            }
           }
         } catch (err) {
           showStatus('err', 'Kết nối máy chủ gián đoạn. Vui lòng gọi trực tiếp Hotline 0937.760.688 hoặc email wanderspaint@gmail.com.');

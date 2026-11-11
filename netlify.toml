@@ -1,0 +1,17 @@
+[build]
+  command = "npm run build"
+  publish = "website_download"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/bang-mau"
+  to = "/bang-mau/"
+  status = 301
+
+[[redirects]]
+  from = "/du-an"
+  to = "/du-an/"
+  status = 301
+

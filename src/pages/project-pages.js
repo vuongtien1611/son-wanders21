@@ -8,9 +8,9 @@ const {
   renderFooter,
   renderMobileDrawer,
   renderCoreScripts,
-} = require('./wanders_layout');
+} = require('../components/layout');
 
-const ROOT = path.resolve(__dirname, '../website_download');
+const ROOT = path.resolve(__dirname, '../../website_download');
 
 const PROJECTS = [
   {

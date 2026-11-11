@@ -101,6 +101,7 @@
     var img = document.createElement('img');
     img.id = 'wandersLightboxImg';
     img.className = 'wanders-lightbox-image';
+    img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
     img.alt = '';
 
     var errorCard = document.createElement('div');
