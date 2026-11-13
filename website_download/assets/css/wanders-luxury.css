@@ -106,6 +106,11 @@ main h2 {
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: -0.02em;
+  text-shadow: 0 2px 14px rgba(4, 36, 28, 0.45);
+}
+
+.w-hero-body p {
+  text-shadow: 0 1px 8px rgba(4, 36, 28, 0.35);
 }
 
 @media (max-width: 640px) {
@@ -423,9 +428,12 @@ main h2 {
 
 .w-hero-section:has(.w-hero-video),
 .w-hero-section.w-hero-home {
+  position: relative;
   height: calc(100vh - var(--header-height, 87px));
   height: calc(100svh - var(--header-height, 87px));
   min-height: 600px;
+  overflow: hidden;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
 }
@@ -433,8 +441,9 @@ main h2 {
 @media (max-width: 640px) {
   .w-hero-section:has(.w-hero-video),
   .w-hero-section.w-hero-home {
-    min-height: calc(100svh - var(--header-height, 77px));
-    height: auto;
+    height: calc(100vh - var(--header-height, 77px));
+    height: calc(100svh - var(--header-height, 77px));
+    min-height: 540px;
   }
 }
 

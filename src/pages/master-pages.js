@@ -164,11 +164,11 @@ ${renderHead({
             Khám phá những giải pháp sơn và cảm hứng màu sắc dành cho không gian sống hiện đại.
           </p>
           <div class="mt-8 flex flex-col gap-3.5 sm:flex-row sm:items-center w-hero-stagger w-hero-stagger--4">
-            <a class="w-btn w-btn-gold" href="./bang-mau.html">
+            <a class="w-btn w-btn-gold" href="${prefix}bang-mau.html">
               <span>Khám phá bảng màu</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
             </a>
-            <a class="w-btn w-btn-glass" href="./san-pham.html">
+            <a class="w-btn w-btn-glass" href="${prefix}san-pham.html">
               <span>Xem sản phẩm</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
             </a>
@@ -178,7 +178,40 @@ ${renderHead({
     </section>
 
     <!-- ============================================================ -->
-    <!-- SECTION 2: COLOR EXPLORER (Warm Ivory #F6F3EC)               -->
+    <!-- SECTION 2: SẢN PHẨM WANDERS NỔI BẬT (Warm Ivory #F6F3EC)     -->
+    <!-- ============================================================ -->
+    <section id="homeCatalogueSection" class="border-t border-[#E2DDD2] w-bg-ivory py-20 lg:py-28">
+      <div class="wanders-container">
+        <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-12 w-reveal">
+          <div class="max-w-[640px]">
+            <p class="w-eyebrow mb-4"><span class="w-eyebrow-line"></span>Catalogue</p>
+            <h2 class="w-section-title text-[#073B2E]">Sản phẩm WANDERS nổi bật</h2>
+          </div>
+          <div class="flex flex-col gap-3 md:items-end">
+            <p class="max-w-[400px] text-[15px] leading-[1.7] text-[#5A6468]">Danh mục sản phẩm WANDERS chính thức theo bề mặt thi công và công năng bảo vệ.</p>
+            <a class="w-text-link" href="./san-pham.html">
+              <span>Xem tất cả ${products.length} sản phẩm</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="mt-9 flex flex-wrap items-center gap-x-2 gap-y-2 border-b border-[#E2DDD2] pb-1 w-reveal" id="homeCatalogueTabs">
+          <button type="button" data-filter="featured" class="relative px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 text-[#073B2E]">Nổi bật<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-100"></span></button>
+          <button type="button" data-filter="son-ngoai-that" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn ngoại thất<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
+          <button type="button" data-filter="son-noi-that" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn nội thất<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
+          <button type="button" data-filter="chong-tham" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn chống thấm<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
+          <button type="button" data-filter="son-lot" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn lót<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
+        </div>
+
+        <div class="mt-9 wanders-products-grid w-reveal" id="homeCatalogueGrid">
+          ${catalogueCardsHtml}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3: COLOR EXPLORER (Warm Ivory #F6F3EC)               -->
     <!-- ============================================================ -->
     <section id="homeColorExplorer" class="border-t border-[#E2DDD2] w-bg-ivory py-20 lg:py-28">
       <div class="wanders-container">
@@ -416,40 +449,7 @@ ${renderHead({
     </section>
 
     <!-- ============================================================ -->
-    <!-- SECTION 4: SẢN PHẨM WANDERS NỔI BẬT (Warm Ivory #F6F3EC)     -->
-    <!-- ============================================================ -->
-    <section id="homeCatalogueSection" class="border-t border-[#E2DDD2] w-bg-ivory py-20 lg:py-28">
-      <div class="wanders-container">
-        <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-12 w-reveal">
-          <div class="max-w-[640px]">
-            <p class="w-eyebrow mb-4"><span class="w-eyebrow-line"></span>Catalogue</p>
-            <h2 class="w-section-title text-[#073B2E]">Sản phẩm WANDERS nổi bật</h2>
-          </div>
-          <div class="flex flex-col gap-3 md:items-end">
-            <p class="max-w-[400px] text-[15px] leading-[1.7] text-[#5A6468]">Danh mục sản phẩm WANDERS chính thức theo bề mặt thi công và công năng bảo vệ.</p>
-            <a class="w-text-link" href="./san-pham.html">
-              <span>Xem tất cả ${products.length} sản phẩm</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="mt-9 flex flex-wrap items-center gap-x-2 gap-y-2 border-b border-[#E2DDD2] pb-1 w-reveal" id="homeCatalogueTabs">
-          <button type="button" data-filter="featured" class="relative px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 text-[#073B2E]">Nổi bật<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-100"></span></button>
-          <button type="button" data-filter="son-ngoai-that" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn ngoại thất<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
-          <button type="button" data-filter="son-noi-that" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn nội thất<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
-          <button type="button" data-filter="chong-tham" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn chống thấm<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
-          <button type="button" data-filter="son-lot" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn lót<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
-        </div>
-
-        <div class="mt-9 wanders-products-grid w-reveal" id="homeCatalogueGrid">
-          ${catalogueCardsHtml}
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================ -->
-    <!-- SECTION 5: LIVING WITH COLOUR (White #FFFFFF)                -->
+    <!-- SECTION 4: LIVING WITH COLOUR (White #FFFFFF)                -->
     <!-- ============================================================ -->
     <section id="homeLivingSection" class="w-bg-white py-20 lg:py-28">
       <div class="wanders-container">
