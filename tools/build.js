@@ -53,7 +53,21 @@ function syncAssets() {
     }
   }
 
-  console.log(`Synced Production assets: ${cssCount} CSS -> assets/css/, ${jsCount} JS -> assets/js/`);
+  // Copy video assets from src/assets/video/ -> website_download/assets/video/
+  const srcVideo = path.join(SRC_DIR, 'assets', 'video');
+  const outVideo = path.join(outAssets, 'video');
+  fs.mkdirSync(outVideo, { recursive: true });
+  let videoCount = 0;
+  if (fs.existsSync(srcVideo)) {
+    for (const f of fs.readdirSync(srcVideo)) {
+      if (f.endsWith('.mp4') || f.endsWith('.webm') || f.endsWith('.jpg') || f.endsWith('.webp')) {
+        fs.copyFileSync(path.join(srcVideo, f), path.join(outVideo, f));
+        videoCount++;
+      }
+    }
+  }
+
+  console.log(`Synced Production assets: ${cssCount} CSS -> assets/css/, ${jsCount} JS -> assets/js/, ${videoCount} Videos -> assets/video/`);
 }
 
 function replaceLegacyWithRedirect(relPath, targetRel, title, desc) {

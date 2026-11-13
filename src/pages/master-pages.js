@@ -133,20 +133,22 @@ ${renderHead({
 
   <main>
     <!-- ============================================================ -->
-    <!-- SECTION 1: CINEMATIC HERO (Synced with Intro Power Wipe)     -->
+    <!-- SECTION 1: CINEMATIC HERO (Video Banner with Intro Sync)     -->
     <!-- ============================================================ -->
     <section class="w-hero-section">
       <div class="absolute inset-0">
-        <span class="relative hero-zoom hidden h-full w-full object-cover sm:block" data-base44-image="" data-base44-image-src="./images/base44/2c9aa4c1c_generated_be64a0c2.png">
-          <span class="block relative w-full h-full overflow-hidden" data-wm-parallax="0.18">
-            <img class="w-full h-full inset-0 absolute object-cover" alt="Biệt thự hiện đại với tường sơn trắng ngà và khối đất nung" src="./images/base44/2c9aa4c1c_generated_be64a0c2.png">
-          </span>
-        </span>
-        <span class="inline-block relative hero-zoom h-full w-full object-cover sm:hidden" data-base44-image="" data-base44-image-src="./images/base44/373ede7be_generated_c18e3afd.png">
-          <span class="block relative w-full h-full overflow-hidden">
-            <img class="w-full h-full inset-0 absolute object-cover" alt="Mặt tiền biệt thự sơn trắng ngà dưới nắng sớm" src="./images/base44/373ede7be_generated_c18e3afd.png">
-          </span>
-        </span>
+        <video
+          class="w-hero-video h-full w-full object-cover"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          poster="${prefix}images/video-banner/hero-poster.webp"
+        >
+          <source src="${prefix}assets/video/wanders-hero.webm" type="video/webm">
+          <source src="${prefix}assets/video/wanders-hero.mp4" type="video/mp4">
+        </video>
         <div class="w-hero-overlay"></div>
       </div>
 

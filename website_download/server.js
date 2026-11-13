@@ -26,7 +26,9 @@ const MIME_TYPES = {
   '.woff2': 'font/woff2',
   '.ttf': 'font/ttf',
   '.otf': 'font/otf',
-  '.eot': 'application/vnd.ms-fontobject'
+  '.eot': 'application/vnd.ms-fontobject',
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm'
 };
 
 function applySecurityHeaders(res) {
@@ -131,11 +133,15 @@ function startServer(port) {
 
     let reqPath;
     try {
-      reqPath = decodeURI(reqUrlPath);
+      reqPath = decodeURIComponent(reqUrlPath);
     } catch {
-      res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
-      res.end('400 Bad Request');
-      return;
+      try {
+        reqPath = decodeURI(reqUrlPath);
+      } catch {
+        res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end('400 Bad Request');
+        return;
+      }
     }
     if (reqPath === '/') reqPath = '/index.html';
 
@@ -186,18 +192,37 @@ function startServer(port) {
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-        res.end('404 Not Found');
+    try {
+      const stat = fs.statSync(filePath);
+      const total = stat.size;
+      const range = req.headers.range;
+
+      if (range) {
+        const parts = range.replace(/bytes=/, '').split('-');
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : total - 1;
+        const chunksize = end - start + 1;
+        const stream = fs.createReadStream(filePath, { start, end });
+        res.writeHead(206, {
+          'Content-Range': `bytes ${start}-${end}/${total}`,
+          'Accept-Ranges': 'bytes',
+          'Content-Length': chunksize,
+          'Content-Type': contentType,
+        });
+        stream.pipe(res);
       } else {
         res.writeHead(200, {
+          'Content-Length': total,
+          'Accept-Ranges': 'bytes',
           'Content-Type': contentType,
-          'Cache-Control': 'no-cache'
+          'Cache-Control': 'no-cache',
         });
-        res.end(data);
+        fs.createReadStream(filePath).pipe(res);
       }
-    });
+    } catch {
+      res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('404 Not Found');
+    }
   });
 
   server.on('error', (err) => {

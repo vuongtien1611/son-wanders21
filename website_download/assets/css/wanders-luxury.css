@@ -405,6 +405,24 @@ main h2 {
   background-color: var(--w-forest-deep);
 }
 
+.w-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+  background-color: var(--w-forest-deep);
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .w-hero-video {
+    display: none !important;
+  }
+}
+
 .w-hero-overlay {
   position: absolute;
   inset: 0;

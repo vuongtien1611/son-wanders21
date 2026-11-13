@@ -1,0 +1,138 @@
+{
+  "project": "WANDERS Cinematic Hero Video Banner",
+  "version": "1.0.0",
+  "resolution": {
+    "width": 1920,
+    "height": 1080,
+    "aspectRatio": "16:9",
+    "fps": 30
+  },
+  "totalDurationSeconds": 24,
+  "transitionDurationSeconds": 0.8,
+  "scenes": [
+    {
+      "id": "scene-01",
+      "index": 1,
+      "title": "WANDERS Clear Nano — Đỉnh cao sơn công nghệ Nano",
+      "file": "ChatGPT Image Nov 13, 2026, 11_12_02 AM-5.png",
+      "duration": 4.0,
+      "category": "Sơn phủ bóng ngoại thất cao cấp",
+      "subject": "Thùng sơn WANDERS Clear Nano trên bệ đá biệt thự tân cổ điển",
+      "motion": {
+        "type": "ken-burns",
+        "scaleStart": 1.05,
+        "scaleEnd": 1.12,
+        "panX": "left-to-center",
+        "panY": "bottom-up"
+      },
+      "transition": {
+        "type": "seamless-loop-entry",
+        "duration": 0.8
+      }
+    },
+    {
+      "id": "scene-02",
+      "index": 2,
+      "title": "Công nghệ hoàn thiện bề mặt — Bột bả nội thất cao cấp",
+      "file": "ChatGPT Image Nov 13, 2026, 11_11_57 AM-1.png",
+      "duration": 4.0,
+      "category": "Xử lý & bả phẳng bề mặt",
+      "subject": "Bao Bột bả nội thất cao cấp 40kg & cảnh thợ thi công làm phẳng tường",
+      "motion": {
+        "type": "ken-burns",
+        "scaleStart": 1.06,
+        "scaleEnd": 1.13,
+        "panX": "left-to-right",
+        "panY": "steady"
+      },
+      "transition": {
+        "type": "paint-wipe-horizontal",
+        "color": "#073B2E",
+        "duration": 0.8
+      }
+    },
+    {
+      "id": "scene-03",
+      "index": 3,
+      "title": "Sơn ngoại thất — Hoàn thiện mặt tiền kiến trúc",
+      "file": "ChatGPT Image Nov 13, 2026, 11_11_58 AM-2.png",
+      "duration": 4.0,
+      "category": "Sơn ngoại thất & bảo vệ công trình",
+      "subject": "Bao Bột bả ngoại thất cao cấp & thi công mặt tiền biệt thự hai tầng",
+      "motion": {
+        "type": "ken-burns",
+        "scaleStart": 1.05,
+        "scaleEnd": 1.12,
+        "panX": "steady",
+        "panY": "bottom-to-top"
+      },
+      "transition": {
+        "type": "cinematic-crossfade",
+        "duration": 0.8
+      }
+    },
+    {
+      "id": "scene-04",
+      "index": 4,
+      "title": "Giải pháp chống thấm sàn & mái bê tông",
+      "file": "ChatGPT Image Nov 13, 2026, 11_11_59 AM-3.png",
+      "duration": 4.0,
+      "category": "Chống thấm chuyên sâu",
+      "subject": "Thùng sơn Bitum Premium Waterproof & cảnh lăn chống thấm sàn sân thượng hoàng hôn",
+      "motion": {
+        "type": "ken-burns",
+        "scaleStart": 1.05,
+        "scaleEnd": 1.14,
+        "panX": "right-to-left",
+        "panY": "focus-droplets"
+      },
+      "transition": {
+        "type": "paint-wipe-diagonal",
+        "color": "#073B2E",
+        "duration": 0.8
+      }
+    },
+    {
+      "id": "scene-05",
+      "index": 5,
+      "title": "Sơn chống nóng Smart Cool — Phản xạ nhiệt tối ưu",
+      "file": "ChatGPT Image Nov 13, 2026, 11_12_01 AM-4.png",
+      "duration": 4.0,
+      "category": "Sơn chuyên dụng chống nóng",
+      "subject": "Thùng sơn chống nóng cao cấp CN08 & không gian thư giãn sân thượng đón nắng",
+      "motion": {
+        "type": "ken-burns",
+        "scaleStart": 1.12,
+        "scaleEnd": 1.05,
+        "panX": "center-out",
+        "panY": "down"
+      },
+      "transition": {
+        "type": "light-sweep-warm",
+        "duration": 0.8
+      }
+    },
+    {
+      "id": "scene-06",
+      "index": 6,
+      "title": "Công nghệ phủ bóng 2K & Hoàn thiện bề mặt",
+      "file": "ChatGPT Image Nov 13, 2026, 11_12_03 AM-6.png",
+      "duration": 4.0,
+      "category": "Sơn bóng 2K cao cấp",
+      "subject": "Hộp sơn MY HOUR 2K Clear & Hardner và phòng sấy phủ bóng công nghệ cao",
+      "motion": {
+        "type": "ken-burns",
+        "scaleStart": 1.05,
+        "scaleEnd": 1.12,
+        "panX": "left-to-right",
+        "panY": "steady"
+      },
+      "transition": {
+        "type": "paint-wipe-loop-to-scene-01",
+        "color": "#073B2E",
+        "duration": 0.8
+      }
+    }
+  ]
+}
+

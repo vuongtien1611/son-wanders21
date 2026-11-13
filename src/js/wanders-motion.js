@@ -31,6 +31,10 @@
 
   function revealHero() {
     document.documentElement.classList.add('wi-hero-enter');
+    var v = document.querySelector('.w-hero-video');
+    if (v && v.paused) {
+      try { v.play(); } catch (e) {}
+    }
   }
 
   function initHeroSync() {
