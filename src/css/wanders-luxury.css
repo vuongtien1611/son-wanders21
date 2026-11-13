@@ -694,11 +694,64 @@ html.wi-active:not(.wi-hero-enter) .w-hero-stagger {
 .w-arch-card {
   position: relative;
   display: block;
+  width: 100%;
   overflow: hidden;
   border-radius: 10px;
   background-color: #E5DFD3;
   box-shadow: 0 10px 28px -14px rgba(7, 59, 46, 0.16);
   transition: transform 480ms var(--motion-ease-cinematic), box-shadow 480ms ease;
+}
+
+/* Ensure project cards never collapse in height under any filter/grid condition */
+.w-arch-card--project,
+#projectsGrid .w-arch-card {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 280px;
+}
+
+@media (min-width: 640px) {
+  .w-arch-card--project,
+  #projectsGrid .w-arch-card {
+    min-height: 320px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .w-arch-card--project,
+  #projectsGrid .w-arch-card {
+    min-height: 300px;
+  }
+}
+
+.w-arch-card--related {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  min-height: 240px;
+}
+
+.w-arch-card-media {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  aspect-ratio: inherit;
+  overflow: hidden;
+}
+
+.w-arch-card-media img,
+.w-arch-card > span > img,
+.w-arch-card > span > span > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 560ms var(--motion-ease-cinematic);
+  will-change: transform;
 }
 
 .w-arch-card:hover {

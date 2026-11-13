@@ -1688,8 +1688,8 @@ function buildDuAnHtml(prefix, isSubdir) {
   const linkPrefix = isSubdir ? './' : './du-an/';
   const cardsHtml = PROJECTS.map((p) => {
     return `
-      <a class="w-arch-card group" href="${linkPrefix}${p.slug}/index.html" data-proj-cat="${escapeHtml(p.category)}">
-        <span class="inline-block relative w-full aspect-[4/3] overflow-hidden">
+      <a class="w-arch-card w-arch-card--project group" href="${linkPrefix}${p.slug}/index.html" data-proj-cat="${escapeHtml(p.category)}">
+        <span class="w-arch-card-media block relative w-full aspect-[4/3] min-h-[280px] sm:min-h-[320px] lg:min-h-[300px] overflow-hidden">
           <img class="w-full h-full inset-0 absolute object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]" alt="${escapeHtml(p.title)}" src="${prefix}images/base44/${p.heroImage}">
         </span>
         <div class="w-arch-card-overlay"></div>
@@ -1748,7 +1748,7 @@ ${renderHead({
           <p id="projectCountLabel" class="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#073B2E]">${PROJECTS.length} phối cảnh</p>
         </div>
 
-        <div class="mt-10 grid gap-6 lg:grid-cols-3 w-reveal" id="projectsGrid">
+        <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 w-reveal" id="projectsGrid">
           ${cardsHtml}
         </div>
 
@@ -1780,9 +1780,13 @@ ${renderHead({
             const cat = card.getAttribute('data-proj-cat') || '';
             const show = selected === 'Tất cả' || cat === selected;
             card.style.display = show ? '' : 'none';
-            if (show) visible++;
+            if (show) {
+              visible++;
+              card.classList.add('is-revealed');
+            }
           });
           if (countEl) countEl.textContent = visible + ' phối cảnh';
+          window.dispatchEvent(new CustomEvent('wanders:refresh-reveals'));
         });
       });
     });

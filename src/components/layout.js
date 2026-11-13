@@ -104,7 +104,7 @@ function renderHeader(prefix = './', activeNav = 'home') {
   const homeActiveAttr = activeNav === 'home' ? ' data-status="active" aria-current="page"' : '';
   const ctaActiveAttr = activeNav === 'lien-he' ? ' data-status="active"' : '';
 
-  return `<header class="w-header"><div class="mx-auto flex h-[76px] w-full max-w-[1320px] items-center justify-between gap-6 px-6 md:h-[86px] md:px-10"><a class="flex shrink-0 items-center" href="${prefix}index.html"${homeActiveAttr} aria-label="Trang chủ WANDERS"><img class="w-brand-logo" alt="Logo WANDERS" src="${logoSrc}"></a><nav class="hidden items-center gap-7 lg:flex xl:gap-10">${navHtml}</nav><div class="flex items-center gap-2"><a class="w-header-cta hidden shrink-0 lg:inline-flex" href="${prefix}lien-he.html"${ctaActiveAttr}>Tư vấn chọn sơn</a><button type="button" aria-label="Mở menu" class="flex h-11 w-11 items-center justify-center border border-[#E2DDD2] bg-white/60 text-[#073B2E] transition-colors hover:border-[#073B2E] lg:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-5 w-5"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button></div></div></header>`;
+  return `<header class="w-header"><div class="mx-auto flex h-[76px] w-full max-w-[1320px] items-center justify-between gap-6 px-4 sm:px-6 md:h-[86px] md:px-10"><a class="flex shrink-0 items-center" href="${prefix}index.html"${homeActiveAttr} aria-label="Trang chủ WANDERS"><img class="w-brand-logo" alt="Logo WANDERS" src="${logoSrc}"></a><nav class="hidden items-center gap-7 lg:flex xl:gap-10">${navHtml}</nav><div class="flex items-center gap-2"><a class="w-header-cta hidden shrink-0 lg:inline-flex" href="${prefix}lien-he.html"${ctaActiveAttr}>Tư vấn chọn sơn</a><button id="wMobileMenuBtn" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="b44MobileMenuDrawer" class="flex h-11 w-11 items-center justify-center border border-[#E2DDD2] bg-white/60 text-[#073B2E] transition-colors hover:border-[#073B2E] lg:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-icon-menu"><line x1="4" x2="20" y1="12"></line><line x1="4" x2="20" y1="6"></line><line x1="4" x2="20" y1="18"></line></svg><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-icon-close hidden"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg></button></div></div></header>`;
 }
 
 function renderConsultationCta(prefix = './') {
@@ -206,7 +206,7 @@ function renderFooter(prefix = './') {
 }
 
 function renderMobileDrawer(prefix = './') {
-  return `<div id="b44MobileMenuDrawer" class="fixed inset-x-0 top-[76px] z-40 hidden border-b border-[#E2DDD2] bg-[#F6F3EC] px-6 py-8 shadow-2xl transition-all duration-300 lg:hidden">
+  return `<div id="b44MobileMenuDrawer" style="top: var(--header-height, 77px); max-height: calc(100vh - var(--header-height, 77px)); overflow-y: auto;" class="fixed inset-x-0 z-40 hidden border-b border-[#E2DDD2] bg-[#F6F3EC]/98 backdrop-blur-md px-6 py-8 shadow-2xl transition-all duration-300 lg:hidden">
     <nav class="flex flex-col gap-5">
       <a class="text-[16px] font-medium text-[#273238] hover:text-[#073B2E]" href="${prefix}gioi-thieu.html">Giới thiệu</a>
       <a class="text-[16px] font-medium text-[#273238] hover:text-[#073B2E]" href="${prefix}san-pham.html">Sản phẩm</a>
@@ -226,11 +226,42 @@ function renderCoreScripts(prefix = './', { includeIntro = false, extraScripts =
   const introScript = includeIntro ? `\n  <script src="${prefix}assets/js/wanders-intro.js"></script>` : '';
   return `<script>
     document.addEventListener('DOMContentLoaded', () => {
-      const menuBtn = document.querySelector('header button[aria-label="Mở menu"]');
+      const menuBtn = document.getElementById('wMobileMenuBtn') || document.querySelector('header button[aria-label="Mở menu"]');
       const drawer = document.getElementById('b44MobileMenuDrawer');
       if (menuBtn && drawer) {
-        menuBtn.addEventListener('click', () => {
-          drawer.classList.toggle('hidden');
+        const iconMenu = menuBtn.querySelector('.w-icon-menu');
+        const iconClose = menuBtn.querySelector('.w-icon-close');
+
+        function toggleDrawer(open) {
+          const isOpen = typeof open === 'boolean' ? open : drawer.classList.contains('hidden');
+          drawer.classList.toggle('hidden', !isOpen);
+          menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          if (iconMenu && iconClose) {
+            iconMenu.classList.toggle('hidden', isOpen);
+            iconClose.classList.toggle('hidden', !isOpen);
+          }
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleDrawer();
+        });
+
+        // Close on clicking link
+        drawer.querySelectorAll('a').forEach(a => {
+          a.addEventListener('click', () => toggleDrawer(false));
+        });
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') toggleDrawer(false);
+        });
+
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+          if (!drawer.contains(e.target) && !menuBtn.contains(e.target) && !drawer.classList.contains('hidden')) {
+            toggleDrawer(false);
+          }
         });
       }
     });
