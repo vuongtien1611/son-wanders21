@@ -37,6 +37,15 @@
   --motion-stagger: 130ms;
 
   --w-ease-cinematic: var(--motion-ease-cinematic);
+
+  /* Layout Tokens */
+  --header-height: 87px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --header-height: 77px;
+  }
 }
 
 /* Base Surface & Typography */
@@ -93,10 +102,17 @@ main h2 {
 }
 
 .w-hero-title {
-  font-size: clamp(2.4rem, 4.4vw, 4rem);
+  font-size: clamp(2.1rem, 4.4vw, 4rem);
   font-weight: 600;
-  line-height: 1.04;
+  line-height: 1.05;
   letter-spacing: -0.02em;
+}
+
+@media (max-width: 640px) {
+  .w-hero-title {
+    font-size: clamp(1.85rem, 6.5vw, 2.35rem);
+    line-height: 1.1;
+  }
 }
 
 .w-subhero-title {
@@ -405,16 +421,51 @@ main h2 {
   background-color: var(--w-forest-deep);
 }
 
+.w-hero-section:has(.w-hero-video),
+.w-hero-section.w-hero-home {
+  height: calc(100vh - var(--header-height, 87px));
+  height: calc(100svh - var(--header-height, 87px));
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 640px) {
+  .w-hero-section:has(.w-hero-video),
+  .w-hero-section.w-hero-home {
+    min-height: calc(100svh - var(--header-height, 77px));
+    height: auto;
+  }
+}
+
 .w-hero-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
   object-position: center center;
   pointer-events: none;
   background-color: var(--w-forest-deep);
   z-index: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  max-height: none;
+}
+
+@media (max-width: 1024px) {
+  .w-hero-video {
+    object-position: 68% center;
+  }
+}
+
+@media (max-width: 640px) {
+  .w-hero-video {
+    object-position: 72% center;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -426,10 +477,28 @@ main h2 {
 .w-hero-overlay {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(96deg, rgba(7, 59, 46, 0.92) 0%, rgba(7, 59, 46, 0.72) 42%, rgba(7, 59, 46, 0.18) 100%),
-    linear-gradient(0deg, rgba(4, 36, 28, 0.82) 0%, rgba(4, 36, 28, 0.18) 46%, rgba(4, 36, 28, 0.25) 100%);
+  z-index: 1;
   pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(7, 59, 46, 0.60) 0%,
+    rgba(7, 59, 46, 0.42) 30%,
+    rgba(7, 59, 46, 0.22) 52%,
+    rgba(7, 59, 46, 0.05) 78%,
+    rgba(7, 59, 46, 0) 100%
+  );
+}
+
+@media (max-width: 767px) {
+  .w-hero-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(7, 59, 46, 0.62) 0%,
+      rgba(7, 59, 46, 0.45) 45%,
+      rgba(7, 59, 46, 0.18) 75%,
+      rgba(7, 59, 46, 0.35) 100%
+    );
+  }
 }
 
 .w-subhero-overlay {

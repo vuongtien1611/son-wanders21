@@ -135,7 +135,7 @@ ${renderHead({
     <!-- ============================================================ -->
     <!-- SECTION 1: CINEMATIC HERO (Video Banner with Intro Sync)     -->
     <!-- ============================================================ -->
-    <section class="w-hero-section">
+    <section class="w-hero-section w-hero-home">
       <div class="absolute inset-0">
         <video
           class="w-hero-video h-full w-full object-cover"
@@ -152,25 +152,27 @@ ${renderHead({
         <div class="w-hero-overlay"></div>
       </div>
 
-      <div class="wanders-container relative z-10 flex min-h-[540px] flex-col justify-end pb-14 pt-28 sm:min-h-[620px] sm:pb-16 lg:min-h-[710px] lg:pb-20">
-        <p class="w-eyebrow w-eyebrow--light w-hero-stagger w-hero-stagger--1">
-          <span class="w-eyebrow-line"></span>WANDERS PAINT · DEINE WAND MAL ANDERS
-        </p>
-        <h1 class="w-hero-title mt-6 max-w-[14ch] text-white sm:max-w-[16ch] w-hero-stagger w-hero-stagger--2">
-          Mỗi bức tường, một dấu ấn riêng.
-        </h1>
-        <p class="mt-6 max-w-[46ch] text-[15px] leading-[1.75] text-[#F6F3EC]/88 sm:text-[16px] w-hero-stagger w-hero-stagger--3">
-          Khám phá những giải pháp sơn và cảm hứng màu sắc dành cho không gian sống hiện đại.
-        </p>
-        <div class="mt-9 flex flex-col gap-3.5 sm:flex-row sm:items-center w-hero-stagger w-hero-stagger--4">
-          <a class="w-btn w-btn-gold" href="./bang-mau.html">
-            <span>Khám phá bảng màu</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-          </a>
-          <a class="w-btn w-btn-glass" href="./san-pham.html">
-            <span>Xem sản phẩm</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-          </a>
+      <div class="wanders-container relative z-10 flex h-full flex-1 flex-col justify-center py-10 sm:py-12 md:py-16">
+        <div class="w-hero-body max-w-xl lg:max-w-[46%] xl:max-w-[540px]">
+          <p class="w-eyebrow w-eyebrow--light w-hero-stagger w-hero-stagger--1">
+            <span class="w-eyebrow-line"></span>WANDERS PAINT · DEINE WAND MAL ANDERS
+          </p>
+          <h1 class="w-hero-title mt-5 text-white w-hero-stagger w-hero-stagger--2">
+            Mỗi bức tường, một dấu ấn riêng.
+          </h1>
+          <p class="mt-5 max-w-[46ch] text-[15px] leading-[1.75] text-[#F6F3EC]/90 sm:text-[16px] w-hero-stagger w-hero-stagger--3">
+            Khám phá những giải pháp sơn và cảm hứng màu sắc dành cho không gian sống hiện đại.
+          </p>
+          <div class="mt-8 flex flex-col gap-3.5 sm:flex-row sm:items-center w-hero-stagger w-hero-stagger--4">
+            <a class="w-btn w-btn-gold" href="./bang-mau.html">
+              <span>Khám phá bảng màu</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </a>
+            <a class="w-btn w-btn-glass" href="./san-pham.html">
+              <span>Xem sản phẩm</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-btn-arrow h-4 w-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            </a>
+          </div>
         </div>
       </div>
     </section>
