@@ -597,14 +597,33 @@ body {
   background-color: var(--wanders-gold);
 }
 
-.suggested-palettes-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
+@media (max-width: 639px) {
+  .suggested-palettes-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: 16px !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding: 6px 16px 20px !important;
+    margin-left: -16px !important;
+    margin-right: -16px !important;
+  }
+  .suggested-palettes-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+  .suggested-palettes-grid .suggested-palette-card {
+    flex: 0 0 84% !important;
+    scroll-snap-align: start !important;
+    min-width: 0 !important;
+  }
 }
 
 @media (min-width: 640px) {
   .suggested-palettes-grid {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
   }
@@ -612,6 +631,7 @@ body {
 
 @media (min-width: 1024px) {
   .suggested-palettes-grid {
+    display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
   }

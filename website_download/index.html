@@ -122,15 +122,15 @@
           </div>
         </div>
 
-        <div class="mt-9 flex flex-wrap items-center gap-x-2 gap-y-2 border-b border-[#E2DDD2] pb-1 w-reveal" id="homeCatalogueTabs">
-          <button type="button" data-filter="featured" class="relative px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 text-[#073B2E]">Nổi bật<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-100"></span></button>
-          <button type="button" data-filter="son-ngoai-that" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn ngoại thất<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
-          <button type="button" data-filter="son-noi-that" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn nội thất<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
-          <button type="button" data-filter="chong-tham" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn chống thấm<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
-          <button type="button" data-filter="son-lot" class="relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn lót<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
+        <div class="mt-9 flex items-center border-b border-[#E2DDD2] pb-1 w-cat-tabs-scroll w-reveal" id="homeCatalogueTabs">
+          <button type="button" data-filter="featured" class="w-cat-tab relative px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.14em] transition-colors duration-200 text-[#073B2E]">Nổi bật<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-100"></span></button>
+          <button type="button" data-filter="son-ngoai-that" class="w-cat-tab relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn ngoại thất<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
+          <button type="button" data-filter="son-noi-that" class="w-cat-tab relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn nội thất<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
+          <button type="button" data-filter="chong-tham" class="w-cat-tab relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn chống thấm<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
+          <button type="button" data-filter="son-lot" class="w-cat-tab relative px-4 py-3 text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-200 text-[#5A6468] hover:text-[#073B2E]">Sơn lót<span class="absolute inset-x-0 -bottom-1 h-[2px] bg-[#D6AD45] transition-opacity duration-200 opacity-0"></span></button>
         </div>
 
-        <div class="mt-9 wanders-products-grid w-reveal" id="homeCatalogueGrid">
+        <div class="mt-9 wanders-products-grid w-cat-slider-mobile w-reveal" id="homeCatalogueGrid">
           
       <a class="sp-product-card home-cat-card" href="./san-pham/anti-uv-exterior-ex9000/index.html" data-cat="son-ngoai-that" data-featured="1">
         <div class="wpc-top">
@@ -631,8 +631,8 @@
           <p class="mt-4 max-w-[580px] text-[15.5px] leading-[1.7] text-[#5A6468]">Sáu nhóm sản phẩm được tổ chức theo bề mặt và điều kiện sử dụng — từ lớp lót đến hoàn thiện ngoại thất.</p>
         </div>
 
-        <div class="mt-12 grid gap-5 lg:mt-16 lg:grid-cols-12 w-reveal">
-          <a class="w-arch-card group lg:col-span-7" href="./san-pham/son-noi-that/index.html">
+        <div class="mt-12 w-paint-collections-slider w-reveal">
+          <a class="w-arch-card group w-pc-card w-pc-card--1" href="./san-pham/son-noi-that/index.html">
             <span class="inline-block relative w-full object-cover aspect-[4/3]">
               <span class="block relative w-full h-full overflow-hidden">
                 <img class="w-pc-img w-full h-full inset-0 absolute object-cover" style="object-position: center 55%;" alt="Sơn nội thất" src="./images/paint-collections/son-noi-that.png">
@@ -650,7 +650,7 @@
             </div>
           </a>
 
-          <a class="w-arch-card group lg:col-span-5 lg:mt-12" href="./san-pham/son-ngoai-that/index.html">
+          <a class="w-arch-card group w-pc-card w-pc-card--2" href="./san-pham/son-ngoai-that/index.html">
             <span class="inline-block relative w-full object-cover aspect-[4/3]">
               <span class="block relative w-full h-full overflow-hidden">
                 <img class="w-pc-img w-full h-full inset-0 absolute object-cover" style="object-position: center 45%;" alt="Sơn ngoại thất" src="./images/paint-collections/son-ngoai-that.png">
@@ -667,10 +667,8 @@
               </span>
             </div>
           </a>
-        </div>
 
-        <div class="mt-5 grid grid-cols-2 gap-5 lg:grid-cols-4 w-reveal w-reveal-delay-1">
-          <a class="w-arch-card group" href="./san-pham/son-chong-tham/index.html">
+          <a class="w-arch-card group w-pc-card w-pc-card--3" href="./san-pham/son-chong-tham/index.html">
             <span class="inline-block relative w-full object-cover aspect-[3/4]">
               <span class="block relative w-full h-full overflow-hidden">
                 <img class="w-pc-img w-full h-full inset-0 absolute object-cover" style="object-position: center 40%;" alt="Sơn chống thấm" src="./images/paint-collections/son-chong-tham.png">
@@ -685,7 +683,7 @@
             </div>
           </a>
 
-          <a class="w-arch-card group" href="./san-pham/son-lot/index.html">
+          <a class="w-arch-card group w-pc-card w-pc-card--4" href="./san-pham/son-lot/index.html">
             <span class="inline-block relative w-full object-cover aspect-[3/4]">
               <span class="block relative w-full h-full overflow-hidden">
                 <img class="w-pc-img w-full h-full inset-0 absolute object-cover" style="object-position: center center;" alt="Sơn lót" src="./images/paint-collections/son-lot.png">
@@ -700,7 +698,7 @@
             </div>
           </a>
 
-          <a class="w-arch-card group" href="./san-pham/son-chong-nong/index.html">
+          <a class="w-arch-card group w-pc-card w-pc-card--5" href="./san-pham/son-chong-nong/index.html">
             <span class="inline-block relative w-full object-cover aspect-[3/4]">
               <span class="block relative w-full h-full overflow-hidden">
                 <img class="w-pc-img w-full h-full inset-0 absolute object-cover" style="object-position: center 60%;" alt="Sơn chống nóng" src="./images/paint-collections/son-chong-nong.png">
@@ -715,7 +713,7 @@
             </div>
           </a>
 
-          <a class="w-arch-card group" href="./san-pham/san-pham-khac/index.html">
+          <a class="w-arch-card group w-pc-card w-pc-card--6" href="./san-pham/san-pham-khac/index.html">
             <span class="inline-block relative w-full object-cover aspect-[3/4]">
               <span class="block relative w-full h-full overflow-hidden">
                 <img class="w-pc-img w-full h-full inset-0 absolute object-cover" style="object-position: center 55%;" alt="Sản phẩm khác" src="./images/paint-collections/san-pham-khac.png">
@@ -760,7 +758,7 @@
           </div>
 
           <div class="flex flex-col">
-            <div class="flex flex-wrap gap-2" id="livingStyleTabs">
+            <div class="flex gap-2 w-living-tabs-scroll" id="livingStyleTabs">
               <button type="button" class="w-filter-pill is-active px-4 py-2.5 text-[11.5px] font-semibold uppercase tracking-[0.12em]">Tối giản hiện đại</button>
               <button type="button" class="w-filter-pill px-4 py-2.5 text-[11.5px] font-medium uppercase tracking-[0.12em]">Sống ấm</button>
               <button type="button" class="w-filter-pill px-4 py-2.5 text-[11.5px] font-medium uppercase tracking-[0.12em]">Cảm hứng thiên nhiên</button>
@@ -831,7 +829,7 @@
           <p class="max-w-[400px] text-[15.5px] leading-[1.7] text-[#5A6468]">Ghi chép về vật liệu, ánh sáng và cách một bảng màu đi vào đời sống của kiến trúc.</p>
         </div>
 
-        <div class="mt-12 grid gap-5 lg:mt-16 lg:grid-cols-12 w-reveal">
+        <div class="mt-12 w-projects-slider-mobile w-reveal">
           <a class="w-arch-card group lg:col-span-7" href="./du-an/biet-thu-mai-bang/index.html">
             <span class="inline-block relative w-full h-full min-h-[300px] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] aspect-[4/3]">
               <span class="block relative w-full h-full overflow-hidden">
@@ -854,7 +852,7 @@
             </div>
           </a>
 
-          <div class="grid gap-5 lg:col-span-5">
+          <div class="w-projects-subgrid">
             <a class="w-arch-card group" href="./du-an/can-ho-trung-tam/index.html">
               <span class="inline-block relative w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] aspect-[16/10]">
                 <span class="block relative w-full h-full overflow-hidden">
@@ -1311,6 +1309,7 @@
       // 2. Catalogue Tab Switching
       const catTabs = Array.from(document.querySelectorAll('#homeCatalogueTabs button[type="button"]'));
       const catCards = Array.from(document.querySelectorAll('#homeCatalogueGrid .home-cat-card'));
+      const catGridEl = document.getElementById('homeCatalogueGrid');
       if (catTabs.length && catCards.length) {
         catTabs.forEach((tab) => {
           tab.addEventListener('click', () => {
@@ -1324,6 +1323,14 @@
             tab.classList.remove('text-[#5A6468]', 'font-medium');
             const activeBar = tab.querySelector('span');
             if (activeBar) activeBar.classList.replace('opacity-0', 'opacity-100');
+
+            try {
+              tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            } catch (e) {}
+
+            if (catGridEl) {
+              catGridEl.scrollTo({ left: 0, behavior: 'smooth' });
+            }
 
             const filter = tab.getAttribute('data-filter') || 'featured';
             let visIdx = 0;
