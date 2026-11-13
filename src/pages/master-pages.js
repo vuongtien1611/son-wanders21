@@ -1682,16 +1682,11 @@ ${renderHead({
 // ============================================================================
 function buildDuAnHtml(prefix, isSubdir) {
   const linkPrefix = isSubdir ? './' : './du-an/';
-  const cardsHtml = PROJECTS.map((p, idx) => {
-    const isLead = idx === 0;
-    const spanClass = isLead ? 'lg:col-span-2' : '';
-    const aspectClass = isLead ? 'aspect-[16/10]' : (idx === 1 ? 'aspect-[4/3] lg:aspect-auto lg:h-full' : 'aspect-[4/3]');
+  const cardsHtml = PROJECTS.map((p) => {
     return `
-      <a class="w-arch-card group ${spanClass}${idx === 1 ? ' lg:min-h-full' : ''}" href="${linkPrefix}${p.slug}/index.html" data-proj-cat="${escapeHtml(p.category)}">
-        <span class="inline-block relative w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03] ${aspectClass}">
-          <span class="block relative w-full h-full overflow-hidden">
-            <img class="w-full h-full inset-0 absolute object-cover" alt="${escapeHtml(p.title)}" src="${prefix}images/base44/${p.heroImage}">
-          </span>
+      <a class="w-arch-card group" href="${linkPrefix}${p.slug}/index.html" data-proj-cat="${escapeHtml(p.category)}">
+        <span class="inline-block relative w-full aspect-[4/3] overflow-hidden">
+          <img class="w-full h-full inset-0 absolute object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]" alt="${escapeHtml(p.title)}" src="${prefix}images/base44/${p.heroImage}">
         </span>
         <div class="w-arch-card-overlay"></div>
         <span class="absolute left-4 top-4 rounded border border-[#F6F3EC]/30 bg-[#073B2E]/70 px-2.5 py-1 text-[9.5px] uppercase tracking-[0.16em] text-[#F6F3EC] backdrop-blur-sm">Phối cảnh định hướng</span>
