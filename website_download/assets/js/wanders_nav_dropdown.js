@@ -159,22 +159,6 @@
         dropdown.classList.remove('is-open');
       }
     });
-
-    // 4. Enhance Mobile Drawer if present
-    const mobileNav = document.querySelector('#b44MobileMenuDrawer nav');
-    if (mobileNav && !mobileNav.querySelector('.wanders-mobile-subcats')) {
-      const mobileProdLink = Array.from(mobileNav.querySelectorAll('a')).find(a => (a.getAttribute('href') || '').includes('san-pham'));
-      if (mobileProdLink) {
-        const subGrid = document.createElement('div');
-        subGrid.className = 'wanders-mobile-subcats';
-        subGrid.innerHTML = CATEGORIES.map(cat => `
-          <a href="${prefix}san-pham.html?nhom=${cat.slug}" class="wanders-mobile-subcat-link">
-            <span>${cat.title}</span>
-          </a>
-        `).join('');
-        mobileProdLink.insertAdjacentElement('afterend', subGrid);
-      }
-    }
   }
 
   if (document.readyState === 'loading') {
