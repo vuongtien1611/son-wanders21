@@ -104,7 +104,7 @@ function renderHeader(prefix = './', activeNav = 'home') {
   const homeActiveAttr = activeNav === 'home' ? ' data-status="active" aria-current="page"' : '';
   const ctaActiveAttr = activeNav === 'lien-he' ? ' data-status="active"' : '';
 
-  return `<header class="w-header"><div class="mx-auto flex h-[76px] w-full max-w-[1320px] items-center justify-between gap-6 px-4 sm:px-6 md:h-[86px] md:px-10"><a class="flex shrink-0 items-center" href="${prefix}index.html"${homeActiveAttr} aria-label="Trang chủ WANDERS"><img class="w-brand-logo" alt="Logo WANDERS" src="${logoSrc}"></a><nav class="hidden items-center gap-7 lg:flex xl:gap-10">${navHtml}</nav><div class="flex items-center gap-2"><a class="w-header-cta hidden shrink-0 lg:inline-flex" href="${prefix}lien-he.html"${ctaActiveAttr}>Tư vấn chọn sơn</a><button id="wMobileMenuBtn" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="b44MobileMenuDrawer" class="flex h-11 w-11 items-center justify-center border border-[#E2DDD2] bg-white/60 text-[#073B2E] transition-colors hover:border-[#073B2E] lg:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-icon-menu"><line x1="4" x2="20" y1="12"></line><line x1="4" x2="20" y1="6"></line><line x1="4" x2="20" y1="18"></line></svg><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-icon-close hidden"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg></button></div></div></header>`;
+  return `<header class="w-header"><div class="mx-auto flex h-[76px] w-full max-w-[1320px] items-center justify-between gap-6 px-4 sm:px-6 md:h-[86px] md:px-10"><a class="flex shrink-0 items-center" href="${prefix}index.html"${homeActiveAttr} aria-label="Trang chủ WANDERS"><img class="w-brand-logo" alt="Logo WANDERS" src="${logoSrc}"></a><nav class="hidden items-center gap-7 lg:flex xl:gap-10">${navHtml}</nav><div class="flex items-center gap-2"><a class="w-header-cta hidden shrink-0 lg:inline-flex" href="${prefix}lien-he.html"${ctaActiveAttr}>Tư vấn chọn sơn</a><button id="wMobileMenuBtn" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="b44MobileMenuDrawer" class="flex h-11 w-11 items-center justify-center rounded border border-[#DED8CD] bg-[#F6F3EC]/90 text-[#073B2E] shadow-sm transition-colors hover:border-[#073B2E] lg:hidden"><svg class="w-icon-menu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#073B2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg><svg class="w-icon-close hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#073B2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div></div></header>`;
 }
 
 function renderConsultationCta(prefix = './') {
@@ -206,7 +206,8 @@ function renderFooter(prefix = './') {
 }
 
 function renderMobileDrawer(prefix = './') {
-  return `<div id="b44MobileMenuDrawer" style="top: var(--header-height, 77px); max-height: calc(100vh - var(--header-height, 77px)); overflow-y: auto;" class="fixed inset-x-0 z-40 hidden border-b border-[#E2DDD2] bg-[#F6F3EC]/98 backdrop-blur-md px-6 py-8 shadow-2xl transition-all duration-300 lg:hidden">
+  return `<div id="b44MobileMenuOverlay" class="fixed inset-0 z-[998] hidden bg-[#073B2E]/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden"></div>
+  <div id="b44MobileMenuDrawer" style="top: var(--header-height, 76px); max-height: calc(100vh - var(--header-height, 76px)); overflow-y: auto;" class="fixed inset-x-0 z-[999] hidden border-b border-[#E2DDD2] bg-[#F6F3EC]/98 backdrop-blur-md px-6 py-8 shadow-2xl transition-all duration-300 lg:hidden">
     <nav class="flex flex-col gap-5">
       <a class="text-[16px] font-medium text-[#273238] hover:text-[#073B2E]" href="${prefix}gioi-thieu.html">Giới thiệu</a>
       <a class="text-[16px] font-medium text-[#273238] hover:text-[#073B2E]" href="${prefix}san-pham.html">Sản phẩm</a>
@@ -228,6 +229,7 @@ function renderCoreScripts(prefix = './', { includeIntro = false, extraScripts =
     document.addEventListener('DOMContentLoaded', () => {
       const menuBtn = document.getElementById('wMobileMenuBtn') || document.querySelector('header button[aria-label="Mở menu"]');
       const drawer = document.getElementById('b44MobileMenuDrawer');
+      const overlay = document.getElementById('b44MobileMenuOverlay');
       if (menuBtn && drawer) {
         const iconMenu = menuBtn.querySelector('.w-icon-menu');
         const iconClose = menuBtn.querySelector('.w-icon-close');
@@ -235,17 +237,25 @@ function renderCoreScripts(prefix = './', { includeIntro = false, extraScripts =
         function toggleDrawer(open) {
           const isOpen = typeof open === 'boolean' ? open : drawer.classList.contains('hidden');
           drawer.classList.toggle('hidden', !isOpen);
+          if (overlay) overlay.classList.toggle('hidden', !isOpen);
           menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
           if (iconMenu && iconClose) {
             iconMenu.classList.toggle('hidden', isOpen);
             iconClose.classList.toggle('hidden', !isOpen);
           }
+          try {
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+          } catch (e) {}
         }
 
         menuBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           toggleDrawer();
         });
+
+        if (overlay) {
+          overlay.addEventListener('click', () => toggleDrawer(false));
+        }
 
         // Close on clicking link
         drawer.querySelectorAll('a').forEach(a => {

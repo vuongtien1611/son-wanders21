@@ -1695,8 +1695,8 @@ function buildDuAnHtml(prefix, isSubdir) {
   const linkPrefix = isSubdir ? './' : './du-an/';
   const cardsHtml = PROJECTS.map((p) => {
     return `
-      <a class="w-arch-card w-arch-card--project group" href="${linkPrefix}${p.slug}/index.html" data-proj-cat="${escapeHtml(p.category)}">
-        <span class="w-arch-card-media block relative w-full aspect-[4/3] min-h-[280px] sm:min-h-[320px] lg:min-h-[300px] overflow-hidden">
+      <a class="w-arch-card w-arch-card--project group" href="${linkPrefix}${p.slug}/index.html" data-proj-cat="${escapeHtml(p.category)}" style="min-height:280px;aspect-ratio:4/3;">
+        <span class="w-arch-card-media block relative w-full aspect-[4/3] min-h-[280px] sm:min-h-[320px] lg:min-h-[300px] overflow-hidden" style="min-height:280px;aspect-ratio:4/3;">
           <img class="w-full h-full inset-0 absolute object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]" alt="${escapeHtml(p.title)}" src="${prefix}images/base44/${p.heroImage}">
         </span>
         <div class="w-arch-card-overlay"></div>
