@@ -1476,7 +1476,7 @@ ${renderHead({
         </span>
         <div class="w-subhero-overlay"></div>
       </div>
-      <div class="wanders-container relative z-10 flex flex-col justify-end pb-14 pt-24 min-h-[380px] lg:min-h-[460px]">
+      <div class="wanders-container relative z-10 flex flex-col justify-end pt-24 pb-10 sm:pt-28 sm:pb-12 md:pt-32 md:pb-14">
         <p class="w-eyebrow w-eyebrow--light w-hero-stagger w-hero-stagger--1"><span class="w-eyebrow-line"></span>Paint Collections</p>
         <h1 class="w-subhero-title mt-5 max-w-[24ch] text-white w-hero-stagger w-hero-stagger--2">Sản phẩm WANDERS</h1>
         <p class="mt-4 max-w-[54ch] text-[15px] leading-[1.7] text-[#F6F3EC]/85 sm:text-[16px] w-hero-stagger w-hero-stagger--3">Danh mục ${products.length} dòng sản phẩm WANDERS chính thức được tổ chức theo bề mặt thi công và điều kiện sử dụng.</p>
@@ -1701,7 +1701,7 @@ ${renderHead({
         </span>
         <div class="w-subhero-overlay"></div>
       </div>
-      <div class="wanders-container relative z-10 flex flex-col justify-end pb-14 pt-24 min-h-[380px] lg:min-h-[460px]">
+      <div class="wanders-container relative z-10 flex flex-col justify-end pt-24 pb-10 sm:pt-28 sm:pb-12 md:pt-32 md:pb-14">
         <p class="w-eyebrow w-eyebrow--light w-hero-stagger w-hero-stagger--1"><span class="w-eyebrow-line"></span>Project Journal</p>
         <h1 class="w-subhero-title mt-5 max-w-[24ch] text-white w-hero-stagger w-hero-stagger--2">Dự án &amp; Công trình</h1>
         <p class="mt-4 max-w-[54ch] text-[15px] leading-[1.7] text-[#F6F3EC]/85 sm:text-[16px] w-hero-stagger w-hero-stagger--3">Những không gian được ghi lại theo cách chúng ta nhìn màu sắc: ánh sáng, vật liệu và bề mặt tường.</p>
@@ -1795,7 +1795,7 @@ ${renderHead({
         </span>
         <div class="w-subhero-overlay"></div>
       </div>
-      <div class="wanders-container relative z-10 flex flex-col justify-end pb-12 pt-24 min-h-[290px] lg:min-h-[360px]">
+      <div class="wanders-container relative z-10 flex flex-col justify-end pt-24 pb-8 sm:pt-28 sm:pb-10 md:pt-32 md:pb-12">
         <p class="w-eyebrow w-eyebrow--light w-hero-stagger w-hero-stagger--1"><span class="w-eyebrow-line"></span>Contact</p>
         <h1 class="w-subhero-title mt-4 max-w-[24ch] text-white w-hero-stagger w-hero-stagger--2">Liên hệ WANDERS</h1>
         <p class="mt-4 max-w-[54ch] text-[15px] leading-[1.7] text-[#F6F3EC]/85 sm:text-[16px] w-hero-stagger w-hero-stagger--3">Gửi nhu cầu tư vấn màu sắc và sản phẩm. WANDERS sẽ phản hồi trong giờ làm việc.</p>

@@ -563,10 +563,34 @@ main h2 {
 .w-subhero-overlay {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(96deg, rgba(7, 59, 46, 0.90) 0%, rgba(7, 59, 46, 0.65) 55%, rgba(7, 59, 46, 0.42) 100%),
-    linear-gradient(0deg, rgba(4, 36, 28, 0.86) 0%, rgba(7, 59, 46, 0.35) 100%);
+  z-index: 1;
   pointer-events: none;
+  background:
+    linear-gradient(
+      96deg,
+      rgba(7, 59, 46, 0.52) 0%,
+      rgba(7, 59, 46, 0.32) 40%,
+      rgba(7, 59, 46, 0.12) 70%,
+      rgba(7, 59, 46, 0.02) 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(4, 36, 28, 0.55) 0%,
+      rgba(7, 59, 46, 0.15) 50%,
+      rgba(7, 59, 46, 0.0) 100%
+    );
+}
+
+@media (max-width: 767px) {
+  .w-subhero-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(7, 59, 46, 0.25) 0%,
+      rgba(7, 59, 46, 0.08) 32%,
+      rgba(7, 59, 46, 0.32) 68%,
+      rgba(4, 36, 28, 0.62) 100%
+    );
+  }
 }
 
 /* Pre-rendered hidden state while Intro plays so wipe reveals Hero cleanly without jump */
