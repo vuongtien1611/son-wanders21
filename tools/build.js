@@ -67,6 +67,13 @@ function syncAssets() {
     }
   }
 
+  // Copy images from src/images/ -> website_download/images/
+  const srcImages = path.join(SRC_DIR, 'images');
+  const outImages = path.join(OUT_DIR, 'images');
+  if (fs.existsSync(srcImages)) {
+    fs.cpSync(srcImages, outImages, { recursive: true });
+  }
+
   console.log(`Synced Production assets: ${cssCount} CSS -> assets/css/, ${jsCount} JS -> assets/js/, ${videoCount} Videos -> assets/video/`);
 }
 

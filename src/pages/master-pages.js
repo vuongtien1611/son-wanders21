@@ -116,6 +116,28 @@ function buildHomepageHtml() {
   const p1 = PROJECTS[1];
   const p2 = PROJECTS[2];
 
+  function renderProjectJournalCard(p) {
+    return `
+      <a class="w-pj-card group" href="./du-an/${p.slug}/index.html">
+        <div class="w-pj-media">
+          <img class="w-pj-img" alt="${escapeHtml(p.title)}" src="./images/base44/${p.heroImage}">
+        </div>
+        <div class="w-pj-body">
+          <div class="w-pj-meta">
+            <span class="w-pj-badge">Phối cảnh định hướng</span>
+            <span class="w-pj-dot" aria-hidden="true">•</span>
+            <span class="w-pj-cat">${escapeHtml(p.category)}</span>
+          </div>
+          <h3 class="w-pj-title">${escapeHtml(p.title)}</h3>
+          <p class="w-pj-desc">${escapeHtml(p.excerpt)}</p>
+          <div class="w-pj-cta">
+            <span class="w-pj-cta-text">Khám phá dự án</span>
+            <span class="w-pj-cta-arrow" aria-hidden="true">→</span>
+          </div>
+        </div>
+      </a>`;
+  }
+
   return `<!DOCTYPE html>
 <html lang="vi">
 ${renderHead({
@@ -545,66 +567,10 @@ ${renderHead({
         </div>
 
         <div class="mt-12 w-projects-slider-mobile w-reveal">
-          <a class="w-arch-card group lg:col-span-7" href="./du-an/${p0.slug}/index.html">
-            <span class="inline-block relative w-full h-full min-h-[300px] object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] aspect-[4/3]">
-              <span class="block relative w-full h-full overflow-hidden">
-                <img class="w-full h-full inset-0 absolute object-cover" alt="${escapeHtml(p0.title)}" src="./images/base44/${p0.heroImage}">
-              </span>
-            </span>
-            <div class="w-arch-card-overlay"></div>
-            <span class="absolute left-4 top-4 rounded border border-[#F6F3EC]/30 bg-[#073B2E]/70 px-2.5 py-1 text-[9.5px] uppercase tracking-[0.16em] text-[#F6F3EC] backdrop-blur-sm">Phối cảnh định hướng</span>
-            <div class="absolute inset-x-0 bottom-0 p-6 pt-16">
-              <p class="text-[10.5px] uppercase tracking-[0.22em] text-[#E8CA7A]">${escapeHtml(p0.category)}</p>
-              <div class="mt-2 flex items-end justify-between gap-4">
-                <div>
-                  <h3 class="font-semibold text-white text-xl sm:text-[26px]">${escapeHtml(p0.title)}</h3>
-                  <p class="mt-2 max-w-[40ch] text-[13.5px] leading-relaxed text-[#F6F3EC]/82">${escapeHtml(p0.excerpt)}</p>
-                </div>
-                <span class="w-arch-card-arrow">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
-                </span>
-              </div>
-            </div>
-          </a>
-
+          ${renderProjectJournalCard(p0)}
           <div class="w-projects-subgrid">
-            <a class="w-arch-card group" href="./du-an/${p1.slug}/index.html">
-              <span class="inline-block relative w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] aspect-[16/10]">
-                <span class="block relative w-full h-full overflow-hidden">
-                  <img class="w-full h-full inset-0 absolute object-cover" alt="${escapeHtml(p1.title)}" src="./images/base44/${p1.heroImage}">
-                </span>
-              </span>
-              <div class="w-arch-card-overlay"></div>
-              <span class="absolute left-4 top-4 rounded border border-[#F6F3EC]/30 bg-[#073B2E]/70 px-2.5 py-1 text-[9.5px] uppercase tracking-[0.16em] text-[#F6F3EC] backdrop-blur-sm">Phối cảnh định hướng</span>
-              <div class="absolute inset-x-0 bottom-0 p-5 pt-16 sm:p-6">
-                <p class="text-[10px] uppercase tracking-[0.22em] text-[#E8CA7A]">${escapeHtml(p1.category)}</p>
-                <div class="mt-2 flex items-end justify-between gap-4">
-                  <h3 class="font-semibold text-white text-[18px]">${escapeHtml(p1.title)}</h3>
-                  <span class="w-arch-card-arrow">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
-                  </span>
-                </div>
-              </div>
-            </a>
-
-            <a class="w-arch-card group" href="./du-an/${p2.slug}/index.html">
-              <span class="inline-block relative w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] aspect-[16/10]">
-                <span class="block relative w-full h-full overflow-hidden">
-                  <img class="w-full h-full inset-0 absolute object-cover" alt="${escapeHtml(p2.title)}" src="./images/base44/${p2.heroImage}">
-                </span>
-              </span>
-              <div class="w-arch-card-overlay"></div>
-              <span class="absolute left-4 top-4 rounded border border-[#F6F3EC]/30 bg-[#073B2E]/70 px-2.5 py-1 text-[9.5px] uppercase tracking-[0.16em] text-[#F6F3EC] backdrop-blur-sm">Phối cảnh định hướng</span>
-              <div class="absolute inset-x-0 bottom-0 p-5 pt-16 sm:p-6">
-                <p class="text-[10px] uppercase tracking-[0.22em] text-[#E8CA7A]">${escapeHtml(p2.category)}</p>
-                <div class="mt-2 flex items-end justify-between gap-4">
-                  <h3 class="font-semibold text-white text-[18px]">${escapeHtml(p2.title)}</h3>
-                  <span class="w-arch-card-arrow">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
-                  </span>
-                </div>
-              </div>
-            </a>
+            ${renderProjectJournalCard(p1)}
+            ${renderProjectJournalCard(p2)}
           </div>
         </div>
 
