@@ -1,21 +1,71 @@
 /**
- * WANDERS CINEMATIC PAINT EXPLOSION INTRO
+ * WANDERS CINEMATIC PAINT EXPLOSION INTRO V5
  * Concept: WANDERS – THE POWER OF COLOR ("Sắc màu kiến tạo không gian sống")
- * Modular Architecture:
- *   - PaintParticles  (Canvas physics: drop acceleration, shockwave rings, ballistic droplets)
- *   - PaintSplash     (Scene 01 Impact & Scene 02 Explosion image choreography)
- *   - LiquidRibbons   (Scene 02-03 Viscous Bezier ribbons + 03_liquid_ribbons.png sweep)
- *   - LogoReveal      (Proportional 7-letter glyph alignment & sequential paint reveal)
- *   - PageTransition  (Scene 05 04_paint_transition.png curtain wipe -> Hero unveil)
- *   - IntroTimeline   (RAF master timeline, session gating, safety timeout, clean teardown)
+ *
+ * Dedicated Mobile Timeline (6.5s) & Desktop Timeline (3.845s untouched):
+ *   Scene 01 – Paint Awakening: 0 – 1.2s (Mobile) / 0 – 0.56s (Desktop)
+ *   Scene 02 – Paint Explosion: 1.2 – 2.6s (Mobile) / 0.56 – 1.30s (Desktop)
+ *   Scene 03 – WANDERS Logo Reveal: 2.6 – 4.1s (Mobile) / 1.30 – 2.12s (Desktop)
+ *   Scene 04 – Brand Hold: 4.1 – 5.5s (Mobile, 1.4s steady hold) / 2.12 – 2.72s (Desktop)
+ *   Scene 05 – Cinematic Exit: 5.5 – 6.5s (Mobile, 1.0s veil lift) / 2.72 – 3.845s (Desktop)
  */
 (function () {
   'use strict';
 
   var SESSION_KEY = 'wanders_intro_seen';
   var ASSET_BASE = './images/introl/';
-  var TOTAL_DURATION = 3845; // ms (2860ms wipe start + 950ms upward glide + 35ms settle)
-  var HARD_SAFETY_TIMEOUT = 5200;
+
+  // ---------------------------------------------------------------------------
+  // TIMELINE CONFIGURATIONS (DESKTOP UNCHANGED vs MOBILE 6.5s CINEMATIC)
+  // ---------------------------------------------------------------------------
+  var CONFIG_DESKTOP = {
+    isMobile: false,
+    totalDuration: 3845,
+    hardSafetyTimeout: 5200,
+    dropDuration: 250,
+    impactTime: 245,
+    explosionTime: 560,
+    explosionBurstTime: 620,
+    explosionEndTime: 1600,
+    ribbonsStartTime: 580,
+    ribbonsEndTime: 2250,
+    logoRevealStart: 1300,
+    logoRevealStep: 105,
+    brandRevealTime: 2120,
+    logoFadeTime: 2720,
+    chargeTime: 2780,
+    wipeTime: 2860,
+    curtainTransitionMs: 950,
+    particleScale: 1.0,
+    canvasDprCap: 1.75,
+  };
+
+  var CONFIG_MOBILE = {
+    isMobile: true,
+    totalDuration: 6500, // Exact 6.5s target
+    hardSafetyTimeout: 8500,
+    // Scene 01 – Paint Awakening: 0–1.2s (0 - 1200ms)
+    dropDuration: 1100,
+    impactTime: 1150,
+    // Scene 02 – Paint Explosion: 1.2–2.6s (1200 - 2600ms)
+    explosionTime: 1220,
+    explosionBurstTime: 1420,
+    explosionEndTime: 2550,
+    ribbonsStartTime: 1320,
+    ribbonsEndTime: 2550,
+    // Scene 03 – WANDERS Logo Reveal: 2.6–4.1s (2600 - 4100ms)
+    logoRevealStart: 2600,
+    logoRevealStep: 180, // W(2600), A(2780), N(2960), D(3140), E(3320), R(3500), S(3680)
+    brandRevealTime: 3900, // Gold line & tagline reveal by 4.1s
+    // Scene 04 – Brand Hold: 4.1–5.5s (4100 - 5500ms = 1.4s steady hold)
+    // Scene 05 – Cinematic Exit: 5.5–6.5s (5500 - 6500ms = 1.0s veil lift into Hero)
+    logoFadeTime: 5400,
+    chargeTime: 5460,
+    wipeTime: 5500,
+    curtainTransitionMs: 1000,
+    particleScale: 0.45, // 55% reduction on mobile
+    canvasDprCap: 1.5,
+  };
 
   // Exact measured bounding-box glyph geometry inside PNGs (W uniformly scaled 1028/662 to match A-S cap-height)
   var LETTER_SPECS = [
@@ -71,14 +121,16 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 1. PaintParticles — HTML5 Canvas Physics Engine
+  // 1. PaintParticles — Optimized Canvas Physics Engine
   // ---------------------------------------------------------------------------
-  function PaintParticles(canvas) {
+  function PaintParticles(canvas, cfg) {
     this.canvas = canvas;
+    this.cfg = cfg || CONFIG_DESKTOP;
     this.ctx = canvas.getContext('2d');
-    this.dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    this.isMobile = this.cfg.isMobile;
+    this.dpr = Math.min(window.devicePixelRatio || 1, this.cfg.canvasDprCap);
     this.isLowPower =
-      window.innerWidth < 768 ||
+      this.isMobile ||
       (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4);
     this.w = 0;
     this.h = 0;
@@ -103,8 +155,8 @@
   };
 
   PaintParticles.prototype.emitRadialBurst = function (cx, cy, count, speedScale, palette) {
-    var scale = this.isLowPower ? 0.55 : 1;
-    var total = Math.max(8, Math.round(count * scale));
+    var scale = this.cfg.particleScale || (this.isLowPower ? 0.55 : 1);
+    var total = Math.max(6, Math.round(count * scale));
     var baseSpeed = Math.min(this.w, this.h) * speedScale;
     for (var i = 0; i < total; i++) {
       var angle = (Math.PI * 2 * i) / total + (Math.random() - 0.5) * 0.35;
@@ -114,13 +166,13 @@
         y: cy + (Math.random() - 0.5) * 14,
         vx: Math.cos(angle) * spd,
         vy: Math.sin(angle) * spd,
-        radius: 1.6 + Math.random() * (this.isLowPower ? 3.5 : 5.2),
+        radius: 1.6 + Math.random() * (this.isMobile ? 3.0 : (this.isLowPower ? 3.5 : 5.2)),
         color: palette[i % palette.length],
         alpha: 0.95,
         drag: 0.92 + Math.random() * 0.04,
         gravity: 220 + Math.random() * 140,
         life: 0,
-        maxLife: 0.65 + Math.random() * 0.55,
+        maxLife: (this.isMobile ? 0.75 : 0.65) + Math.random() * 0.55,
       });
     }
   };
@@ -135,7 +187,7 @@
       lineWidth: lineWidth,
       alpha: 0.9,
       life: 0,
-      maxLife: 0.62,
+      maxLife: this.isMobile ? 0.75 : 0.62,
     });
   };
 
@@ -144,14 +196,18 @@
     this.letterBursts[idx] = true;
     var cx = this.w * ratioX;
     var cy = this.h * 0.49;
-    this.emitRadialBurst(cx, cy, 12, 0.24, [COLORS.gold, COLORS.ivory, COLORS.emerald]);
+    var count = this.isMobile ? 6 : 12;
+    this.emitRadialBurst(cx, cy, count, 0.22, [COLORS.gold, COLORS.ivory, COLORS.emerald]);
   };
 
   PaintParticles.prototype.updateAndDraw = function (elapsedMs, dtSec) {
     var ctx = this.ctx;
     if (!ctx) return;
+    var cfg = this.cfg;
 
-    if (elapsedMs > 2350 && this.droplets.length === 0 && this.rings.length === 0) {
+    // During Scene 04 (Brand Hold), stop drawing once droplets dissipate to save battery & main thread
+    var idleCutoff = this.isMobile ? (cfg.brandRevealTime + 300) : 2350;
+    if (elapsedMs > idleCutoff && this.droplets.length === 0 && this.rings.length === 0) {
       if (!this.canvasIdle) {
         ctx.clearRect(0, 0, this.w, this.h);
         this.canvasIdle = true;
@@ -164,12 +220,12 @@
     var cx = this.w * 0.5;
     var cy = this.h * 0.5;
 
-    // Scene 01 (0 - 250ms): Falling accelerating emerald drop
-    if (elapsedMs < 255) {
-      var dropT = clamp(elapsedMs / 250, 0, 1);
+    // Scene 01: Accelerating emerald drop
+    if (elapsedMs < cfg.dropDuration + 10) {
+      var dropT = clamp(elapsedMs / cfg.dropDuration, 0, 1);
       var accelT = easeInQuad(dropT);
       var dropY = lerp(-30, cy, accelT);
-      var tailH = 18 + accelT * 75;
+      var tailH = 18 + accelT * (this.isMobile ? 65 : 75);
 
       var grad = ctx.createLinearGradient(cx, dropY - tailH, cx, dropY + 14);
       grad.addColorStop(0, 'rgba(15, 76, 58, 0)');
@@ -187,19 +243,21 @@
       ctx.restore();
     }
 
-    // Impact trigger at 245ms
-    if (elapsedMs >= 245 && !this.impactFired) {
+    // Impact trigger
+    if (elapsedMs >= cfg.impactTime && !this.impactFired) {
       this.impactFired = true;
-      var maxRad = Math.hypot(this.w, this.h) * 0.42;
-      this.emitRing(cx, cy, maxRad, COLORS.ivory, 3.2);
-      this.emitRing(cx, cy, maxRad * 0.72, COLORS.gold, 2.0);
-      this.emitRadialBurst(cx, cy, 42, 0.92, [COLORS.ivory, COLORS.gold, COLORS.emerald, COLORS.forest]);
+      var maxRad = Math.hypot(this.w, this.h) * (this.isMobile ? 0.36 : 0.42);
+      this.emitRing(cx, cy, maxRad, COLORS.ivory, this.isMobile ? 2.4 : 3.2);
+      this.emitRing(cx, cy, maxRad * 0.72, COLORS.gold, this.isMobile ? 1.6 : 2.0);
+      var burstCount = this.isMobile ? 22 : 42;
+      this.emitRadialBurst(cx, cy, burstCount, 0.92, [COLORS.ivory, COLORS.gold, COLORS.emerald, COLORS.forest]);
     }
 
-    // Explosion secondary burst at 620ms
-    if (elapsedMs >= 620 && !this.explosionBurstFired) {
+    // Explosion secondary burst
+    if (elapsedMs >= cfg.explosionBurstTime && !this.explosionBurstFired) {
       this.explosionBurstFired = true;
-      this.emitRadialBurst(cx, cy, 34, 1.12, [COLORS.gold, COLORS.ivory, COLORS.emerald]);
+      var secCount = this.isMobile ? 16 : 34;
+      this.emitRadialBurst(cx, cy, secCount, 1.12, [COLORS.gold, COLORS.ivory, COLORS.emerald]);
     }
 
     // Draw expanding shockwave rings
@@ -218,39 +276,38 @@
       ctx.arc(ring.x, ring.y, ring.r, 0, Math.PI * 2);
       ctx.strokeStyle = ring.color;
       ctx.globalAlpha = ring.alpha;
-      ctx.lineWidth = Math.max(0.6, ring.lineWidth * (1 - p * 0.7));
+      ctx.lineWidth = Math.max(0.6, ring.lineWidth * (1 - p * 0.5));
       ctx.stroke();
       ctx.restore();
     }
 
-    // Fade out remaining droplets cleanly by 2.15s
-    var globalFade = elapsedMs > 1950 ? clamp(1 - (elapsedMs - 1950) / 280, 0, 1) : 1;
-
+    // Draw paint droplets with velocity stretching
     for (var i = this.droplets.length - 1; i >= 0; i--) {
       var d = this.droplets[i];
       d.life += dtSec;
-      if (d.life >= d.maxLife || globalFade <= 0.01) {
+      if (d.life >= d.maxLife) {
         this.droplets.splice(i, 1);
         continue;
       }
-      var frameDrag = Math.pow(d.drag, dtSec * 60);
-      d.vx *= frameDrag;
-      d.vy = d.vy * frameDrag + d.gravity * dtSec * 0.35;
+      d.vx *= d.drag;
+      d.vy *= d.drag;
+      d.vy += d.gravity * dtSec;
       d.x += d.vx * dtSec;
       d.y += d.vy * dtSec;
 
       var lifeRatio = d.life / d.maxLife;
       var spd = Math.hypot(d.vx, d.vy);
-      var stretch = clamp(spd / 220, 1, 3.8);
+      var stretch = clamp(spd / 220, 1, this.isMobile ? 3.0 : 3.8);
       var angle = Math.atan2(d.vy, d.vx);
 
       ctx.save();
       ctx.translate(d.x, d.y);
       ctx.rotate(angle);
-      ctx.globalAlpha = d.alpha * (1 - easeInQuad(lifeRatio)) * globalFade;
-      ctx.fillStyle = d.color;
+      ctx.scale(stretch, 1);
       ctx.beginPath();
-      ctx.ellipse(0, 0, d.radius * stretch, d.radius * 0.78, 0, 0, Math.PI * 2);
+      ctx.arc(0, 0, d.radius * (1 - lifeRatio * 0.35), 0, Math.PI * 2);
+      ctx.fillStyle = d.color;
+      ctx.globalAlpha = clamp((1 - lifeRatio) * d.alpha * 1.2, 0, 1);
       ctx.fill();
       ctx.restore();
     }
@@ -259,38 +316,41 @@
   PaintParticles.prototype.destroy = function () {
     this.droplets = [];
     this.rings = [];
-    if (this.canvas) {
-      this.canvas.width = 0;
-      this.canvas.height = 0;
+    if (this.ctx) {
+      this.ctx.clearRect(0, 0, this.w, this.h);
     }
   };
 
   // ---------------------------------------------------------------------------
-  // 2. LiquidRibbons — Canvas Viscous Flowing Paint Streams (Scene 2-3)
+  // 2. LiquidRibbons — Viscous Multi-frequency Liquid Paint Stream
   // ---------------------------------------------------------------------------
-  function LiquidRibbons(canvas) {
+  function LiquidRibbons(canvas, cfg) {
     this.canvas = canvas;
+    this.cfg = cfg || CONFIG_DESKTOP;
     this.ctx = canvas.getContext('2d');
-    this.isLowPower = window.innerWidth < 768;
+    this.isLowPower = this.cfg.isMobile || window.innerWidth < 768;
   }
 
   LiquidRibbons.prototype.draw = function (elapsedMs) {
-    // Active primarily between 580ms and 2200ms
-    if (elapsedMs < 580 || elapsedMs > 2250 || !this.ctx) return;
+    var cfg = this.cfg;
+    if (elapsedMs < cfg.ribbonsStartTime || elapsedMs > cfg.ribbonsEndTime || !this.ctx) return;
 
     var ctx = this.ctx;
     var w = window.innerWidth;
     var h = window.innerHeight;
-    var progress = clamp((elapsedMs - 580) / 1550, 0, 1);
-    var fadeIn = easeOutCubic(clamp((elapsedMs - 580) / 260, 0, 1));
-    var fadeOut = elapsedMs > 1880 ? clamp(1 - (elapsedMs - 1880) / 360, 0, 1) : 1;
+    var totalSpan = cfg.ribbonsEndTime - cfg.ribbonsStartTime;
+    var progress = clamp((elapsedMs - cfg.ribbonsStartTime) / totalSpan, 0, 1);
+    var fadeIn = easeOutCubic(clamp((elapsedMs - cfg.ribbonsStartTime) / 260, 0, 1));
+    var fadeOut = elapsedMs > (cfg.ribbonsEndTime - 360)
+      ? clamp(1 - (elapsedMs - (cfg.ribbonsEndTime - 360)) / 360, 0, 1)
+      : 1;
     var alpha = fadeIn * fadeOut;
     if (alpha <= 0.01) return;
 
     var streams = [
-      { color: COLORS.emerald, amp: h * 0.14, freq: 1.8, phase: 0.2, width: w < 640 ? 10 : 18, yOff: -12 },
-      { color: COLORS.ivory, amp: h * 0.11, freq: 2.3, phase: 1.7, width: w < 640 ? 6 : 11, yOff: 6 },
-      { color: COLORS.gold, amp: h * 0.09, freq: 2.8, phase: 3.1, width: w < 640 ? 4 : 7, yOff: 0 },
+      { color: COLORS.emerald, amp: h * (cfg.isMobile ? 0.11 : 0.14), freq: 1.8, phase: 0.2, width: w < 640 ? 8 : 18, yOff: -12 },
+      { color: COLORS.ivory, amp: h * (cfg.isMobile ? 0.08 : 0.11), freq: 2.3, phase: 1.7, width: w < 640 ? 5 : 11, yOff: 6 },
+      { color: COLORS.gold, amp: h * (cfg.isMobile ? 0.07 : 0.09), freq: 2.8, phase: 3.1, width: w < 640 ? 3.5 : 7, yOff: 0 },
     ];
 
     ctx.save();
@@ -303,7 +363,7 @@
       var st = streams[s];
       var headX = lerp(-w * 0.12, w * 1.15, easeInOutCubic(progress));
       var tailX = Math.max(-w * 0.18, headX - w * 0.68);
-      var steps = 28;
+      var steps = this.isLowPower ? 20 : 28;
 
       ctx.beginPath();
       for (var i = 0; i <= steps; i++) {
@@ -316,26 +376,27 @@
         else ctx.lineTo(x, y);
       }
 
-      var grad = ctx.createLinearGradient(tailX, h * 0.5, headX, h * 0.5);
-      grad.addColorStop(0, 'rgba(15, 76, 58, 0)');
+      var grad = ctx.createLinearGradient(tailX, 0, headX, 0);
+      grad.addColorStop(0, 'rgba(255,255,255,0)');
       grad.addColorStop(0.35, st.color);
-      grad.addColorStop(0.88, st.color);
-      grad.addColorStop(1, 'rgba(250, 249, 245, 0)');
+      grad.addColorStop(0.85, st.color);
+      grad.addColorStop(1, 'rgba(255,255,255,0)');
 
       ctx.strokeStyle = grad;
-      ctx.lineWidth = st.width * (0.65 + 0.35 * Math.sin(progress * Math.PI));
+      ctx.lineWidth = st.width;
       ctx.lineCap = 'round';
-      ctx.globalAlpha = alpha * 0.72;
+      ctx.lineJoin = 'round';
+      ctx.globalAlpha = alpha * 0.85;
       ctx.stroke();
     }
-
     ctx.restore();
   };
 
   // ---------------------------------------------------------------------------
-  // 3. PaintSplash — Asset Choreography for Scenes 01, 02, 03 & 05
+  // 3. PaintSplash — Multi-Layer Paint Image Choreography
   // ---------------------------------------------------------------------------
-  function PaintSplash(layers) {
+  function PaintSplash(layers, cfg) {
+    this.cfg = cfg || CONFIG_DESKTOP;
     this.impact = layers.impact;
     this.explosion = layers.explosion;
     this.ribbons = layers.ribbons;
@@ -345,11 +406,14 @@
 
   PaintSplash.prototype.update = function (t) {
     if (this.settled) return;
+    var cfg = this.cfg;
 
-    // Subtle physical impact shock recoil (245ms - 480ms)
+    // Physical impact shock recoil
+    var shockStart = cfg.impactTime;
+    var shockEnd = shockStart + 235;
     if (this.kinetic) {
-      if (t >= 245 && t < 480) {
-        var k = 1 - (t - 245) / 235;
+      if (t >= shockStart && t < shockEnd) {
+        var k = 1 - (t - shockStart) / 235;
         var sx = Math.sin(t * 0.14) * 3.5 * k;
         var sy = Math.cos(t * 0.18) * 3.5 * k;
         this.kinetic.style.transform = 'translate3d(' + sx.toFixed(2) + 'px,' + sy.toFixed(2) + 'px,0)';
@@ -358,78 +422,91 @@
       }
     }
 
-    // Scene 01 Layer: 01_paint_impact.png (235ms -> 920ms)
+    // Scene 01/02 Layer: 01_paint_impact.png
     if (this.impact) {
-      if (t >= 235 && t <= 950) {
-        var p1 = easeOutExpo(clamp((t - 235) / 360, 0, 1));
-        var fade1 = t > 620 ? clamp(1 - (t - 620) / 310, 0, 1) : p1;
-        var sc1 = lerp(0.72, 1.07, clamp((t - 235) / 680, 0, 1));
+      var impStart = cfg.impactTime - 10;
+      var impEnd = cfg.impactTime + (cfg.isMobile ? 1050 : 715);
+      if (t >= impStart && t <= impEnd) {
+        var p1 = easeOutExpo(clamp((t - impStart) / (cfg.isMobile ? 520 : 360), 0, 1));
+        var fadeStart = impStart + (cfg.isMobile ? 650 : 385);
+        var fade1 = t > fadeStart ? clamp(1 - (t - fadeStart) / (cfg.isMobile ? 400 : 310), 0, 1) : p1;
+        var sc1 = lerp(0.72, 1.07, clamp((t - impStart) / (cfg.isMobile ? 950 : 680), 0, 1));
         var rad = lerp(8, 130, p1);
         this.impact.style.opacity = (fade1 * 0.92).toFixed(3);
         this.impact.style.clipPath = 'circle(' + rad.toFixed(1) + '% at 50% 50%)';
-        this.impact.querySelector('img').style.transform = 'scale(' + sc1.toFixed(4) + ')';
+        var imgEl1 = this.impact.querySelector('img');
+        if (imgEl1) imgEl1.style.transform = 'scale(' + sc1.toFixed(4) + ')';
       } else {
         this.impact.style.opacity = '0';
       }
     }
 
-    // Scene 02 Layer: 02_paint_explosion.png (580ms -> 1550ms)
+    // Scene 02 Layer: 02_paint_explosion.png
     if (this.explosion) {
-      if (t >= 560 && t <= 1600) {
-        var p2 = easeOutCubic(clamp((t - 560) / 480, 0, 1));
-        var fade2 = t > 1180 ? clamp(1 - (t - 1180) / 380, 0, 1) : p2;
-        var sc2 = lerp(0.86, 1.12, clamp((t - 560) / 960, 0, 1));
-        var rot2 = lerp(-1.8, 0.8, clamp((t - 560) / 960, 0, 1));
+      var expStart = cfg.explosionTime;
+      var expEnd = cfg.explosionEndTime;
+      if (t >= expStart && t <= expEnd) {
+        var p2 = easeOutCubic(clamp((t - expStart) / (cfg.isMobile ? 680 : 480), 0, 1));
+        var fadeStart2 = expStart + (cfg.isMobile ? 850 : 620);
+        var fade2 = t > fadeStart2 ? clamp(1 - (t - fadeStart2) / (cfg.isMobile ? 480 : 380), 0, 1) : p2;
+        var sc2 = lerp(0.86, 1.12, clamp((t - expStart) / (expEnd - expStart), 0, 1));
+        var rot2 = lerp(-1.8, 0.8, clamp((t - expStart) / (expEnd - expStart), 0, 1));
         var rad2 = lerp(14, 135, p2);
         this.explosion.style.opacity = (fade2 * 0.88).toFixed(3);
         this.explosion.style.clipPath = 'circle(' + rad2.toFixed(1) + '% at 50% 50%)';
-        this.explosion.querySelector('img').style.transform =
-          'scale(' + sc2.toFixed(4) + ') rotate(' + rot2.toFixed(2) + 'deg)';
+        var imgEl2 = this.explosion.querySelector('img');
+        if (imgEl2) {
+          imgEl2.style.transform = 'scale(' + sc2.toFixed(4) + ') rotate(' + rot2.toFixed(2) + 'deg)';
+        }
       } else {
         this.explosion.style.opacity = '0';
       }
     }
 
-    // Scene 03 Layer: 03_liquid_ribbons.png (1180ms -> 2620ms, fades clear before Scene 05)
+    // Scene 02-03 Layer: 03_liquid_ribbons.png
     if (this.ribbons) {
-      if (t >= 1180 && t <= 2640) {
-        var wipe = easeOutExpo(clamp((t - 1180) / 620, 0, 1));
-        var fadeIn3 = clamp((t - 1180) / 260, 0, 1);
-        var settleOpacity = t > 2050 ? lerp(0.86, 0, clamp((t - 2050) / 560, 0, 1)) : 0.86 * fadeIn3;
-        var sc3 = lerp(1.16, 1.01, clamp((t - 1180) / 1400, 0, 1));
-        var tx3 = lerp(-3.5, 1.5, clamp((t - 1180) / 1500, 0, 1));
-        var rightInset = Math.max(0, 100 - wipe * 100);
-        this.ribbons.style.opacity = settleOpacity.toFixed(3);
-        this.ribbons.style.clipPath = 'inset(0 ' + rightInset.toFixed(1) + '% 0 0)';
-        this.ribbons.querySelector('img').style.transform =
-          'translate3d(' + tx3.toFixed(2) + '%, 0, 0) scale(' + sc3.toFixed(4) + ')';
+      var ribStart = cfg.ribbonsStartTime;
+      var ribEnd = cfg.ribbonsEndTime;
+      if (t >= ribStart && t <= ribEnd) {
+        var wipe = easeOutExpo(clamp((t - ribStart) / (cfg.isMobile ? 800 : 620), 0, 1));
+        var fadeIn3 = clamp((t - ribStart) / 260, 0, 1);
+        var settleOpacity = t > (ribEnd - 420) ? clamp(1 - (t - (ribEnd - 420)) / 420, 0, 1) : fadeIn3;
+        var sc3 = lerp(0.88, 1.05, clamp((t - ribStart) / (ribEnd - ribStart), 0, 1));
+        this.ribbons.style.opacity = (settleOpacity * 0.85).toFixed(3);
+        this.ribbons.style.clipPath = 'inset(0 ' + ((1 - wipe) * 100).toFixed(1) + '% 0 0)';
+        var imgEl3 = this.ribbons.querySelector('img');
+        if (imgEl3) imgEl3.style.transform = 'scale(' + sc3.toFixed(4) + ')';
       } else {
         this.ribbons.style.opacity = '0';
       }
     }
 
-    if (t > 2660) {
+    // After ribbons & explosion end, ensure splash layers stay fully hidden so logo is crystal clear
+    if (t > cfg.ribbonsEndTime + 50) {
       this.settled = true;
+      if (this.impact) this.impact.style.opacity = '0';
+      if (this.explosion) this.explosion.style.opacity = '0';
+      if (this.ribbons) this.ribbons.style.opacity = '0';
     }
   };
 
   // ---------------------------------------------------------------------------
-  // 4. LogoReveal — 7 Architectural Letter Slots + Gold Sweep & Tagline
+  // 4. LogoReveal — Precision 7-Letter Alignment & Sequential Emergence
   // ---------------------------------------------------------------------------
-  function LogoReveal(rootEl, particles) {
+  function LogoReveal(rootEl, particles, cfg) {
     this.root = rootEl;
     this.particles = particles;
+    this.cfg = cfg || CONFIG_DESKTOP;
     this.slots = Array.prototype.slice.call(rootEl.querySelectorAll('.wi-letter-slot'));
     this.revealed = {};
     this.revealStageTriggered = false;
   }
 
   LogoReveal.prototype.update = function (elapsedMs) {
-    // Scene 03: Sequential W-A-N-D-E-R-S emergence from paint ribbons (1300ms -> 2080ms)
-    var startMs = 1300;
-    var stepMs = 105;
+    var cfg = this.cfg;
+    // Scene 03: Sequential W-A-N-D-E-R-S emergence
     for (var i = 0; i < this.slots.length; i++) {
-      var triggerTime = startMs + i * stepMs;
+      var triggerTime = cfg.logoRevealStart + i * cfg.logoRevealStep;
       if (elapsedMs >= triggerTime && !this.revealed[i]) {
         this.revealed[i] = true;
         this.slots[i].classList.add('is-visible');
@@ -440,33 +517,35 @@
       }
     }
 
-    // Scene 04: Final Brand Reveal (2120ms -> 2820ms)
-    if (elapsedMs >= 2120 && !this.revealStageTriggered) {
+    // Scene 04: Final Brand Reveal (Gold rule + Tagline emerge)
+    if (elapsedMs >= cfg.brandRevealTime && !this.revealStageTriggered) {
       this.revealStageTriggered = true;
       this.root.classList.add('wi-intro--reveal');
     }
   };
 
   // ---------------------------------------------------------------------------
-  // 5. PageTransition — Power Paint Wipe (Logo Fade -> Charge -> Vertical Wipe)
+  // 5. PageTransition — Power Paint Veil Lift (Logo Fade -> Charge -> Vertical Wipe)
   // ---------------------------------------------------------------------------
-  function PageTransition(rootEl) {
+  function PageTransition(rootEl, cfg) {
     this.root = rootEl;
+    this.cfg = cfg || CONFIG_DESKTOP;
     this.logoFaded = false;
     this.charged = false;
     this.wiped = false;
   }
 
   PageTransition.prototype.update = function (elapsedMs) {
-    if (elapsedMs >= 2720 && !this.logoFaded) {
+    var cfg = this.cfg;
+    if (elapsedMs >= cfg.logoFadeTime && !this.logoFaded) {
       this.logoFaded = true;
       this.root.classList.add('wi-intro--logo-fade');
     }
-    if (elapsedMs >= 2780 && !this.charged) {
+    if (elapsedMs >= cfg.chargeTime && !this.charged) {
       this.charged = true;
       this.root.classList.add('wi-intro--charge');
     }
-    if (elapsedMs >= 2860 && !this.wiped) {
+    if (elapsedMs >= cfg.wipeTime && !this.wiped) {
       this.wiped = true;
       this.root.classList.add('wi-intro--wipe', 'wi-intro--exit');
       document.documentElement.classList.add('wi-hero-enter');
@@ -477,7 +556,7 @@
   };
 
   // ---------------------------------------------------------------------------
-  // 6. IntroTimeline — Master Controller & Asset Preloader
+  // 6. Markup Builder
   // ---------------------------------------------------------------------------
   function buildMarkup(mount) {
     var lettersHtml = LETTER_SPECS.map(function (spec) {
@@ -570,10 +649,20 @@
     var loaded = files.map(function (f) {
       return new Promise(function (resolve) {
         var img = new Image();
-        img.onload = function () { resolve(true); };
-        img.onerror = function () { resolve(false); };
         img.src = ASSET_BASE + f;
-        if (img.complete) resolve(true);
+        if (typeof img.decode === 'function') {
+          img.decode().then(function () { resolve(true); }).catch(function () {
+            if (img.complete) resolve(true);
+            else {
+              img.onload = function () { resolve(true); };
+              img.onerror = function () { resolve(false); };
+            }
+          });
+        } else {
+          img.onload = function () { resolve(true); };
+          img.onerror = function () { resolve(false); };
+          if (img.complete) resolve(true);
+        }
       });
     });
     var timeoutPromise = new Promise(function (resolve) {
@@ -582,6 +671,9 @@
     return Promise.race([Promise.all(loaded), timeoutPromise]);
   }
 
+  // ---------------------------------------------------------------------------
+  // 8. IntroTimeline — Master Timeline Controller
+  // ---------------------------------------------------------------------------
   function IntroTimeline(mount) {
     this.mount = mount;
     this.rafId = null;
@@ -591,6 +683,9 @@
     this.lastFrameTime = 0;
     this.onResize = null;
     this.onKeyDown = null;
+
+    var isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    this.cfg = isMobile ? CONFIG_MOBILE : CONFIG_DESKTOP;
   }
 
   IntroTimeline.prototype.finish = function (immediate) {
@@ -631,28 +726,35 @@
       unmount();
     } else {
       this.mount.classList.add('wi-intro--logo-fade', 'wi-intro--charge', 'wi-intro--wipe', 'wi-intro--exit');
-      setTimeout(unmount, 970);
+      document.documentElement.classList.add('wi-hero-enter');
+      try {
+        window.dispatchEvent(new CustomEvent('wanders:intro-wipe'));
+      } catch (e) {}
+      setTimeout(unmount, self.cfg.curtainTransitionMs || 970);
     }
   };
 
   IntroTimeline.prototype.start = function () {
+    var isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    this.cfg = isMobile ? CONFIG_MOBILE : CONFIG_DESKTOP;
     var self = this;
+    var cfg = this.cfg;
     buildMarkup(this.mount);
 
     var canvas = document.getElementById('wiCanvas');
     var progressFill = document.getElementById('wiProgressFill');
     var skipBtn = document.getElementById('wiSkipBtn');
 
-    this.particles = new PaintParticles(canvas);
-    this.ribbonsFx = new LiquidRibbons(canvas);
+    this.particles = new PaintParticles(canvas, cfg);
+    this.ribbonsFx = new LiquidRibbons(canvas, cfg);
     this.splash = new PaintSplash({
       kinetic: document.getElementById('wiKineticStage'),
       impact: document.getElementById('wiLayerImpact'),
       explosion: document.getElementById('wiLayerExplosion'),
       ribbons: document.getElementById('wiLayerRibbons'),
-    });
-    this.logoReveal = new LogoReveal(this.mount, this.particles);
-    this.transition = new PageTransition(this.mount);
+    }, cfg);
+    this.logoReveal = new LogoReveal(this.mount, this.particles, cfg);
+    this.transition = new PageTransition(this.mount, cfg);
 
     this.onResize = function () {
       if (self.particles) self.particles.resize();
@@ -660,23 +762,25 @@
     window.addEventListener('resize', this.onResize, { passive: true });
 
     this.onKeyDown = function (e) {
-      if (e.key === 'Escape') self.finish(true);
+      if (e.key === 'Escape') self.finish(false);
     };
     document.addEventListener('keydown', this.onKeyDown);
 
     if (skipBtn) {
-      skipBtn.addEventListener('click', function () {
-        self.finish(true);
+      skipBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.finish(false);
       });
     }
 
-    // Hard fail-safe guarantee so site is never locked
+    // Fail-safe guarantee
     this.safetyTimer = setTimeout(function () {
       self.finish(true);
-    }, HARD_SAFETY_TIMEOUT);
+    }, cfg.hardSafetyTimeout);
 
-    // Preload images briefly (max 900ms wait on slow connections) then run timeline
-    preloadAssets(900).then(function () {
+    // Preload & decode images then start timeline
+    preloadAssets(1000).then(function () {
       if (self.finished) return;
       self.startTime = performance.now();
       self.lastFrameTime = self.startTime;
@@ -684,11 +788,12 @@
       function tick(now) {
         if (self.finished) return;
         var elapsed = now - self.startTime;
+        window.__wi_elapsed = elapsed;
         var dtSec = clamp((now - self.lastFrameTime) / 1000, 0.001, 0.05);
         self.lastFrameTime = now;
 
         if (progressFill) {
-          progressFill.style.width = clamp((elapsed / TOTAL_DURATION) * 100, 0, 100).toFixed(1) + '%';
+          progressFill.style.width = clamp((elapsed / cfg.totalDuration) * 100, 0, 100).toFixed(1) + '%';
         }
 
         self.particles.updateAndDraw(elapsed, dtSec);
@@ -697,7 +802,7 @@
         self.logoReveal.update(elapsed);
         self.transition.update(elapsed);
 
-        if (elapsed >= TOTAL_DURATION) {
+        if (elapsed >= cfg.totalDuration) {
           self.finish(true);
           return;
         }
@@ -738,9 +843,9 @@
     try {
       document.documentElement.classList.add('wi-active');
       activeTimeline = new IntroTimeline(mount);
+      window.WandersIntro._timeline = activeTimeline;
       activeTimeline.start();
     } catch (err) {
-      // Never lock page if any unexpected error happens
       document.documentElement.classList.remove('wi-active');
       mount.style.display = 'none';
     }
@@ -764,7 +869,7 @@
       }
     },
     skip: function () {
-      if (activeTimeline) activeTimeline.finish(true);
+      if (activeTimeline) activeTimeline.finish(false);
     },
   };
   window.WandersIntrol = window.WandersIntro;
@@ -775,4 +880,3 @@
     boot();
   }
 })();
-
