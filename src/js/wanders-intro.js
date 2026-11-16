@@ -1,13 +1,14 @@
 /**
- * WANDERS CINEMATIC PAINT EXPLOSION INTRO V5
+ * WANDERS CINEMATIC PAINT EXPLOSION INTRO V6
  * Concept: WANDERS – THE POWER OF COLOR ("Sắc màu kiến tạo không gian sống")
+ * Uniform Slow Motion Architecture — Slower, continuous physical motion across all scenes
  *
- * Dedicated Mobile Timeline (6.5s) & Desktop Timeline (3.845s untouched):
- *   Scene 01 – Paint Awakening: 0 – 1.2s (Mobile) / 0 – 0.56s (Desktop)
- *   Scene 02 – Paint Explosion: 1.2 – 2.6s (Mobile) / 0.56 – 1.30s (Desktop)
- *   Scene 03 – WANDERS Logo Reveal: 2.6 – 4.1s (Mobile) / 1.30 – 2.12s (Desktop)
- *   Scene 04 – Brand Hold: 4.1 – 5.5s (Mobile, 1.4s steady hold) / 2.12 – 2.72s (Desktop)
- *   Scene 05 – Cinematic Exit: 5.5 – 6.5s (Mobile, 1.0s veil lift) / 2.72 – 3.845s (Desktop)
+ * Dedicated Mobile Timeline (7.5s) & Desktop Timeline (3.845s untouched):
+ *   Scene 01 – Paint Awakening:    0 – 1.5s (Mobile) / 0 – 0.56s (Desktop)
+ *   Scene 02 – Paint Explosion:    1.5 – 3.3s (Mobile, 1.8s duration) / 0.56 – 1.30s (Desktop)
+ *   Scene 03 – WANDERS Reveal:     3.3 – 5.1s (Mobile, 1.8s duration) / 1.30 – 2.12s (Desktop)
+ *   Scene 04 – Brand Presentation: 5.1 – 6.3s (Mobile, 1.2s steady hold) / 2.12 – 2.72s (Desktop)
+ *   Scene 05 – Curtain Exit:       6.3 – 7.5s (Mobile, 1.2s veil lift) / 2.72 – 3.845s (Desktop)
  */
 (function () {
   'use strict';
@@ -16,7 +17,7 @@
   var ASSET_BASE = './images/introl/';
 
   // ---------------------------------------------------------------------------
-  // TIMELINE CONFIGURATIONS (DESKTOP UNCHANGED vs MOBILE 6.5s CINEMATIC)
+  // TIMELINE CONFIGURATIONS (DESKTOP UNCHANGED vs MOBILE 7.5s UNIFORM SLOW-MO)
   // ---------------------------------------------------------------------------
   var CONFIG_DESKTOP = {
     isMobile: false,
@@ -42,27 +43,27 @@
 
   var CONFIG_MOBILE = {
     isMobile: true,
-    totalDuration: 6500, // Exact 6.5s target
-    hardSafetyTimeout: 8500,
-    // Scene 01 – Paint Awakening: 0–1.2s (0 - 1200ms)
-    dropDuration: 1100,
-    impactTime: 1150,
-    // Scene 02 – Paint Explosion: 1.2–2.6s (1200 - 2600ms)
-    explosionTime: 1220,
-    explosionBurstTime: 1420,
-    explosionEndTime: 2550,
-    ribbonsStartTime: 1320,
-    ribbonsEndTime: 2550,
-    // Scene 03 – WANDERS Logo Reveal: 2.6–4.1s (2600 - 4100ms)
-    logoRevealStart: 2600,
-    logoRevealStep: 180, // W(2600), A(2780), N(2960), D(3140), E(3320), R(3500), S(3680)
-    brandRevealTime: 3900, // Gold line & tagline reveal by 4.1s
-    // Scene 04 – Brand Hold: 4.1–5.5s (4100 - 5500ms = 1.4s steady hold)
-    // Scene 05 – Cinematic Exit: 5.5–6.5s (5500 - 6500ms = 1.0s veil lift into Hero)
-    logoFadeTime: 5400,
-    chargeTime: 5460,
-    wipeTime: 5500,
-    curtainTransitionMs: 1000,
+    totalDuration: 7500, // Exact 7.5s target
+    hardSafetyTimeout: 10000,
+    // Scene 01 – Paint Awakening: 0–1.5s (0 - 1500ms)
+    dropDuration: 1450,
+    impactTime: 1500,
+    // Scene 02 – Paint Explosion: 1.5–3.3s (1500 - 3300ms, duration 1800ms)
+    explosionTime: 1540,
+    explosionBurstTime: 1780,
+    explosionEndTime: 3280,
+    ribbonsStartTime: 1620,
+    ribbonsEndTime: 3280,
+    // Scene 03 – WANDERS Reveal: 3.3–5.1s (3300 - 5100ms, duration 1800ms)
+    logoRevealStart: 3300,
+    logoRevealStep: 180, // W(3300), A(3480), N(3660), D(3840), E(4020), R(4200), S(4380)
+    brandRevealTime: 4500, // Gold line & tagline reveal sweep from 4.5s to 5.1s
+    // Scene 04 – Brand Presentation: 5.1–6.3s (5100 - 6300ms = 1.2s steady hold)
+    // Scene 05 – Curtain Exit: 6.3–7.5s (6300 - 7500ms = 1.2s veil lift into Hero)
+    logoFadeTime: 6220,
+    chargeTime: 6260,
+    wipeTime: 6300,
+    curtainTransitionMs: 1200,
     particleScale: 0.45, // 55% reduction on mobile
     canvasDprCap: 1.5,
   };
@@ -157,10 +158,16 @@
   PaintParticles.prototype.emitRadialBurst = function (cx, cy, count, speedScale, palette) {
     var scale = this.cfg.particleScale || (this.isLowPower ? 0.55 : 1);
     var total = Math.max(6, Math.round(count * scale));
-    var baseSpeed = Math.min(this.w, this.h) * speedScale;
+    var effectiveSpeedScale = this.isMobile ? (speedScale * 0.60) : speedScale;
+    var baseSpeed = Math.min(this.w, this.h) * effectiveSpeedScale;
     for (var i = 0; i < total; i++) {
       var angle = (Math.PI * 2 * i) / total + (Math.random() - 0.5) * 0.35;
       var spd = baseSpeed * (0.45 + Math.random() * 0.95);
+      var maxLife = this.isMobile
+        ? (1.45 + Math.random() * 0.35)
+        : ((this.isLowPower ? 0.55 : 0.65) + Math.random() * 0.55);
+      var drag = this.isMobile ? (0.958 + Math.random() * 0.018) : (0.92 + Math.random() * 0.04);
+      var gravity = this.isMobile ? (85 + Math.random() * 45) : (220 + Math.random() * 140);
       this.droplets.push({
         x: cx + (Math.random() - 0.5) * 14,
         y: cy + (Math.random() - 0.5) * 14,
@@ -169,10 +176,10 @@
         radius: 1.6 + Math.random() * (this.isMobile ? 3.0 : (this.isLowPower ? 3.5 : 5.2)),
         color: palette[i % palette.length],
         alpha: 0.95,
-        drag: 0.92 + Math.random() * 0.04,
-        gravity: 220 + Math.random() * 140,
+        drag: drag,
+        gravity: gravity,
         life: 0,
-        maxLife: (this.isMobile ? 0.75 : 0.65) + Math.random() * 0.55,
+        maxLife: maxLife,
       });
     }
   };
@@ -187,7 +194,7 @@
       lineWidth: lineWidth,
       alpha: 0.9,
       life: 0,
-      maxLife: this.isMobile ? 0.75 : 0.62,
+      maxLife: this.isMobile ? 1.55 : 0.62,
     });
   };
 
@@ -206,7 +213,7 @@
     var cfg = this.cfg;
 
     // During Scene 04 (Brand Hold), stop drawing once droplets dissipate to save battery & main thread
-    var idleCutoff = this.isMobile ? (cfg.brandRevealTime + 300) : 2350;
+    var idleCutoff = this.isMobile ? (cfg.brandRevealTime + 400) : 2350;
     if (elapsedMs > idleCutoff && this.droplets.length === 0 && this.rings.length === 0) {
       if (!this.canvasIdle) {
         ctx.clearRect(0, 0, this.w, this.h);
@@ -225,7 +232,7 @@
       var dropT = clamp(elapsedMs / cfg.dropDuration, 0, 1);
       var accelT = easeInQuad(dropT);
       var dropY = lerp(-30, cy, accelT);
-      var tailH = 18 + accelT * (this.isMobile ? 65 : 75);
+      var tailH = 18 + accelT * (this.isMobile ? 70 : 75);
 
       var grad = ctx.createLinearGradient(cx, dropY - tailH, cx, dropY + 14);
       grad.addColorStop(0, 'rgba(15, 76, 58, 0)');
@@ -265,7 +272,7 @@
       var ring = this.rings[rIdx];
       ring.life += dtSec;
       var p = clamp(ring.life / ring.maxLife, 0, 1);
-      ring.r = lerp(10, ring.maxR, easeOutExpo(p));
+      ring.r = lerp(10, ring.maxR, this.isMobile ? easeOutCubic(p) : easeOutExpo(p));
       ring.alpha = (1 - p) * 0.78;
       if (p >= 1) {
         this.rings.splice(rIdx, 1);
@@ -340,10 +347,8 @@
     var h = window.innerHeight;
     var totalSpan = cfg.ribbonsEndTime - cfg.ribbonsStartTime;
     var progress = clamp((elapsedMs - cfg.ribbonsStartTime) / totalSpan, 0, 1);
-    var fadeIn = easeOutCubic(clamp((elapsedMs - cfg.ribbonsStartTime) / 260, 0, 1));
-    var fadeOut = elapsedMs > (cfg.ribbonsEndTime - 360)
-      ? clamp(1 - (elapsedMs - (cfg.ribbonsEndTime - 360)) / 360, 0, 1)
-      : 1;
+    var fadeIn = easeOutCubic(clamp(progress / 0.18, 0, 1));
+    var fadeOut = progress > 0.74 ? clamp(1 - (progress - 0.74) / 0.26, 0, 1) : 1;
     var alpha = fadeIn * fadeOut;
     if (alpha <= 0.01) return;
 
@@ -359,6 +364,7 @@
       ctx.shadowColor = 'rgba(214, 173, 69, 0.35)';
     }
 
+    var waveSpeed = cfg.isMobile ? 2.8 : 4.5;
     for (var s = 0; s < streams.length; s++) {
       var st = streams[s];
       var headX = lerp(-w * 0.12, w * 1.15, easeInOutCubic(progress));
@@ -370,7 +376,7 @@
         var frac = i / steps;
         var x = lerp(tailX, headX, frac);
         var nx = x / w;
-        var wave = Math.sin(nx * Math.PI * st.freq + progress * 4.5 + st.phase) * st.amp * (1 - Math.abs(nx - 0.5) * 0.65);
+        var wave = Math.sin(nx * Math.PI * st.freq + progress * waveSpeed + st.phase) * st.amp * (1 - Math.abs(nx - 0.5) * 0.65);
         var y = h * 0.5 + st.yOff + wave;
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
@@ -409,13 +415,13 @@
     var cfg = this.cfg;
 
     // Physical impact shock recoil
-    var shockStart = cfg.impactTime;
-    var shockEnd = shockStart + 235;
     if (this.kinetic) {
-      if (t >= shockStart && t < shockEnd) {
-        var k = 1 - (t - shockStart) / 235;
-        var sx = Math.sin(t * 0.14) * 3.5 * k;
-        var sy = Math.cos(t * 0.18) * 3.5 * k;
+      var shockStart = cfg.impactTime;
+      var shockSpan = cfg.isMobile ? 420 : 235;
+      if (t >= shockStart && t < shockStart + shockSpan) {
+        var k = 1 - (t - shockStart) / shockSpan;
+        var sx = Math.sin(t * (cfg.isMobile ? 0.08 : 0.14)) * (cfg.isMobile ? 2.4 : 3.5) * k;
+        var sy = Math.cos(t * (cfg.isMobile ? 0.10 : 0.18)) * (cfg.isMobile ? 2.4 : 3.5) * k;
         this.kinetic.style.transform = 'translate3d(' + sx.toFixed(2) + 'px,' + sy.toFixed(2) + 'px,0)';
       } else if (this.kinetic.style.transform !== 'none') {
         this.kinetic.style.transform = 'none';
@@ -424,16 +430,18 @@
 
     // Scene 01/02 Layer: 01_paint_impact.png
     if (this.impact) {
-      var impStart = cfg.impactTime - 10;
-      var impEnd = cfg.impactTime + (cfg.isMobile ? 1050 : 715);
+      var impStart = cfg.impactTime;
+      var impDuration = cfg.isMobile ? 1400 : 715;
+      var impEnd = impStart + impDuration;
       if (t >= impStart && t <= impEnd) {
-        var p1 = easeOutExpo(clamp((t - impStart) / (cfg.isMobile ? 520 : 360), 0, 1));
-        var fadeStart = impStart + (cfg.isMobile ? 650 : 385);
-        var fade1 = t > fadeStart ? clamp(1 - (t - fadeStart) / (cfg.isMobile ? 400 : 310), 0, 1) : p1;
-        var sc1 = lerp(0.72, 1.07, clamp((t - impStart) / (cfg.isMobile ? 950 : 680), 0, 1));
-        var rad = lerp(8, 130, p1);
+        var pImp = clamp((t - impStart) / impDuration, 0, 1);
+        var bloomT = clamp(pImp / (cfg.isMobile ? 0.45 : 0.50), 0, 1);
+        var rad1 = lerp(10, 135, easeOutCubic(bloomT));
+        var fadeStartP = cfg.isMobile ? 0.50 : 0.54;
+        var fade1 = pImp > fadeStartP ? clamp(1 - (pImp - fadeStartP) / (1 - fadeStartP), 0, 1) : easeOutExpo(bloomT);
+        var sc1 = lerp(0.74, 1.08, easeOutCubic(pImp));
         this.impact.style.opacity = (fade1 * 0.92).toFixed(3);
-        this.impact.style.clipPath = 'circle(' + rad.toFixed(1) + '% at 50% 50%)';
+        this.impact.style.clipPath = 'circle(' + rad1.toFixed(1) + '% at 50% 50%)';
         var imgEl1 = this.impact.querySelector('img');
         if (imgEl1) imgEl1.style.transform = 'scale(' + sc1.toFixed(4) + ')';
       } else {
@@ -445,14 +453,16 @@
     if (this.explosion) {
       var expStart = cfg.explosionTime;
       var expEnd = cfg.explosionEndTime;
+      var expDuration = expEnd - expStart;
       if (t >= expStart && t <= expEnd) {
-        var p2 = easeOutCubic(clamp((t - expStart) / (cfg.isMobile ? 680 : 480), 0, 1));
-        var fadeStart2 = expStart + (cfg.isMobile ? 850 : 620);
-        var fade2 = t > fadeStart2 ? clamp(1 - (t - fadeStart2) / (cfg.isMobile ? 480 : 380), 0, 1) : p2;
-        var sc2 = lerp(0.86, 1.12, clamp((t - expStart) / (expEnd - expStart), 0, 1));
-        var rot2 = lerp(-1.8, 0.8, clamp((t - expStart) / (expEnd - expStart), 0, 1));
-        var rad2 = lerp(14, 135, p2);
-        this.explosion.style.opacity = (fade2 * 0.88).toFixed(3);
+        var pExp = clamp((t - expStart) / expDuration, 0, 1);
+        var growT = clamp(pExp / (cfg.isMobile ? 0.55 : 0.52), 0, 1);
+        var rad2 = lerp(12, 140, easeOutCubic(growT));
+        var fadeStart2P = cfg.isMobile ? 0.58 : 0.60;
+        var fade2 = pExp > fadeStart2P ? clamp(1 - (pExp - fadeStart2P) / (1 - fadeStart2P), 0, 1) : easeOutCubic(growT);
+        var sc2 = lerp(0.85, 1.14, easeOutCubic(pExp));
+        var rot2 = lerp(-2.2, 1.2, pExp);
+        this.explosion.style.opacity = (fade2 * 0.90).toFixed(3);
         this.explosion.style.clipPath = 'circle(' + rad2.toFixed(1) + '% at 50% 50%)';
         var imgEl2 = this.explosion.querySelector('img');
         if (imgEl2) {
@@ -467,12 +477,15 @@
     if (this.ribbons) {
       var ribStart = cfg.ribbonsStartTime;
       var ribEnd = cfg.ribbonsEndTime;
+      var ribDuration = ribEnd - ribStart;
       if (t >= ribStart && t <= ribEnd) {
-        var wipe = easeOutExpo(clamp((t - ribStart) / (cfg.isMobile ? 800 : 620), 0, 1));
-        var fadeIn3 = clamp((t - ribStart) / 260, 0, 1);
-        var settleOpacity = t > (ribEnd - 420) ? clamp(1 - (t - (ribEnd - 420)) / 420, 0, 1) : fadeIn3;
-        var sc3 = lerp(0.88, 1.05, clamp((t - ribStart) / (ribEnd - ribStart), 0, 1));
-        this.ribbons.style.opacity = (settleOpacity * 0.85).toFixed(3);
+        var pRib = clamp((t - ribStart) / ribDuration, 0, 1);
+        var wipe = easeOutCubic(pRib);
+        var fadeIn3 = clamp(pRib / 0.22, 0, 1);
+        var fadeOut3 = pRib > 0.70 ? clamp(1 - (pRib - 0.70) / 0.30, 0, 1) : 1;
+        var settleOpacity = fadeIn3 * fadeOut3;
+        var sc3 = lerp(0.88, 1.06, pRib);
+        this.ribbons.style.opacity = (settleOpacity * 0.88).toFixed(3);
         this.ribbons.style.clipPath = 'inset(0 ' + ((1 - wipe) * 100).toFixed(1) + '% 0 0)';
         var imgEl3 = this.ribbons.querySelector('img');
         if (imgEl3) imgEl3.style.transform = 'scale(' + sc3.toFixed(4) + ')';

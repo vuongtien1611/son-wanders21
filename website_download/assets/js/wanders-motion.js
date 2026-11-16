@@ -53,7 +53,7 @@
       if (!html.classList.contains('wi-active')) {
         revealHero();
       }
-    }, typeof window !== 'undefined' && window.innerWidth < 768 ? 9500 : 5300);
+    }, typeof window !== 'undefined' && window.innerWidth < 768 ? 10500 : 5300);
   }
 
   function initHeaderHeightSync() {
