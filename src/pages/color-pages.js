@@ -112,110 +112,114 @@ ${renderHead({
           </aside>
 
           <div class="color-main-panel min-w-0">
-            <!-- Active Color Preview Banner (Pure Flat HEX, 220ms transition) -->
-            <div id="active-color-banner" class="studio-active-banner" style="background-color: #EBDFC7;">
-              <div class="studio-active-banner-overlay"></div>
+            <!-- Pinned Controls: Banner, Search, Categories & Filters (Fixed on Desktop) -->
+            <div class="studio-pinned-controls">
+              <!-- Active Color Preview Banner (Pure Flat HEX, 220ms transition) -->
+              <div id="active-color-banner" class="studio-active-banner" style="background-color: #EBDFC7;">
+                <div class="studio-active-banner-overlay"></div>
 
-              <div class="flex items-center justify-between relative z-10">
-                <span id="active-banner-tag" class="text-[11px] font-bold tracking-[0.2em] uppercase text-[#1F2937]/90">
-                  MÀU ĐANG XEM
-                </span>
+                <div class="flex items-center justify-between relative z-10">
+                  <span id="active-banner-tag" class="text-[11px] font-bold tracking-[0.2em] uppercase text-[#1F2937]/90">
+                    MÀU ĐANG XEM
+                  </span>
 
-                <div class="flex items-center gap-2">
-                  <button id="btn-fav-color" type="button" aria-label="Lưu yêu thích" class="banner-action-btn text-[#1F2937]">
-                    <svg id="icon-heart" width="16" height="16" class="fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                    </svg>
+                  <div class="flex items-center gap-2">
+                    <button id="btn-fav-color" type="button" aria-label="Lưu yêu thích" class="banner-action-btn text-[#1F2937]">
+                      <svg id="icon-heart" width="16" height="16" class="fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                      </svg>
+                    </button>
+
+                    <button id="btn-copy-color" type="button" aria-label="Sao chép mã màu" class="banner-action-btn text-[#1F2937]">
+                      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="relative z-10 flex items-end justify-between gap-4">
+                  <div>
+                    <div id="active-banner-code" class="text-3xl sm:text-4xl font-bold tracking-tight text-[#1F2937] leading-none">
+                      1340
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2.5 mt-1.5">
+                      <span id="active-banner-name" class="text-[14px] sm:text-[15px] font-medium text-[#1F2937]/90">
+                        Pastel
+                      </span>
+                      <span id="active-banner-hex" class="text-[12px] font-mono px-2.5 py-0.5 rounded-md bg-black/10 text-[#1F2937]">
+                        #EBDFC7
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Real-time Search Input -->
+              <div class="studio-search-bar mt-3.5 mb-2">
+                <div class="relative w-full">
+                  <svg width="17" height="17" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                  </svg>
+                  <input id="color-search-input" type="text" placeholder="Tìm kiếm theo mã màu (ví dụ 1340, 2001-P) hoặc HEX..." class="w-full h-11 rounded-xl">
+                  <button id="color-search-clear" type="button" aria-label="Xóa tìm kiếm" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
                   </button>
+                </div>
+              </div>
 
-                  <button id="btn-copy-color" type="button" aria-label="Sao chép mã màu" class="banner-action-btn text-[#1F2937]">
+              <!-- Horizontal Scrollable Category Tabs Bar (9 Tabs) -->
+              <nav id="color-category-tabs" class="w-cat-tabs-scroll color-category-tabs" aria-label="Nhóm màu WANDERS"></nav>
+
+              <div class="studio-toolbar">
+                <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
+                  <select id="toolbar-collection-select" aria-label="Chọn nhóm màu" class="studio-select text-[12.5px]">
+                    <option value="all">Tất cả màu (1.002)</option>
+                    <option value="pastel">Pastel (154)</option>
+                    <option value="red">Đỏ (227)</option>
+                    <option value="grey">Xám (152)</option>
+                    <option value="blue">Xanh dương (176)</option>
+                    <option value="brown">Nâu (160)</option>
+                    <option value="yellow">Vàng (120)</option>
+                    <option value="green">Xanh lá (160)</option>
+                    <option value="purple">Tím (88)</option>
+                  </select>
+
+                  <select id="toolbar-shade-select" aria-label="Chọn sắc độ" class="studio-select text-[12.5px]">
+                    <option value="all">Tất cả sắc độ</option>
+                    <option value="light">Sắc độ nhạt</option>
+                    <option value="medium">Sắc độ vừa</option>
+                    <option value="deep">Sắc độ đậm</option>
+                  </select>
+
+                  <span id="color-count-badge" class="hidden sm:inline-flex text-[11.5px] font-semibold bg-white px-2.5 py-1.5 rounded-xl shadow-sm" style="color: #5A6468; border: 1px solid #E2DDD2;">
+                    1.002 màu
+                  </span>
+                </div>
+
+                <div class="view-toggle-wrap shrink-0">
+                  <button id="btn-view-grid" type="button" aria-label="Lưới chuẩn" class="view-toggle-btn active">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                      <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                      <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                      <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                    </svg>
+                  </button>
+                  <button id="btn-view-compact" type="button" aria-label="Lưới thu gọn" class="view-toggle-btn">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <line x1="4" y1="6" x2="20" y2="6"></line>
+                      <line x1="4" y1="12" x2="20" y2="12"></line>
+                      <line x1="4" y1="18" x2="20" y2="18"></line>
                     </svg>
                   </button>
                 </div>
               </div>
-
-              <div class="relative z-10 flex items-end justify-between gap-4">
-                <div>
-                  <div id="active-banner-code" class="text-3xl sm:text-4xl font-bold tracking-tight text-[#1F2937] leading-none">
-                    1340
-                  </div>
-                  <div class="flex flex-wrap items-center gap-2.5 mt-1.5">
-                    <span id="active-banner-name" class="text-[14px] sm:text-[15px] font-medium text-[#1F2937]/90">
-                      Pastel
-                    </span>
-                    <span id="active-banner-hex" class="text-[12px] font-mono px-2.5 py-0.5 rounded-md bg-black/10 text-[#1F2937]">
-                      #EBDFC7
-                    </span>
-                  </div>
-                </div>
-              </div>
             </div>
 
-            <!-- Real-time Search Input -->
-            <div class="studio-search-bar mt-4 mb-2">
-              <div class="relative w-full">
-                <svg width="17" height="17" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-                <input id="color-search-input" type="text" placeholder="Tìm kiếm theo mã màu (ví dụ 1340, 2001-P) hoặc HEX..." class="w-full h-11 rounded-xl">
-                <button id="color-search-clear" type="button" aria-label="Xóa tìm kiếm" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1">
-                  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- Horizontal Scrollable Category Tabs Bar (9 Tabs) -->
-            <nav id="color-category-tabs" class="w-cat-tabs-scroll color-category-tabs" aria-label="Nhóm màu WANDERS"></nav>
-
-            <div class="studio-toolbar">
-              <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
-                <select id="toolbar-collection-select" aria-label="Chọn nhóm màu" class="studio-select text-[12.5px]">
-                  <option value="all">Tất cả màu (1.002)</option>
-                  <option value="pastel">Pastel (154)</option>
-                  <option value="red">Đỏ (227)</option>
-                  <option value="grey">Xám (152)</option>
-                  <option value="blue">Xanh dương (176)</option>
-                  <option value="brown">Nâu (160)</option>
-                  <option value="yellow">Vàng (120)</option>
-                  <option value="green">Xanh lá (160)</option>
-                  <option value="purple">Tím (88)</option>
-                </select>
-
-                <select id="toolbar-shade-select" aria-label="Chọn sắc độ" class="studio-select text-[12.5px]">
-                  <option value="all">Tất cả sắc độ</option>
-                  <option value="light">Sắc độ nhạt</option>
-                  <option value="medium">Sắc độ vừa</option>
-                  <option value="deep">Sắc độ đậm</option>
-                </select>
-
-                <span id="color-count-badge" class="hidden sm:inline-flex text-[11.5px] font-semibold bg-white px-2.5 py-1.5 rounded-xl shadow-sm" style="color: #5A6468; border: 1px solid #E2DDD2;">
-                  1.002 màu
-                </span>
-              </div>
-
-              <div class="view-toggle-wrap shrink-0">
-                <button id="btn-view-grid" type="button" aria-label="Lưới chuẩn" class="view-toggle-btn active">
-                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="7" height="7" rx="1"></rect>
-                    <rect x="14" y="3" width="7" height="7" rx="1"></rect>
-                    <rect x="14" y="14" width="7" height="7" rx="1"></rect>
-                    <rect x="3" y="14" width="7" height="7" rx="1"></rect>
-                  </svg>
-                </button>
-                <button id="btn-view-compact" type="button" aria-label="Lưới thu gọn" class="view-toggle-btn">
-                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <line x1="4" y1="6" x2="20" y2="6"></line>
-                    <line x1="4" y1="12" x2="20" y2="12"></line>
-                    <line x1="4" y1="18" x2="20" y2="18"></line>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div id="swatch-grid-container" class="relative min-h-[300px]">
+            <!-- Scrollable Swatch Grid Area (Desktop) / Paginated Swatch Grid (Mobile) -->
+            <div id="swatch-grid-container" class="swatch-grid-container" tabindex="0" aria-label="Danh sách mã màu WANDERS">
               <div id="swatch-grid" class="color-swatch-grid"></div>
 
               <div id="load-more-wrap" class="load-more-wrap">
@@ -236,6 +240,9 @@ ${renderHead({
                 </button>
               </div>
             </div>
+
+            <!-- Mobile & Tablet Pagination (12 colors / page) -->
+            <nav id="mobile-pagination" class="studio-pagination" aria-label="Phân trang bảng màu"></nav>
           </div>
         </div>
       </div>

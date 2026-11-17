@@ -1,7 +1,8 @@
 /**
  * WANDERS COLOR STUDIO V2 — ARCHITECTURAL COLOR SYSTEM
  * Built for WANDERS Luxury Paint & Color City Pro Master Palette
- * 1.002 Unique Architectural Colors | 8 Categories + Tất cả | Mobile Touch Horizontal Scroll
+ * 1.002 Unique Architectural Colors | 8 Categories + Tất cả
+ * Desktop Independent Swatch Scroll & Hand-off | Mobile 12-Card Pagination
  */
 
 (function () {
@@ -117,8 +118,12 @@
     activeTone: 'all',
     searchQuery: '',
     viewMode: 'grid', // 'grid' | 'compact'
-    displayLimit: 48,
-    pageSize: 48,
+    // Desktop progressive scroll limit
+    desktopDisplayLimit: 48,
+    desktopPageSize: 48,
+    // Mobile pagination: exact 12 colors per page
+    mobilePage: 1,
+    mobilePageSize: 12,
     favorites: new Set()
   };
 
@@ -132,6 +137,10 @@
   } catch (e) {}
 
   // --- 3. UTILITIES ---
+  function isDesktopView() {
+    return window.innerWidth >= 1024;
+  }
+
   function removeVietnameseTones(str) {
     if (!str) return '';
     return str
@@ -181,7 +190,6 @@
 
     if (state.searchQuery) {
       const q = removeVietnameseTones(state.searchQuery.trim().toLowerCase());
-      // When user searches: if 'all', search across all unique colors; if specific category, search inside that category
       list = list.filter(item => {
         const codeMatch = removeVietnameseTones(item.code.toLowerCase()).includes(q);
         const hexMatch = item.hex.toLowerCase().includes(q) || item.hex.replace('#', '').toLowerCase().includes(q);
@@ -205,7 +213,7 @@
 
   // --- 5. RENDERERS ---
 
-  // A. Render Horizontal Category Tabs (Mobile Swipeable + Desktop Elegant)
+  // A. Render Horizontal Category Tabs
   function renderCategoryTabs() {
     const container = document.getElementById('color-category-tabs');
     if (!container) return;
@@ -260,7 +268,8 @@
   // C. Switch Active Category & Sync UI
   function setActiveCategory(catId, clickedTabEl) {
     state.activeCategory = catId;
-    state.displayLimit = state.pageSize;
+    state.desktopDisplayLimit = state.desktopPageSize;
+    state.mobilePage = 1;
     state.searchQuery = '';
 
     const searchInput = document.getElementById('color-search-input');
@@ -280,12 +289,16 @@
       if (tabEl) tabEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
 
+    // Reset grid scroll to top on desktop
+    const gridContainer = document.getElementById('swatch-grid-container');
+    if (gridContainer) gridContainer.scrollTop = 0;
+
     renderCategoryTabs();
     renderCollectionPills();
     renderSwatchGrid();
   }
 
-  // D. Render Color Swatch Grid (Chunked Progressive Pagination)
+  // D. Render Color Swatch Grid (Desktop Independent Scroll vs Mobile 12-Card Pagination)
   function renderSwatchGrid() {
     const gridEl = document.getElementById('swatch-grid');
     const emptyEl = document.getElementById('swatch-empty');
@@ -293,6 +306,7 @@
     const loadMoreWrap = document.getElementById('load-more-wrap');
     const loadMoreBtn = document.getElementById('btn-load-more');
     const loadMoreCounter = document.getElementById('load-more-counter');
+    const paginationEl = document.getElementById('mobile-pagination');
     if (!gridEl) return;
 
     const filtered = getFilteredColors();
@@ -306,17 +320,62 @@
       gridEl.innerHTML = '';
       if (emptyEl) emptyEl.classList.remove('hidden');
       if (loadMoreWrap) loadMoreWrap.classList.add('hidden');
+      if (paginationEl) paginationEl.innerHTML = '';
       return;
     } else {
       if (emptyEl) emptyEl.classList.add('hidden');
     }
 
+    const isDesktop = isDesktopView();
+    let visibleList;
+
+    if (isDesktop) {
+      // DESKTOP: Progressive chunk rendering within independent scroll container
+      visibleList = filtered.slice(0, state.desktopDisplayLimit);
+
+      // Hide mobile pagination on desktop
+      if (paginationEl) paginationEl.innerHTML = '';
+
+      // Update load more controls
+      if (loadMoreWrap) {
+        if (state.desktopDisplayLimit < filtered.length) {
+          loadMoreWrap.classList.remove('hidden');
+          const remaining = filtered.length - visibleList.length;
+          if (loadMoreCounter) {
+            loadMoreCounter.innerHTML = `Đang hiển thị <strong class="text-[#073B2E]">${visibleList.length.toLocaleString('vi-VN')}</strong> / ${filtered.length.toLocaleString('vi-VN')} màu`;
+          }
+          if (loadMoreBtn) {
+            loadMoreBtn.innerHTML = `
+              <span>Xem thêm (${remaining.toLocaleString('vi-VN')} màu)</span>
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+            `;
+          }
+        } else {
+          loadMoreWrap.classList.remove('hidden');
+          if (loadMoreCounter) {
+            loadMoreCounter.innerHTML = `<span class="text-[#073B2E] font-medium">Đã hiển thị toàn bộ ${filtered.length.toLocaleString('vi-VN')} màu</span>`;
+          }
+          if (loadMoreBtn) {
+            loadMoreBtn.classList.add('hidden');
+          }
+        }
+      }
+    } else {
+      // MOBILE: Exact 12 colors per page in 2-column grid
+      const totalPages = Math.ceil(filtered.length / state.mobilePageSize);
+      if (state.mobilePage > totalPages) {
+        state.mobilePage = Math.max(1, totalPages);
+      }
+      const startIndex = (state.mobilePage - 1) * state.mobilePageSize;
+      visibleList = filtered.slice(startIndex, startIndex + state.mobilePageSize);
+
+      if (loadMoreWrap) loadMoreWrap.classList.add('hidden');
+      renderMobilePagination(filtered.length, totalPages);
+    }
+
     // Determine grid classes based on viewMode
     const isCompact = state.viewMode === 'compact';
     gridEl.className = isCompact ? 'color-swatch-grid compact-mode' : 'color-swatch-grid';
-
-    // Slice to displayLimit
-    const visibleList = filtered.slice(0, state.displayLimit);
 
     gridEl.innerHTML = visibleList.map(c => {
       const isSelected = state.selectedColor && state.selectedColor.code === c.code;
@@ -353,28 +412,112 @@
         }
       });
     });
+  }
 
-    // Update Load More Controls
-    if (loadMoreWrap) {
-      if (state.displayLimit < filtered.length) {
-        loadMoreWrap.classList.remove('hidden');
-        const remaining = filtered.length - visibleList.length;
-        if (loadMoreCounter) {
-          loadMoreCounter.innerHTML = `Đang hiển thị <strong class="text-[#073B2E]">${visibleList.length.toLocaleString('vi-VN')}</strong> / ${filtered.length.toLocaleString('vi-VN')} màu`;
-        }
-        if (loadMoreBtn) {
-          loadMoreBtn.innerHTML = `
-            <span>Xem thêm (${remaining.toLocaleString('vi-VN')} màu)</span>
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
-          `;
-        }
+  // E. Render Mobile & Tablet Pagination (‹ Trước | 1 | 2 | 3 | ... | 13 | Sau ›)
+  function renderMobilePagination(totalFiltered, totalPages) {
+    const paginationEl = document.getElementById('mobile-pagination');
+    if (!paginationEl) return;
+
+    if (totalPages <= 1) {
+      paginationEl.innerHTML = `
+        <div class="page-status-text">
+          Hiển thị toàn bộ <strong>${totalFiltered.toLocaleString('vi-VN')}</strong> màu
+        </div>
+      `;
+      return;
+    }
+
+    const cur = state.mobilePage;
+
+    // Generate pagination pages array with ellipsis
+    let pages = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (cur <= 3) {
+        pages.push(2, 3);
+        if (cur === 3) pages.push(4);
+        pages.push('...');
+        pages.push(totalPages);
+      } else if (cur >= totalPages - 2) {
+        pages.push('...');
+        if (cur === totalPages - 2) pages.push(totalPages - 3);
+        pages.push(totalPages - 2, totalPages - 1, totalPages);
       } else {
-        loadMoreWrap.classList.add('hidden');
+        pages.push('...');
+        pages.push(cur - 1, cur, cur + 1);
+        pages.push('...');
+        pages.push(totalPages);
       }
+    }
+
+    // Clean consecutive ellipses if any
+    const cleanPages = [];
+    for (let i = 0; i < pages.length; i++) {
+      if (pages[i] === '...' && cleanPages[cleanPages.length - 1] === '...') continue;
+      cleanPages.push(pages[i]);
+    }
+
+    const html = `
+      <div class="pagination-controls">
+        <button type="button" class="page-btn page-btn-nav prev-btn" data-page="${cur - 1}" ${cur <= 1 ? 'disabled' : ''} aria-label="Trang trước">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+          <span>Trước</span>
+        </button>
+
+        <div class="page-numbers">
+          ${cleanPages.map(p => {
+            if (p === '...') {
+              return `<span class="page-ellipsis">…</span>`;
+            }
+            const isActive = p === cur;
+            return `<button type="button" class="page-btn page-num-btn ${isActive ? 'active' : ''}" data-page="${p}">${p}</button>`;
+          }).join('')}
+        </div>
+
+        <button type="button" class="page-btn page-btn-nav next-btn" data-page="${cur + 1}" ${cur >= totalPages ? 'disabled' : ''} aria-label="Trang sau">
+          <span>Sau</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+
+      <div class="page-status-text">
+        Trang <strong>${cur}</strong> / ${totalPages} · (${totalFiltered.toLocaleString('vi-VN')} màu)
+      </div>
+    `;
+
+    paginationEl.innerHTML = html;
+
+    // Attach click events
+    paginationEl.querySelectorAll('.page-btn:not(:disabled)').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetPage = parseInt(btn.getAttribute('data-page'), 10);
+        if (targetPage && targetPage !== cur && targetPage >= 1 && targetPage <= totalPages) {
+          goToMobilePage(targetPage);
+        }
+      });
+    });
+  }
+
+  function goToMobilePage(targetPage) {
+    state.mobilePage = targetPage;
+    renderSwatchGrid();
+
+    // Smooth scroll to top of swatch grid, NOT top of site
+    const targetEl = document.getElementById('swatch-grid-container') || document.getElementById('swatch-grid');
+    if (targetEl) {
+      const headerEl = document.querySelector('header');
+      const headerH = headerEl ? headerEl.offsetHeight : 77;
+      const rect = targetEl.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const targetY = rect.top + scrollTop - headerH - 12;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
     }
   }
 
-  // E. Select Color & Update Active Banner
+  // F. Select Color & Update Active Banner
   function selectColor(colorObj) {
     state.selectedColor = colorObj;
     updateActiveBanner();
@@ -402,7 +545,7 @@
     }
   }
 
-  // F. Update Active Preview Banner (Pure HEX, Auto-Contrast, Copy & Favorite)
+  // G. Update Active Preview Banner (Pure HEX, Auto-Contrast, Copy & Favorite)
   function updateActiveBanner() {
     const banner = document.getElementById('active-color-banner');
     const codeEl = document.getElementById('active-banner-code');
@@ -460,11 +603,76 @@
     }
   }
 
-  // --- 6. GLOBAL PRESET PALETTE FUNCTION ---
+  // --- 6. DESKTOP SCROLL COORDINATOR ---
+  function initDesktopScrollCoordinator() {
+    const studioSection = document.getElementById('color-studio-app');
+    const gridContainer = document.getElementById('swatch-grid-container');
+    if (!studioSection || !gridContainer) return;
+
+    // 1. Auto progressive loading on scroll inside grid container
+    gridContainer.addEventListener('scroll', () => {
+      if (!isDesktopView()) return;
+      const filtered = getFilteredColors();
+      if (state.desktopDisplayLimit < filtered.length) {
+        if (gridContainer.scrollTop + gridContainer.clientHeight >= gridContainer.scrollHeight - 350) {
+          state.desktopDisplayLimit += state.desktopPageSize;
+          renderSwatchGrid();
+        }
+      }
+    }, { passive: true });
+
+    // 2. Coordinated wheel handling across the studio section
+    studioSection.addEventListener('wheel', (e) => {
+      if (!isDesktopView()) return;
+
+      const headerEl = document.querySelector('header');
+      const headerH = headerEl ? headerEl.offsetHeight : 77;
+      const secRect = studioSection.getBoundingClientRect();
+
+      // Section is engaged when its top aligns with the sticky header
+      const isEngaged = secRect.top <= headerH + 25 && secRect.bottom >= window.innerHeight - 35;
+
+      if (!isEngaged) {
+        return; // Allow natural document scroll into view
+      }
+
+      const isScrollingDown = e.deltaY > 0;
+      const isScrollingUp = e.deltaY < 0;
+
+      const filtered = getFilteredColors();
+      const atBottom = gridContainer.scrollTop + gridContainer.clientHeight >= gridContainer.scrollHeight - 3;
+      const atTop = gridContainer.scrollTop <= 2;
+
+      if (isScrollingDown) {
+        // Expand batch if approaching bottom of loaded items
+        if (state.desktopDisplayLimit < filtered.length && gridContainer.scrollTop + gridContainer.clientHeight >= gridContainer.scrollHeight - 250) {
+          state.desktopDisplayLimit += state.desktopPageSize;
+          renderSwatchGrid();
+        }
+
+        const allLoadedAndAtBottom = (state.desktopDisplayLimit >= filtered.length) && atBottom;
+
+        if (!allLoadedAndAtBottom) {
+          e.preventDefault();
+          gridContainer.scrollTop += e.deltaY;
+        } else {
+          // At very end of all colors: hand off to natural page scroll down
+        }
+      } else if (isScrollingUp) {
+        if (!atTop) {
+          e.preventDefault();
+          gridContainer.scrollTop += e.deltaY;
+        } else {
+          // At very top of colors: hand off to natural page scroll up
+        }
+      }
+    }, { passive: false });
+  }
+
+  // --- 7. GLOBAL PRESET PALETTE FUNCTION ---
   window.applyPresetPalette = function (hexArray, title) {
     let match = null;
     if (Array.isArray(hexArray) && hexArray.length > 0) {
-      // Find exact hex match or code match
       for (const target of hexArray) {
         match = UNIQUE_COLORS.find(c => c.hex.toLowerCase() === target.toLowerCase() || c.code.toLowerCase() === target.toLowerCase());
         if (match) break;
@@ -476,13 +684,13 @@
     }
 
     if (match) {
-      // Switch to its category if not in all
       state.activeCategory = match.catId || 'all';
       state.activeShade = 'all';
       state.activeBrightness = 'all';
       state.activeTone = 'all';
       state.searchQuery = '';
-      state.displayLimit = state.pageSize;
+      state.desktopDisplayLimit = state.desktopPageSize;
+      state.mobilePage = 1;
 
       const searchInput = document.getElementById('color-search-input');
       if (searchInput) searchInput.value = '';
@@ -513,7 +721,7 @@
     }
   };
 
-  // --- 7. EVENT BINDINGS & INITIALIZATION ---
+  // --- 8. EVENT BINDINGS & INITIALIZATION ---
   document.addEventListener('DOMContentLoaded', () => {
     // 1. Search with debounce
     const searchInput = document.getElementById('color-search-input');
@@ -530,7 +738,8 @@
         }
         searchDebounce = setTimeout(() => {
           state.searchQuery = val;
-          state.displayLimit = state.pageSize;
+          state.desktopDisplayLimit = state.desktopPageSize;
+          state.mobilePage = 1;
           renderSwatchGrid();
         }, 180);
       });
@@ -544,7 +753,8 @@
         }
         searchClear.classList.add('hidden');
         state.searchQuery = '';
-        state.displayLimit = state.pageSize;
+        state.desktopDisplayLimit = state.desktopPageSize;
+        state.mobilePage = 1;
         renderSwatchGrid();
       });
     }
@@ -562,7 +772,8 @@
     const filterShade = document.getElementById('filter-shade');
     function syncShade(val) {
       state.activeShade = val;
-      state.displayLimit = state.pageSize;
+      state.desktopDisplayLimit = state.desktopPageSize;
+      state.mobilePage = 1;
       if (tbShade) tbShade.value = val;
       if (filterShade) filterShade.value = val;
       renderSwatchGrid();
@@ -575,7 +786,8 @@
     if (filterBright) {
       filterBright.addEventListener('change', (e) => {
         state.activeBrightness = e.target.value;
-        state.displayLimit = state.pageSize;
+        state.desktopDisplayLimit = state.desktopPageSize;
+        state.mobilePage = 1;
         renderSwatchGrid();
       });
     }
@@ -584,7 +796,8 @@
     if (filterTone) {
       filterTone.addEventListener('change', (e) => {
         state.activeTone = e.target.value;
-        state.displayLimit = state.pageSize;
+        state.desktopDisplayLimit = state.desktopPageSize;
+        state.mobilePage = 1;
         renderSwatchGrid();
       });
     }
@@ -598,7 +811,8 @@
         state.activeBrightness = 'all';
         state.activeTone = 'all';
         state.searchQuery = '';
-        state.displayLimit = state.pageSize;
+        state.desktopDisplayLimit = state.desktopPageSize;
+        state.mobilePage = 1;
 
         if (searchInput) searchInput.value = '';
         if (searchClear) searchClear.classList.add('hidden');
@@ -607,6 +821,9 @@
         if (filterShade) filterShade.value = 'all';
         if (filterBright) filterBright.value = 'all';
         if (filterTone) filterTone.value = 'all';
+
+        const gridContainer = document.getElementById('swatch-grid-container');
+        if (gridContainer) gridContainer.scrollTop = 0;
 
         renderCategoryTabs();
         renderCollectionPills();
@@ -634,33 +851,16 @@
       });
     }
 
-    // 7. Load More Button (Progressive Pagination)
+    // 7. Desktop Load More Button
     const btnLoadMore = document.getElementById('btn-load-more');
     if (btnLoadMore) {
       btnLoadMore.addEventListener('click', () => {
-        state.displayLimit += state.pageSize;
+        state.desktopDisplayLimit += state.desktopPageSize;
         renderSwatchGrid();
       });
     }
 
-    // 8. Auto-load on Sentinel Intersection
-    const sentinel = document.getElementById('load-more-sentinel');
-    if (sentinel && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const filtered = getFilteredColors();
-            if (state.displayLimit < filtered.length) {
-              state.displayLimit += state.pageSize;
-              renderSwatchGrid();
-            }
-          }
-        });
-      }, { rootMargin: '200px' });
-      observer.observe(sentinel);
-    }
-
-    // 9. Copy Color Code & HEX
+    // 8. Copy Color Code & HEX
     const btnCopy = document.getElementById('btn-copy-color');
     if (btnCopy) {
       btnCopy.addEventListener('click', () => {
@@ -678,7 +878,7 @@
       });
     }
 
-    // 10. Favorite Toggle
+    // 9. Favorite Toggle
     const btnFav = document.getElementById('btn-fav-color');
     if (btnFav) {
       btnFav.addEventListener('click', () => {
@@ -696,11 +896,26 @@
       });
     }
 
-    // --- INITIAL RENDER ---
+    // 10. Window Resize Handling (Switch between Desktop Independent Scroll and Mobile Pagination)
+    let resizeTimer = null;
+    let lastWasDesktop = isDesktopView();
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const nowDesktop = isDesktopView();
+        if (nowDesktop !== lastWasDesktop) {
+          lastWasDesktop = nowDesktop;
+          renderSwatchGrid();
+        }
+      }, 150);
+    });
+
+    // --- INITIAL RENDER & SCROLL SETUP ---
     renderCategoryTabs();
     renderCollectionPills();
     renderSwatchGrid();
     updateActiveBanner();
+    initDesktopScrollCoordinator();
   });
 
 })();
