@@ -6,6 +6,9 @@ website_download/submissions/
 .env.local
 .env.*.local
 *.log
+*.bak
+*.backup*
+scratch/
 .cache/
 screenshots/
 qa_screenshots/
