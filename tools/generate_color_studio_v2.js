@@ -299,36 +299,12 @@ const jsContent = `/**
     let visibleList;
 
     if (isDesktop) {
-      // DESKTOP: Progressive chunk rendering within independent scroll container
-      visibleList = filtered.slice(0, state.desktopDisplayLimit);
+      // DESKTOP: Render all filtered colors in independent scroll container with accurate scrollbar
+      visibleList = filtered;
 
-      // Hide mobile pagination on desktop
+      // Hide mobile pagination and load more controls on desktop
       if (paginationEl) paginationEl.innerHTML = '';
-
-      // Update load more controls
-      if (loadMoreWrap) {
-        if (state.desktopDisplayLimit < filtered.length) {
-          loadMoreWrap.classList.remove('hidden');
-          const remaining = filtered.length - visibleList.length;
-          if (loadMoreCounter) {
-            loadMoreCounter.innerHTML = \`Đang hiển thị <strong class="text-[#073B2E]">\${visibleList.length.toLocaleString('vi-VN')}</strong> / \${filtered.length.toLocaleString('vi-VN')} màu\`;
-          }
-          if (loadMoreBtn) {
-            loadMoreBtn.innerHTML = \`
-              <span>Xem thêm (\${remaining.toLocaleString('vi-VN')} màu)</span>
-              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
-            \`;
-          }
-        } else {
-          loadMoreWrap.classList.remove('hidden');
-          if (loadMoreCounter) {
-            loadMoreCounter.innerHTML = \`<span class="text-[#073B2E] font-medium">Đã hiển thị toàn bộ \${filtered.length.toLocaleString('vi-VN')} màu</span>\`;
-          }
-          if (loadMoreBtn) {
-            loadMoreBtn.classList.add('hidden');
-          }
-        }
-      }
+      if (loadMoreWrap) loadMoreWrap.classList.add('hidden');
     } else {
       // MOBILE: Exact 12 colors per page in 2-column grid
       const totalPages = Math.ceil(filtered.length / state.mobilePageSize);
@@ -578,19 +554,7 @@ const jsContent = `/**
     const gridContainer = document.getElementById('swatch-grid-container');
     if (!studioSection || !gridContainer) return;
 
-    // 1. Auto progressive loading on scroll inside grid container
-    gridContainer.addEventListener('scroll', () => {
-      if (!isDesktopView()) return;
-      const filtered = getFilteredColors();
-      if (state.desktopDisplayLimit < filtered.length) {
-        if (gridContainer.scrollTop + gridContainer.clientHeight >= gridContainer.scrollHeight - 350) {
-          state.desktopDisplayLimit += state.desktopPageSize;
-          renderSwatchGrid();
-        }
-      }
-    }, { passive: true });
-
-    // 2. Coordinated wheel handling across the studio section
+    // Coordinated two-way wheel handling across the studio section
     studioSection.addEventListener('wheel', (e) => {
       if (!isDesktopView()) return;
 
@@ -598,41 +562,62 @@ const jsContent = `/**
       const headerH = headerEl ? headerEl.offsetHeight : 77;
       const secRect = studioSection.getBoundingClientRect();
 
-      // Section is engaged when its top aligns with the sticky header
-      const isEngaged = secRect.top <= headerH + 25 && secRect.bottom >= window.innerHeight - 35;
-
-      if (!isEngaged) {
-        return; // Allow natural document scroll into view
-      }
-
       const isScrollingDown = e.deltaY > 0;
       const isScrollingUp = e.deltaY < 0;
+      if (!isScrollingDown && !isScrollingUp) return;
 
-      const filtered = getFilteredColors();
-      const atBottom = gridContainer.scrollTop + gridContainer.clientHeight >= gridContainer.scrollHeight - 3;
-      const atTop = gridContainer.scrollTop <= 2;
+      // 1. If page is above the studio section, let window scroll down naturally into view
+      if (isScrollingDown && secRect.top > headerH + 15) {
+        return;
+      }
+      // 2. If page is below the studio section, let window scroll up naturally into view
+      if (isScrollingUp && secRect.top < headerH - 15) {
+        return;
+      }
+
+      // Studio is currently in interactive position under the sticky header
+      const maxScroll = Math.max(0, gridContainer.scrollHeight - gridContainer.clientHeight);
+      const atTop = gridContainer.scrollTop <= 1;
+      const atBottom = gridContainer.scrollTop >= maxScroll - 1;
 
       if (isScrollingDown) {
-        // Expand batch if approaching bottom of loaded items
-        if (state.desktopDisplayLimit < filtered.length && gridContainer.scrollTop + gridContainer.clientHeight >= gridContainer.scrollHeight - 250) {
-          state.desktopDisplayLimit += state.desktopPageSize;
-          renderSwatchGrid();
-        }
-
-        const allLoadedAndAtBottom = (state.desktopDisplayLimit >= filtered.length) && atBottom;
-
-        if (!allLoadedAndAtBottom) {
-          e.preventDefault();
-          gridContainer.scrollTop += e.deltaY;
+        if (!atBottom) {
+          const remaining = maxScroll - gridContainer.scrollTop;
+          if (e.deltaY <= remaining) {
+            e.preventDefault();
+            gridContainer.scrollTop += e.deltaY;
+          } else {
+            // Delta exceeds remaining distance in grid:
+            // Absorb remaining in grid, seamlessly forward excess delta to window scroll!
+            e.preventDefault();
+            const excess = e.deltaY - remaining;
+            gridContainer.scrollTop = maxScroll;
+            window.scrollBy({ top: excess, behavior: 'auto' });
+          }
         } else {
-          // At very end of all colors: hand off to natural page scroll down
+          // At bottom of grid swatches: forward wheel down to window scroll smoothly
+          e.preventDefault();
+          window.scrollBy({ top: e.deltaY, behavior: 'auto' });
         }
       } else if (isScrollingUp) {
         if (!atTop) {
-          e.preventDefault();
-          gridContainer.scrollTop += e.deltaY;
+          const remaining = gridContainer.scrollTop;
+          const absDelta = Math.abs(e.deltaY);
+          if (absDelta <= remaining) {
+            e.preventDefault();
+            gridContainer.scrollTop += e.deltaY;
+          } else {
+            // Delta exceeds remaining distance up:
+            // Absorb remaining in grid, seamlessly forward excess delta to window scroll up!
+            e.preventDefault();
+            const excess = absDelta - remaining;
+            gridContainer.scrollTop = 0;
+            window.scrollBy({ top: -excess, behavior: 'auto' });
+          }
         } else {
-          // At very top of colors: hand off to natural page scroll up
+          // At top of grid swatches: forward wheel up to window scroll smoothly
+          e.preventDefault();
+          window.scrollBy({ top: e.deltaY, behavior: 'auto' });
         }
       }
     }, { passive: false });
