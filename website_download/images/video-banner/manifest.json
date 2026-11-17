@@ -9,61 +9,118 @@
   },
   "totalDurationSeconds": 30,
   "totalFrames": 900,
-  "transitionDurationSeconds": 0.8,
+  "transitionDurationSeconds": 1.3,
   "scenes": [
     {
       "id": "scene-01",
       "index": 1,
       "title": "WANDERS Clear Nano",
+      "file": "ChatGPT Image Nov 13, 2026, 11_12_02 AM-5.png",
       "duration": 5,
       "startSecond": 0,
       "endSecond": 5,
-      "frames": "0 - 149"
+      "frames": "0 - 149",
+      "camera": {
+        "type": "zoom-in",
+        "startScale": 1.03,
+        "endScale": 1.09,
+        "panX": 0,
+        "panY": 0
+      },
+      "transition": "paint-wipe-horizontal"
     },
     {
       "id": "scene-02",
       "index": 2,
       "title": "Bột bả nội thất",
+      "file": "ChatGPT Image Nov 13, 2026, 11_11_57 AM-1.png",
       "duration": 5,
       "startSecond": 5,
       "endSecond": 10,
-      "frames": "150 - 299"
+      "frames": "150 - 299",
+      "camera": {
+        "type": "pan-left-to-right",
+        "startScale": 1.05,
+        "endScale": 1.05,
+        "startPanX": -0.025,
+        "endPanX": 0.025,
+        "panY": 0
+      },
+      "transition": "paint-wipe-diagonal"
     },
     {
       "id": "scene-03",
       "index": 3,
       "title": "Bột bả ngoại thất",
+      "file": "ChatGPT Image Nov 13, 2026, 11_11_58 AM-2.png",
       "duration": 5,
       "startSecond": 10,
       "endSecond": 15,
-      "frames": "300 - 449"
+      "frames": "300 - 449",
+      "camera": {
+        "type": "zoom-out",
+        "startScale": 1.09,
+        "endScale": 1.03,
+        "panX": 0,
+        "panY": 0
+      },
+      "transition": "paint-wipe-horizontal"
     },
     {
       "id": "scene-04",
       "index": 4,
       "title": "Sơn chống thấm",
+      "file": "ChatGPT Image Nov 13, 2026, 11_11_59 AM-3.png",
       "duration": 5,
       "startSecond": 15,
       "endSecond": 20,
-      "frames": "450 - 599"
+      "frames": "450 - 599",
+      "camera": {
+        "type": "push-in",
+        "startScale": 1.03,
+        "endScale": 1.1,
+        "panX": 0,
+        "startPanY": 0.015,
+        "endPanY": -0.015
+      },
+      "transition": "paint-wipe-diagonal"
     },
     {
       "id": "scene-05",
       "index": 5,
       "title": "Sơn chống nóng",
+      "file": "ChatGPT Image Nov 13, 2026, 11_12_01 AM-4.png",
       "duration": 5,
       "startSecond": 20,
       "endSecond": 25,
-      "frames": "600 - 749"
+      "frames": "600 - 749",
+      "camera": {
+        "type": "pan-right-to-left",
+        "startScale": 1.05,
+        "endScale": 1.05,
+        "startPanX": 0.025,
+        "endPanX": -0.025,
+        "panY": 0
+      },
+      "transition": "paint-wipe-horizontal"
     },
     {
       "id": "scene-06",
       "index": 6,
       "title": "Sơn 2K",
+      "file": "ChatGPT Image Nov 13, 2026, 11_12_03 AM-6.png",
       "duration": 5,
       "startSecond": 25,
       "endSecond": 30,
-      "frames": "750 - 899"
+      "frames": "750 - 899",
+      "camera": {
+        "type": "zoom-out",
+        "startScale": 1.09,
+        "endScale": 1.03,
+        "panX": 0,
+        "panY": 0
+      },
+      "transition": "paint-wipe-loop"
     }
   ]
 }

@@ -65,7 +65,7 @@ const SCENES = [
 const TOTAL_FRAMES = 900;
 const FPS = 30;
 const FRAMES_PER_SCENE = 150; // 5.0s per scene
-const TRANSITION_FRAMES = 24;  // 0.8s transition (frames 126 to 149 of each scene)
+const TRANSITION_FRAMES = 39;  // 1.3s transition (0.8s + 0.5s slower) (frames 111 to 149 of each scene)
 
 function runCommand(bin, args) {
   return new Promise((resolve, reject) => {
@@ -428,7 +428,7 @@ async function main() {
     },
     totalDurationSeconds: 30.0,
     totalFrames: 900,
-    transitionDurationSeconds: 0.8,
+    transitionDurationSeconds: 1.3,
     scenes: SCENES.map((s, idx) => ({
       id: s.id,
       index: idx + 1,
@@ -446,6 +446,11 @@ async function main() {
   const manifestPath = path.join(PROJECT_DIR, 'website_download/images/video-banner/manifest.json');
   fs.writeFileSync(manifestPath, JSON.stringify(manifestV4, null, 2));
   console.log(`Updated manifest.json at ${manifestPath}`);
+
+  const srcManifestPath = path.join(PROJECT_DIR, 'src/images/video-banner/manifest.json');
+  fs.mkdirSync(path.dirname(srcManifestPath), { recursive: true });
+  fs.writeFileSync(srcManifestPath, JSON.stringify(manifestV4, null, 2));
+  console.log(`Updated manifest.json at ${srcManifestPath}`);
 
   // Also save a copy in tools/
   const toolsScript = path.join(PROJECT_DIR, 'tools/render_cinematic_hero_v4.js');
