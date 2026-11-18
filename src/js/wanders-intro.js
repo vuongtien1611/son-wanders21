@@ -651,17 +651,17 @@
           '<div class="wi-layer" id="wiLayerRibbons" style="z-index:4;"><img src="' + ASSET_BASE + '03_liquid_ribbons.png" alt="" decoding="async" draggable="false"></div>' +
           '<div class="wi-vignette"></div>' +
           '<canvas class="wi-canvas" id="wiCanvas"></canvas>' +
-          '<div class="wi-brand-stage">' +
-            '<div class="wi-logo-row" aria-label="WANDERS">' +
-              '<div class="wi-logo-glow"></div>' +
-              lettersHtml +
-              '<div class="wi-gold-sweep"></div>' +
-            '</div>' +
-            '<div class="wi-brand-meta">' +
-              '<div class="wi-gold-rule"></div>' +
-              '<p class="wi-tagline">SẮC MÀU THỊNH VƯỢNG</p>' +
-              '<p class="wi-subline">Wanders · Sắc màu kiến tạo không gian sống</p>' +
-            '</div>' +
+        '</div>' +
+        '<div class="wi-brand-stage">' +
+          '<div class="wi-logo-row" aria-label="WANDERS">' +
+            '<div class="wi-logo-glow"></div>' +
+            lettersHtml +
+            '<div class="wi-gold-sweep"></div>' +
+          '</div>' +
+          '<div class="wi-brand-meta">' +
+            '<div class="wi-gold-rule"></div>' +
+            '<p class="wi-tagline">SẮC MÀU THỊNH VƯỢNG</p>' +
+            '<p class="wi-subline">Wanders · Sắc màu kiến tạo không gian sống</p>' +
           '</div>' +
         '</div>' +
         '<div class="wi-paint-charge" aria-hidden="true"></div>' +

@@ -52,6 +52,7 @@ html.wi-active #wanders-intro {
   inset: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
   background:
     radial-gradient(ellipse 80% 72% at 50% 42%, rgba(21, 102, 77, 0.55) 0%, transparent 70%),
     linear-gradient(180deg, #0F4C3A 0%, #073B2E 58%, #04241C 100%);
@@ -66,7 +67,7 @@ html.wi-active #wanders-intro {
   overflow: hidden;
   background-color: #073B2E;
   opacity: 0;
-  z-index: 5;
+  z-index: 2;
   pointer-events: none;
   transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity;
@@ -164,6 +165,7 @@ html.wi-active #wanders-intro {
 .wi-kinetic-stage {
   position: absolute;
   inset: 0;
+  z-index: 10;
   will-change: transform;
 }
 
@@ -174,7 +176,7 @@ html.wi-active #wanders-intro {
   right: 0;
   bottom: 0;
   height: 92px;
-  z-index: 18;
+  z-index: 25;
   pointer-events: none;
   opacity: 0;
   transform: translate3d(0, 18px, 0) scaleY(0.35);
@@ -211,7 +213,7 @@ html.wi-active #wanders-intro {
   width: 102%;
   top: calc(100% - 2px);
   height: clamp(92px, 13vw, 148px);
-  z-index: 19;
+  z-index: 30;
   pointer-events: none;
   overflow: visible;
 }
@@ -246,7 +248,7 @@ html.wi-active #wanders-intro {
 .wi-brand-stage {
   position: absolute;
   inset: 0;
-  z-index: 15;
+  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
