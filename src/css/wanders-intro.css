@@ -57,6 +57,67 @@ html.wi-active #wanders-intro {
     linear-gradient(180deg, #0F4C3A 0%, #073B2E 58%, #04241C 100%);
 }
 
+/* Official Brand Scene Background: Emerald Waves with Golden Light */
+.wi-brand-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #073B2E;
+  opacity: 0;
+  z-index: 5;
+  pointer-events: none;
+  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity;
+}
+
+.wi-intro--logo-scene .wi-brand-bg,
+.wi-intro--reveal .wi-brand-bg {
+  opacity: 1;
+}
+
+.wi-brand-bg-image {
+  position: absolute;
+  inset: -3%;
+  width: 106%;
+  height: 106%;
+  background-image: url('../../images/introl/Emerald%20Waves%20with%20Golden%20Light.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  will-change: transform;
+  transform: scale(1);
+}
+
+/* Subtle Slow Zoom: Continuous, smooth drift from scale(1) to scale(1.035) */
+.wi-intro--logo-scene .wi-brand-bg-image,
+.wi-intro--reveal .wi-brand-bg-image {
+  animation: wiBgSlowZoom 8.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes wiBgSlowZoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.035);
+  }
+}
+
+/* Fade out dark vignette during brand scene so the emerald waves & golden light are vivid & clear */
+.wi-intro--logo-scene .wi-vignette,
+.wi-intro--reveal .wi-vignette {
+  opacity: 0.12;
+  transition: opacity 0.85s ease;
+}
+
+@media (max-width: 767px) {
+  .wi-brand-bg-image {
+    background-position: center 58%;
+  }
+}
+
 /* Fullscreen Layers */
 .wi-layer,
 .wi-canvas,
@@ -516,6 +577,8 @@ html.wi-active #wanders-intro {
 @media (prefers-reduced-motion: reduce) {
   .wi-overlay,
   .wi-curtain,
+  .wi-brand-bg,
+  .wi-brand-bg-image,
   .wi-paint-charge,
   .wi-wave-drops,
   .wi-brand-stage,

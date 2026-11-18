@@ -86,6 +86,7 @@
     '01_paint_impact.png',
     '02_paint_explosion.png',
     '03_liquid_ribbons.png',
+    'Emerald Waves with Golden Light.png',
   ];
 
   var COLORS = {
@@ -515,11 +516,18 @@
     this.cfg = cfg || CONFIG_DESKTOP;
     this.slots = Array.prototype.slice.call(rootEl.querySelectorAll('.wi-letter-slot'));
     this.revealed = {};
+    this.logoSceneTriggered = false;
     this.revealStageTriggered = false;
   }
 
   LogoReveal.prototype.update = function (elapsedMs) {
     var cfg = this.cfg;
+    // Scene 03/04: Logo scene background transition as letters begin forming
+    if (elapsedMs >= cfg.logoRevealStart && !this.logoSceneTriggered) {
+      this.logoSceneTriggered = true;
+      this.root.classList.add('wi-intro--logo-scene');
+    }
+
     // Scene 03: Sequential W-A-N-D-E-R-S emergence
     for (var i = 0; i < this.slots.length; i++) {
       var triggerTime = cfg.logoRevealStart + i * cfg.logoRevealStep;
@@ -634,6 +642,9 @@
     mount.innerHTML =
       '<div class="wi-curtain" id="wiCurtain">' +
         '<div class="wi-curtain-bg"></div>' +
+        '<div class="wi-brand-bg" id="wiBrandBg" aria-hidden="true">' +
+          '<div class="wi-brand-bg-image"></div>' +
+        '</div>' +
         '<div class="wi-kinetic-stage" id="wiKineticStage">' +
           '<div class="wi-layer" id="wiLayerImpact" style="z-index:2;"><img src="' + ASSET_BASE + '01_paint_impact.png" alt="" decoding="async" draggable="false"></div>' +
           '<div class="wi-layer" id="wiLayerExplosion" style="z-index:3;"><img src="' + ASSET_BASE + '02_paint_explosion.png" alt="" decoding="async" draggable="false"></div>' +
