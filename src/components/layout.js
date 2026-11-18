@@ -43,7 +43,7 @@ function renderHead({
           setTimeout(function () {
             document.documentElement.classList.remove('wi-active');
             document.documentElement.classList.add('wi-hero-enter');
-          }, window.innerWidth < 768 ? 10500 : 5200);
+          }, 12000);
         }
       } catch (e) {}
     })();
