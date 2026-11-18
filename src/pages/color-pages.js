@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const SUGGESTED_COMBINATIONS = require('../data/color_combinations.json');
 const {
   renderHead,
   renderHeader,
@@ -172,6 +173,22 @@ ${renderHead({
               <!-- Horizontal Scrollable Category Tabs Bar (9 Tabs) -->
               <nav id="color-category-tabs" class="w-cat-tabs-scroll color-category-tabs" aria-label="Nhóm màu WANDERS"></nav>
 
+              <!-- Preset Combination Active Banner (Hidden by default) -->
+              <div id="studio-preset-banner" class="studio-preset-banner hidden">
+                <div class="preset-banner-info">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="text-[#073B2E] shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                  </svg>
+                  <span>Đang xem bộ màu gợi ý: <strong id="preset-banner-title">Pastel trang nhã</strong> (3 mã màu)</span>
+                </div>
+                <button id="btn-exit-preset" type="button" class="btn-exit-preset">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                  <span>Quay lại bảng màu đầy đủ</span>
+                </button>
+              </div>
+
               <div class="studio-toolbar">
                 <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
                   <select id="toolbar-collection-select" aria-label="Chọn nhóm màu" class="studio-select text-[12.5px]">
@@ -269,89 +286,33 @@ ${renderHead({
         </div>
 
         <div class="suggested-palettes-grid">
-          <div class="suggested-palette-card group w-reveal">
-            <div class="aspect-[16/10] overflow-hidden relative bg-[#E8E2D5]">
-              <img src="${prefix}images/base44/edf841af7_generated_77536f0e.png" alt="Pastel trang nhã" width="350" height="219" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700">
-            </div>
-            <div class="p-5 flex-1 flex flex-col justify-between">
-              <div>
-                <h3 class="text-[16px] font-semibold" style="color: #073B2E;">Pastel trang nhã</h3>
-                <p class="text-[13px] mt-1.5 leading-relaxed" style="color: #5A6468;">Tông tường màu sáng, nhẹ nhàng và thanh lịch cho mọi không gian.</p>
-                <div class="flex gap-1.5 mt-4">
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #FFFFFF;" title="white-1 — #FFFFFF"></span>
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #EBDFC7;" title="1340 — #EBDFC7"></span>
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #E3D4BA;" title="1460 — #E3D4BA"></span>
-                </div>
-              </div>
-              <button type="button" onclick="applyPresetPalette(['#EBDFC7', '#FFFFFF', '#E3D4BA'], 'Pastel trang nhã')" class="suggested-card-btn">
-                Xem chi tiết
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-              </button>
-            </div>
-          </div>
+          ${SUGGESTED_COMBINATIONS.map((combo, idx) => {
+            const delayClass = idx > 0 ? (' w-reveal-delay-' + idx) : '';
+            const swatchesHtml = combo.colors.map(c => 
+              '<span class="h-6 flex-1 rounded border border-black/10 cursor-pointer transition-transform hover:scale-105" style="background-color: ' + c.hex + ';" title="' + c.code + ' — ' + c.hex.toUpperCase() + ' (' + c.role + ')" onclick="if(window.WandersColorStudio) window.WandersColorStudio.openCombination(\'' + combo.id + '\', \'' + c.code + '\')"></span>'
+            ).join('');
 
-          <div class="suggested-palette-card group w-reveal w-reveal-delay-1">
-            <div class="aspect-[16/10] overflow-hidden relative bg-[#E8E2D5]">
-              <img src="${prefix}images/base44/08867f386_generated_9bb6eef6.png" alt="Tông đỏ & đất ấm cúng" width="350" height="219" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700">
-            </div>
-            <div class="p-5 flex-1 flex flex-col justify-between">
-              <div>
-                <h3 class="text-[16px] font-semibold" style="color: #073B2E;">Tông đỏ &amp; đất ấm cúng</h3>
-                <p class="text-[13px] mt-1.5 leading-relaxed" style="color: #5A6468;">Gam màu đất ấm tạo điểm nhấn sang trọng và ấm cúng.</p>
-                <div class="flex gap-1.5 mt-4">
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #F6DBE1;" title="2001-P — #F6DBE1"></span>
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #F5E7E7;" title="2041-P — #F5E7E7"></span>
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #FEEBE4;" title="2101-P — #FEEBE4"></span>
-                </div>
+            return `
+            <div class="suggested-palette-card group w-reveal${delayClass}">
+              <div class="aspect-[16/10] overflow-hidden relative bg-[#E8E2D5]">
+                <img src="${prefix}${combo.image}" alt="${combo.title}" width="350" height="219" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700">
               </div>
-              <button type="button" onclick="applyPresetPalette(['#F6DBE1', '#F5E7E7', '#FEEBE4'], 'Tông đỏ & đất ấm cúng')" class="suggested-card-btn">
-                Xem chi tiết
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="suggested-palette-card group w-reveal w-reveal-delay-2">
-            <div class="aspect-[16/10] overflow-hidden relative bg-[#E8E2D5]">
-              <img src="${prefix}images/base44/8099d7d28_generated_8abc6bed.png" alt="Xanh lá thảo mộc tự nhiên" width="350" height="219" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700">
-            </div>
-            <div class="p-5 flex-1 flex flex-col justify-between">
-              <div>
-                <h3 class="text-[16px] font-semibold" style="color: #073B2E;">Xanh lá thảo mộc tự nhiên</h3>
-                <p class="text-[13px] mt-1.5 leading-relaxed" style="color: #5A6468;">Tạo cảm giác thoáng đãng, thư thái và gần gũi thiên nhiên.</p>
-                <div class="flex gap-1.5 mt-4">
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #F3F2D5;" title="2561-P — #F3F2D5"></span>
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #E2EDAA;" title="2562-P — #E2EDAA"></span>
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #DFE89E;" title="2563-T — #DFE89E"></span>
+              <div class="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 class="text-[16px] font-semibold" style="color: #073B2E;">${combo.title}</h3>
+                  <p class="text-[13px] mt-1.5 leading-relaxed" style="color: #5A6468;">${combo.description}</p>
+                  <div class="flex gap-1.5 mt-4">
+                    ${swatchesHtml}
+                  </div>
                 </div>
+                <button type="button" data-combination-id="${combo.id}" class="suggested-card-btn">
+                  Xem chi tiết
+                  <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </button>
               </div>
-              <button type="button" onclick="applyPresetPalette(['#F3F2D5', '#E2EDAA', '#DFE89E'], 'Xanh lá thảo mộc tự nhiên')" class="suggested-card-btn">
-                Xem chi tiết
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-              </button>
             </div>
-          </div>
-
-          <div class="suggested-palette-card group w-reveal w-reveal-delay-3">
-            <div class="aspect-[16/10] overflow-hidden relative bg-[#E8E2D5]">
-              <img src="${prefix}images/base44/7266e0bc1_generated_27f36fa1.png" alt="Xanh dương đại dương thanh lịch" width="350" height="219" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700">
-            </div>
-            <div class="p-5 flex-1 flex flex-col justify-between">
-              <div>
-                <h3 class="text-[16px] font-semibold" style="color: #073B2E;">Xanh dương đại dương thanh lịch</h3>
-                <p class="text-[13px] mt-1.5 leading-relaxed" style="color: #5A6468;">Sắc thái tinh tế, hiện đại cho phòng khách và không gian mở.</p>
-                <div class="flex gap-1.5 mt-4">
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #DEE8D9;" title="2651-P — #DEE8D9"></span>
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #C1D3C2;" title="2652-P — #C1D3C2"></span>
-                  <span class="h-6 flex-1 rounded border border-black/10" style="background-color: #B0C5B2;" title="2653-T — #B0C5B2"></span>
-                </div>
-              </div>
-              <button type="button" onclick="applyPresetPalette(['#DEE8D9', '#C1D3C2', '#B0C5B2'], 'Xanh dương đại dương thanh lịch')" class="suggested-card-btn">
-                Xem chi tiết
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-              </button>
-            </div>
-          </div>
+            `;
+          }).join('')}
         </div>
       </div>
     </section>

@@ -3,6 +3,8 @@ const path = require('path');
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 const PALETTE_PATH = path.join(ROOT_DIR, 'src/data/color_palette.json');
+const COMBINATIONS_PATH = path.join(ROOT_DIR, 'src/data/color_combinations.json');
+const suggestedCombinations = JSON.parse(fs.readFileSync(COMBINATIONS_PATH, 'utf8'));
 const TARGET_JS_PATH = path.join(ROOT_DIR, 'src/js/wanders_color_studio_v2.js');
 
 const paletteData = JSON.parse(fs.readFileSync(PALETTE_PATH, 'utf8'));
@@ -33,6 +35,7 @@ const jsContent = `/**
 
   // --- 1. DATA DEFINITIONS ---
   const CATEGORIES = ${JSON.stringify(categories, null, 2)};
+  const SUGGESTED_COMBINATIONS = ${JSON.stringify(suggestedCombinations, null, 2)};
 
   // Raw items array (1.237 rows)
   const RAW_ITEMS_DATA = ${JSON.stringify(compactItems)};
@@ -93,7 +96,8 @@ const jsContent = `/**
     // Mobile pagination: exact 12 colors per page
     mobilePage: 1,
     mobilePageSize: 12,
-    favorites: new Set()
+    favorites: new Set(),
+    presetMode: null
   };
 
   // Restore favorites from localStorage
@@ -150,6 +154,12 @@ const jsContent = `/**
 
   // --- 4. FILTERING LOGIC ---
   function getFilteredColors() {
+    if (state.presetMode && Array.isArray(state.presetMode.codes)) {
+      return state.presetMode.codes.map(c => {
+        return UNIQUE_COLORS.find(item => item.code === c) || RAW_ITEMS.find(item => item.code === c);
+      }).filter(Boolean);
+    }
+
     let list;
     if (state.activeCategory === 'all') {
       list = UNIQUE_COLORS;
@@ -236,6 +246,11 @@ const jsContent = `/**
 
   // C. Switch Active Category & Sync UI
   function setActiveCategory(catId, clickedTabEl) {
+    if (state.presetMode) {
+      state.presetMode = null;
+      const pb = document.getElementById('studio-preset-banner');
+      if (pb) pb.classList.add('hidden');
+    }
     state.activeCategory = catId;
     state.desktopDisplayLimit = state.desktopPageSize;
     state.mobilePage = 1;
@@ -549,6 +564,82 @@ const jsContent = `/**
   }
 
   // --- 6. DESKTOP SCROLL COORDINATOR ---
+  // --- 6C. PRESET COMBINATION CONTROLLER ---
+  function openColorCombination(combinationId, targetColorCode) {
+    const combo = SUGGESTED_COMBINATIONS.find(c => c.id === combinationId);
+    if (!combo) return;
+
+    state.presetMode = {
+      id: combo.id,
+      title: combo.title,
+      codes: combo.codes
+    };
+
+    // Reset filters
+    state.searchQuery = '';
+    state.activeShade = 'all';
+    state.activeBrightness = 'all';
+    state.activeTone = 'all';
+    const searchInput = document.getElementById('color-search-input');
+    if (searchInput) searchInput.value = '';
+    const searchClear = document.getElementById('color-search-clear');
+    if (searchClear) searchClear.classList.add('hidden');
+
+    const tbShade = document.getElementById('toolbar-shade-select');
+    if (tbShade) tbShade.value = 'all';
+    const filterShade = document.getElementById('filter-shade');
+    if (filterShade) filterShade.value = 'all';
+    const filterBright = document.getElementById('filter-brightness');
+    if (filterBright) filterBright.value = 'all';
+    const filterTone = document.getElementById('filter-tone');
+    if (filterTone) filterTone.value = 'all';
+
+    // Reset mobile pagination
+    state.mobilePage = 1;
+
+    // Show preset banner
+    const presetBanner = document.getElementById('studio-preset-banner');
+    const presetTitle = document.getElementById('preset-banner-title');
+    if (presetBanner) presetBanner.classList.remove('hidden');
+    if (presetTitle) presetTitle.textContent = combo.title;
+
+    // Select color (targetColorCode or 1st color in combination)
+    const codeToSelect = targetColorCode || combo.codes[0];
+    const colorObj = UNIQUE_COLORS.find(c => c.code === codeToSelect) || RAW_ITEMS.find(c => c.code === codeToSelect);
+    if (colorObj) {
+      state.selectedColor = colorObj;
+      updateActiveBanner();
+    }
+
+    renderSwatchGrid();
+
+    // Scroll smoothly to studio
+    const studioEl = document.getElementById('color-studio-app');
+    if (studioEl) {
+      const headerEl = document.querySelector('header');
+      const headerH = headerEl ? headerEl.offsetHeight : 77;
+      const targetY = studioEl.getBoundingClientRect().top + window.scrollY - headerH;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+
+    const gridContainer = document.getElementById('swatch-grid-container');
+    if (gridContainer) gridContainer.scrollTop = 0;
+
+    showToast('Đang xem bộ màu gợi ý "' + combo.title + '"');
+  }
+
+  function exitColorCombination() {
+    if (!state.presetMode) return;
+    state.presetMode = null;
+
+    const presetBanner = document.getElementById('studio-preset-banner');
+    if (presetBanner) presetBanner.classList.add('hidden');
+
+    state.mobilePage = 1;
+    renderSwatchGrid();
+    showToast('Đã quay lại bảng màu đầy đủ');
+  }
+
   function initDesktopScrollCoordinator() {
     const studioSection = document.getElementById('color-studio-app');
     const gridContainer = document.getElementById('swatch-grid-container');
@@ -689,6 +780,11 @@ const jsContent = `/**
         if (searchClear) {
           if (val) searchClear.classList.remove('hidden');
           else searchClear.classList.add('hidden');
+        }
+        if (state.presetMode) {
+          state.presetMode = null;
+          const pb = document.getElementById('studio-preset-banner');
+          if (pb) pb.classList.add('hidden');
         }
         searchDebounce = setTimeout(() => {
           state.searchQuery = val;
@@ -862,6 +958,36 @@ const jsContent = `/**
           renderSwatchGrid();
         }
       }, 150);
+    });
+
+    // 11. Exit Preset Combination Button
+    const btnExitPreset = document.getElementById('btn-exit-preset');
+    if (btnExitPreset) {
+      btnExitPreset.addEventListener('click', () => {
+        exitColorCombination();
+      });
+    }
+
+    // 12. Suggested Card Buttons ("Xem chi tiết")
+    document.querySelectorAll('.suggested-card-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const comboId = btn.getAttribute('data-combination-id');
+        openColorCombination(comboId);
+      });
+    });
+
+    // 13. Expose Public API & Event Listeners
+    window.WandersColorStudio = {
+      openCombination: openColorCombination,
+      exitCombination: exitColorCombination,
+      getCombinations: () => SUGGESTED_COMBINATIONS
+    };
+
+    window.addEventListener('wanders:open-color-combination', (e) => {
+      if (e.detail && e.detail.combinationId) {
+        openColorCombination(e.detail.combinationId, e.detail.colorCode);
+      }
     });
 
     // --- INITIAL RENDER & SCROLL SETUP ---

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "pastel-trang-nha",
+    "title": "Pastel trang nhã",
+    "description": "Tông trắng ngà, beige và greige nhẹ nhàng, mang lại cảm giác khoáng đạt, thanh lịch cho mọi không gian sống.",
+    "image": "images/base44/edf841af7_generated_77536f0e.png",
+    "codes": ["1080", "1340", "1460"],
+    "colors": [
+      {
+        "code": "1080",
+        "hex": "#f8f1e4",
+        "role": "Trắng ngà dịu nhẹ — Nền tường sáng"
+      },
+      {
+        "code": "1340",
+        "hex": "#ebdfc7",
+        "role": "Greige thanh lịch — Trung tính chủ đạo"
+      },
+      {
+        "code": "1460",
+        "hex": "#e3d4ba",
+        "role": "Beige ấm — Điểm nhấn tinh tế"
+      }
+    ]
+  },
+  {
+    "id": "tong-do-dat-am-cung",
+    "title": "Tông đỏ & đất ấm cúng",
+    "description": "Sắc kem ấm, nâu đất và gỗ trầm tạo chiều sâu không gian sang trọng, ấm cúng và gần gũi.",
+    "image": "images/base44/08867f386_generated_9bb6eef6.png",
+    "codes": ["2351-P", "2353-T", "2357-A"],
+    "colors": [
+      {
+        "code": "2351-P",
+        "hex": "#faeddd",
+        "role": "Kem ấm — Nền tường chính"
+      },
+      {
+        "code": "2353-T",
+        "hex": "#dfbea0",
+        "role": "Nâu đất nhẹ — Trung tính chuyển tiếp"
+      },
+      {
+        "code": "2357-A",
+        "hex": "#a47854",
+        "role": "Nâu ấm đậm — Điểm nhấn mộc sang trọng"
+      }
+    ]
+  },
+  {
+    "id": "xanh-la-thao-moc",
+    "title": "Xanh lá thảo mộc tự nhiên",
+    "description": "Sự kết hợp giữa trắng kem, sage green dịu và olive thảo mộc, khơi gợi cảm giác thư thái và tươi mới.",
+    "image": "images/base44/8099d7d28_generated_8abc6bed.png",
+    "codes": ["2641-P", "2644-P", "2647-A"],
+    "colors": [
+      {
+        "code": "2641-P",
+        "hex": "#e6eed9",
+        "role": "Trắng kem thảo mộc — Nền tường sáng"
+      },
+      {
+        "code": "2644-P",
+        "hex": "#c2d6b1",
+        "role": "Xanh Sage dịu mát — Tường chính"
+      },
+      {
+        "code": "2647-A",
+        "hex": "#7b965d",
+        "role": "Xanh Olive thảo mộc — Điểm nhấn thiên nhiên"
+      }
+    ]
+  },
+  {
+    "id": "xanh-duong-dai-duong",
+    "title": "Xanh dương đại dương thanh lịch",
+    "description": "Sắc thái đại dương từ sương lam dịu đến xanh biển sâu thẳm, kiến tạo không gian tĩnh tại, hiện đại và đẳng cấp.",
+    "image": "images/base44/blue_ocean_living_room.png",
+    "codes": ["2911-P", "2914-T", "2918-A"],
+    "colors": [
+      {
+        "code": "2911-P",
+        "hex": "#e4eae8",
+        "role": "Sương lam nhạt — Trần & phào chỉ"
+      },
+      {
+        "code": "2914-T",
+        "hex": "#93bcd5",
+        "role": "Xanh biển êm dịu — Tường phòng khách"
+      },
+      {
+        "code": "2918-A",
+        "hex": "#264e72",
+        "role": "Xanh đại dương sâu — Tường điểm nhấn"
+      }
+    ]
+  }
+]
