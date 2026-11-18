@@ -15,58 +15,60 @@
   var ASSET_BASE = './images/introl/';
 
   // ---------------------------------------------------------------------------
-  // TIMELINE CONFIGURATIONS (9.0S UNIFIED CINEMATIC TIMELINE WITH >=3.5S HOLD)
+  // TIMELINE CONFIGURATIONS (5.85S TIMELINE: 28% FASTER DROP + EXACT 2.0S BRAND HOLD)
   // ---------------------------------------------------------------------------
   var CONFIG_DESKTOP = {
     isMobile: false,
-    totalDuration: 9000, // 9.0s target
-    hardSafetyTimeout: 12000,
-    // Scene 01 – Paint Awakening: 0–1.5s
-    dropDuration: 1100,
-    impactTime: 1150,
-    // Scene 02 – Paint Explosion & Ribbons: 1.2–2.5s
-    explosionTime: 1200,
-    explosionBurstTime: 1380,
-    explosionEndTime: 2400,
-    ribbonsStartTime: 1250,
-    ribbonsEndTime: 2450,
-    // Scene 03 – WANDERS Reveal (7 Letters): 1.8–2.5s
-    logoRevealStart: 1800,
-    logoRevealStep: 100, // W(1800), A(1900), N(2000), D(2100), E(2200), R(2300), S(2400) -> fully formed by 2.5s
-    // Scene 04 – Brand Presentation & Steady Hold: 2.5–7.0s (3.8s steady reading time!)
-    brandRevealTime: 2500, // Gold rule + Tagline + Slogan expand smoothly (2.5s - 3.2s)
-    // Scene 05 – Transition & Curtain Exit: 7.0–9.0s
-    logoFadeTime: 7000, // Brand stage fades smoothly (7.0s - 7.35s)
-    chargeTime: 7150,   // Bottom energy charge surge
-    wipeTime: 7300,     // Upward curtain sweep reveals Hero (7.3s - 8.8s)
-    curtainTransitionMs: 1500,
+    totalDuration: 5850, // 5.85s total Intro duration
+    hardSafetyTimeout: 8500,
+    // Scene 01 – Paint Awakening: 0–0.8s (Fast natural gravitational drop, 29% faster)
+    dropDuration: 780,
+    impactTime: 800,
+    // Scene 02 – Paint Explosion & Ribbons: 0.82–2.0s
+    explosionTime: 820,
+    explosionBurstTime: 960,
+    explosionEndTime: 1950,
+    ribbonsStartTime: 840,
+    ribbonsEndTime: 1980,
+    // Scene 03 – WANDERS Reveal (7 Letters): 1.35–2.0s
+    logoRevealStart: 1350,
+    logoRevealStep: 90, // W(1350), A(1440), N(1530), D(1620), E(1710), R(1800), S(1890) -> all 7 letters formed by 1980ms
+    // Scene 04 – Brand Presentation & Exact 2.0s Steady Hold: 2.0–4.5s
+    brandRevealTime: 2000, // Gold rule + Tagline + Slogan expand smoothly (2.0s - 2.45s)
+    // EXACT 2.0s BRAND HOLD: 2.5s -> 4.5s (All text 100% visible and held)
+    // Scene 05 – Transition & Curtain Exit: 4.5–5.85s
+    logoFadeTime: 4500, // Brand stage fades smoothly (4.5s - 4.75s)
+    chargeTime: 4620,   // Bottom energy charge surge
+    wipeTime: 4720,     // Upward curtain sweep reveals Hero (4.72s - 5.82s)
+    curtainTransitionMs: 1100,
     particleScale: 1.0,
     canvasDprCap: 1.75,
   };
 
   var CONFIG_MOBILE = {
     isMobile: true,
-    totalDuration: 9000, // Unified 9.0s timeline, uniform slow-motion luxury pacing
-    hardSafetyTimeout: 12000,
-    // Scene 01 – Paint Awakening: 0–1.5s
-    dropDuration: 1150,
-    impactTime: 1200,
-    // Scene 02 – Paint Explosion & Ribbons: 1.2–2.5s
-    explosionTime: 1250,
-    explosionBurstTime: 1420,
-    explosionEndTime: 2450,
-    ribbonsStartTime: 1300,
-    ribbonsEndTime: 2480,
-    // Scene 03 – WANDERS Reveal (7 Letters): 1.8–2.5s
-    logoRevealStart: 1820,
-    logoRevealStep: 95, // W(1820), A(1915), N(2010), D(2105), E(2200), R(2295), S(2390)
-    // Scene 04 – Brand Presentation & Steady Hold: 2.5–7.0s (3.8s steady reading time!)
-    brandRevealTime: 2500,
-    // Scene 05 – Transition & Curtain Exit: 7.0–9.0s
-    logoFadeTime: 7000,
-    chargeTime: 7150,
-    wipeTime: 7300,
-    curtainTransitionMs: 1500,
+    totalDuration: 5850, // Unified 5.85s timeline with exact 2.0s hold
+    hardSafetyTimeout: 8500,
+    // Scene 01 – Paint Awakening: 0–0.82s (Fast gravitational drop, 28.7% faster)
+    dropDuration: 800,
+    impactTime: 820,
+    // Scene 02 – Paint Explosion & Ribbons: 0.84–2.0s
+    explosionTime: 840,
+    explosionBurstTime: 980,
+    explosionEndTime: 1980,
+    ribbonsStartTime: 860,
+    ribbonsEndTime: 2000,
+    // Scene 03 – WANDERS Reveal (7 Letters): 1.38–2.0s
+    logoRevealStart: 1380,
+    logoRevealStep: 90, // W(1380), A(1470), N(1560), D(1650), E(1740), R(1830), S(1920)
+    // Scene 04 – Brand Presentation & Exact 2.0s Steady Hold: 2.02–4.5s
+    brandRevealTime: 2020,
+    // EXACT 2.0s BRAND HOLD: 2.5s -> 4.5s
+    // Scene 05 – Transition & Curtain Exit: 4.5–5.85s
+    logoFadeTime: 4500,
+    chargeTime: 4620,
+    wipeTime: 4720,
+    curtainTransitionMs: 1100,
     particleScale: 0.45, // 55% reduction on mobile for 60fps smoothness
     canvasDprCap: 1.5,
   };
@@ -421,7 +423,7 @@
     // Physical impact shock recoil
     if (this.kinetic) {
       var shockStart = cfg.impactTime;
-      var shockSpan = cfg.isMobile ? 380 : 360;
+      var shockSpan = cfg.isMobile ? 280 : 260;
       if (t >= shockStart && t < shockStart + shockSpan) {
         var k = 1 - (t - shockStart) / shockSpan;
         var sx = Math.sin(t * (cfg.isMobile ? 0.08 : 0.09)) * (cfg.isMobile ? 2.4 : 2.8) * k;
@@ -435,7 +437,7 @@
     // Scene 01/02 Layer: 01_paint_impact.png
     if (this.impact) {
       var impStart = cfg.impactTime;
-      var impDuration = cfg.isMobile ? 1200 : 1150;
+      var impDuration = cfg.isMobile ? 950 : 900;
       var impEnd = impStart + impDuration;
       if (t >= impStart && t <= impEnd) {
         var pImp = clamp((t - impStart) / impDuration, 0, 1);

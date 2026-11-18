@@ -94,7 +94,7 @@ html.wi-active #wanders-intro {
 /* Subtle Slow Zoom: Continuous, smooth drift from scale(1) to scale(1.035) */
 .wi-intro--logo-scene .wi-brand-bg-image,
 .wi-intro--reveal .wi-brand-bg-image {
-  animation: wiBgSlowZoom 8.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: wiBgSlowZoom 5.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes wiBgSlowZoom {
@@ -414,7 +414,7 @@ html.wi-active #wanders-intro {
   height: 1.5px;
   background: linear-gradient(90deg, transparent 0%, #D6AD45 25%, #FAF9F5 50%, #D6AD45 75%, transparent 100%);
   opacity: 0;
-  transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+  transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.32s ease;
 }
 
 .wi-intro--reveal .wi-gold-rule {
@@ -432,7 +432,7 @@ html.wi-active #wanders-intro {
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
   opacity: 0;
   transform: translate3d(0, 12px, 0);
-  transition: opacity 0.45s ease 0.1s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+  transition: opacity 0.35s ease 0.05s, transform 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.05s;
 }
 
 .wi-subline {
@@ -445,7 +445,7 @@ html.wi-active #wanders-intro {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65);
   opacity: 0;
   transform: translate3d(0, 8px, 0);
-  transition: opacity 0.45s ease 0.2s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+  transition: opacity 0.35s ease 0.12s, transform 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.12s;
 }
 
 .wi-intro--reveal .wi-tagline,
@@ -457,8 +457,8 @@ html.wi-active #wanders-intro {
 /* Scene 05: Power Paint Wipe (Logo Fade -> Bottom Charge -> Upward Curtain Sweep) */
 .wi-brand-stage {
   transition:
-    opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, opacity;
 }
 
@@ -478,37 +478,37 @@ html.wi-active #wanders-intro {
 
 .wi-intro--wipe .wi-curtain {
   transform: translate3d(0, calc(-100% - 170px), 0);
-  transition: transform 1.5s cubic-bezier(0.65, 0, 0.16, 1);
+  transition: transform 1.1s cubic-bezier(0.65, 0, 0.16, 1);
 }
 
 @media (max-width: 767px) {
   .wi-intro--wipe .wi-curtain {
     transform: translate3d(0, calc(-100% - 140px), 0);
-    transition: transform 1.5s cubic-bezier(0.72, 0, 0.20, 1);
+    transition: transform 1.1s cubic-bezier(0.72, 0, 0.20, 1);
   }
   .wi-letter-slot.is-visible {
     transition:
-      transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-      opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-      clip-path 0.50s cubic-bezier(0.22, 1, 0.36, 1);
+      transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+      clip-path 0.42s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .wi-intro--reveal .wi-gold-sweep::after {
-    animation: wiGoldSweep 0.85s cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
+    animation: wiGoldSweep 0.75s cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
   }
   .wi-intro--reveal .wi-gold-rule {
-    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+    transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
   }
   .wi-intro--reveal .wi-tagline {
     font-size: clamp(11px, 3.2vw, 13.5px);
     letter-spacing: 0.34em;
     font-weight: 600;
-    transition: opacity 0.45s ease 0.1s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+    transition: opacity 0.35s ease 0.05s, transform 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.05s;
   }
   .wi-intro--reveal .wi-subline {
     font-size: clamp(9.5px, 2.5vw, 11px);
     letter-spacing: 0.18em;
     font-weight: 500;
-    transition: opacity 0.45s ease 0.2s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+    transition: opacity 0.35s ease 0.12s, transform 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.12s;
   }
 }
 
