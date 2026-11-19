@@ -517,13 +517,13 @@ main h2 {
 
 @media (max-width: 1024px) {
   .w-hero-video {
-    object-position: 68% center;
+    object-position: center center;
   }
 }
 
 @media (max-width: 640px) {
   .w-hero-video {
-    object-position: 72% center;
+    object-position: center center;
   }
 }
 
