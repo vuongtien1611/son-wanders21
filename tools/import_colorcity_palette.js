@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const CSV_PATH = 'C:/Users/Admin/Documents/sơn wanders/ma_mau_colorcity_pro.csv';
+const CSV_PATH = fs.existsSync(path.join(__dirname, '../src/data/ma_mau_colorcity_pro.csv'))
+  ? path.join(__dirname, '../src/data/ma_mau_colorcity_pro.csv')
+  : 'C:/Users/Admin/Documents/sơn wanders/ma_mau_colorcity_pro.csv';
 const SRC_DATA_DIR = 'C:/Users/Admin/Documents/sơn wanders/giao-dien/src/data';
 const PROD_DATA_DIR = 'C:/Users/Admin/Documents/sơn wanders/giao-dien/website_download/data';
 
