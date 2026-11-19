@@ -165,11 +165,10 @@ ${renderHead({
           muted
           loop
           playsinline
-          preload="auto"
-          poster="${prefix}images/video-banner/hero-poster.webp?v=4.0.0"
+          preload="metadata"
+          poster="${prefix}images/video-banner/hero-poster.webp?v=4.1.0"
         >
-          <source src="${prefix}assets/video/wanders-hero.webm?v=4.0.0" type="video/webm">
-          <source src="${prefix}assets/video/wanders-hero.mp4?v=4.0.0" type="video/mp4">
+          <source src="${prefix}images/video-banner/video-banner.mp4?v=4.1.0" type="video/mp4">
         </video>
         <div class="w-hero-overlay"></div>
       </div>
